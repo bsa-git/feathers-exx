@@ -21,7 +21,12 @@ Getting up and running is as easy as 1, 2, 3, 4, 5.
   npm install
   ```
 
-4. Start your app
+4. Environment variables
+
+Add file "/env.js" to your project to set user environment variables.
+See the sample file "/env.example.js".
+
+5. Start your app
 
 Let's start building packages on the client side on a separate command line
 
@@ -35,7 +40,7 @@ On the other command line, start the local server, so that you can see the appli
   npm run dev
   ```
 
-5. The application is now running on http://localhost:3000
+6. The application is now running on http://localhost:3000
 
 ## Production
 
