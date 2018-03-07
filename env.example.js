@@ -1,5 +1,6 @@
 // The values in the configuration files "config/env/"
 // will be overwritten by the values of "env.js" file
+
 module.exports = {
     app_env: 'testing', // development, production, testing
     global: {
