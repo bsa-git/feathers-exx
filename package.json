@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start-server": "node ./server/start.js",
+    "start": "node ./server/start.js",
     "dev": "nodemon ./server/start.js",
     "css-build": "node-sass client/src/sass/themes/ -o client/public/css/themes/",
     "css-deploy": "npm run css-build",
