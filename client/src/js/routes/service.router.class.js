@@ -27,7 +27,9 @@ class ServiceRouter {
      */
     async serviceRestApis() {
         // Find message
-        let messages = await this.client.req.get('http://localhost:3030/messages');
+        const url = `${this.client.req.protocol}//${this.client.req.hostname}:${this.client.config.app.exxPort}/messages`;
+        console.log(`HttpBox.get url: `, url);
+        let messages = await this.client.req.get(url);
         console.log(`HttpBox.get response: `, messages);
         // Render twig template
         const template = require('../tmpls/service/rest-apis/messages.html.twig');

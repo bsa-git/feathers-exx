@@ -2,16 +2,16 @@
 // will be overwritten by the values of "env.js" file
 
 module.exports = {
-    app_env: 'testing', // development, production, testing
+    app_env: 'development', // development, production, testing
     global: {
-        debug: false,
+        debug: true,
         maintenance: false,
         gapi: {
             apiKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
             clientId: 'xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com'
         },
         ui: {
-            color_theme: 'default', // default(Bulma as-is); cerulean(A calm blue sky); darkly(Flatly in night-mode)
+            color_theme: 'darkly', // default(Bulma as-is); cerulean(A calm blue sky); darkly(Flatly in night-mode)
         },
         personal_data: {
             app_title: 'Real App Title',
