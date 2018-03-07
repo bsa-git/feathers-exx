@@ -1,0 +1,11 @@
+<div id="message-box" class="container {% if not msgBox %}is-hidden{% endif %}">
+    <article class="message is-{% if msgBox.type %}{{ msgBox.type }}{% else %}danger{% endif %}">
+        <div class="message-header">
+            <p>{% if msgBox.type %}{{ msgBox.type|title }}{% else %}Danger{% endif %}</p>
+            <button class="delete" aria-label="delete"></button>
+        </div>
+        <div class="message-body content">
+            {{ msgBox.text }}
+        </div>
+    </article>
+</div>

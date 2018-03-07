@@ -1,0 +1,17 @@
+<script>
+    const modernBrowser = (
+        'assign' in Object
+//        'assign' in Object &&
+//        'fetch' in window
+    );
+
+    if (!modernBrowser) {
+        const scriptElement = document.createElement('script');
+
+        scriptElement.async = false;
+        scriptElement.src = '/js/polyfills.bundle.js';
+        document.head.appendChild(scriptElement);
+
+        console.log('Added - polyfills.bundle.js')
+    }
+</script>

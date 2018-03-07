@@ -1,0 +1,48 @@
+# feathers-exx
+
+> Feathers examples
+
+## About
+
+This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
+
+## Getting Started
+
+Getting up and running is as easy as 1, 2, 3, 4, 5.
+
+1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
+
+2. Clone or download [feathers-exx](https://github.com/bsa-git/feathers-exx) project with git.
+
+3. Install your dependencies
+
+  ```bash
+  cd <project-name>
+  npm install
+  ```
+
+4. Start your app
+
+Let's start building packages on the client side on a separate command line
+
+  ```bash
+  npm run start-client
+  ```
+
+On the other command line, start the local server, so that you can see the application running
+
+  ```bash
+  npm run dev
+  ```
+
+5. The application is now running on http://localhost:3000
+
+## Production
+
+```bash
+npm start
+```
+
+## Help
+
+For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).

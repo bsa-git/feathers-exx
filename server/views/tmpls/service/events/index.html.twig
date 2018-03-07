@@ -1,0 +1,83 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+        <h2 id="service-events">Service events<a class="anchorjs-link " href="#service-events"
+                                                 aria-label="Anchor link for: service events" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h2>
+        <p>When you register a service it will automatically become a <a href="https://nodejs.org/api/events.html"
+                                                                         target="_blank">NodeJS EventEmitter</a> that
+            sends events with the new data when a service method that modifies data (<code>create</code>,
+            <code>update</code>, <code>patch</code> and <code>remove</code>) returns. Events can be listened to with
+            <code>app.service('messages').on('eventName', data =&gt; {})</code>. Here is a list of the service methods
+            and their corresponding events:</p>
+        <table>
+            <thead>
+            <tr>
+                <th>Service method</th>
+                <th>Service event</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><code>service.create()</code></td>
+                <td><code>service.on('created')</code></td>
+            </tr>
+            <tr>
+                <td><code>service.update()</code></td>
+                <td><code>service.on('updated')</code></td>
+            </tr>
+            <tr>
+                <td><code>service.patch()</code></td>
+                <td><code>service.on('patched')</code></td>
+            </tr>
+            <tr>
+                <td><code>service.remove()</code></td>
+                <td><code>service.on('removed')</code></td>
+            </tr>
+            </tbody>
+        </table>
+        <p>We will see later that this is the key to how Feathers enables real-time functionality. For now, let's update
+            the <code>processMessages</code> function in <code>app.js</code>, look in the section "About":</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span
+                            class="hljs-keyword">function</span> <span class="hljs-title">processMessages</span>(<span
+                            class="hljs-params"></span>) </span>{
+  app.service(<span class="hljs-string">'messages'</span>).on(<span class="hljs-string">'created'</span>, message =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Created a new message'</span>, message);
+  });
+
+  app.service(<span class="hljs-string">'messages'</span>).on(<span class="hljs-string">'removed'</span>, message =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Deleted message'</span>, message);
+  });
+
+  <span class="hljs-keyword">await</span> app.service(<span class="hljs-string">'messages'</span>).create({
+    text: <span class="hljs-string">'First message'</span>
+  });
+
+  <span class="hljs-keyword">const</span> lastMessage = <span class="hljs-keyword">await</span> app.service(<span
+                        class="hljs-string">'messages'</span>).create({
+    text: <span class="hljs-string">'Second message'</span>
+  });
+
+  <span class="hljs-comment">// Remove the message we just created</span>
+  <span class="hljs-keyword">await</span> app.service(<span class="hljs-string">'messages'</span>).remove(lastMessage.id);
+
+  <span class="hljs-keyword">const</span> messageList = <span class="hljs-keyword">await</span> app.service(<span
+                        class="hljs-string">'messages'</span>).find();
+
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Available messages'</span>, messageList);
+}
+
+processMessages();
+</code></pre>
+        <p>If we now run the file via</p>
+        <pre><code>node app.js
+</code></pre>
+        <p>We will see how the event handlers are logging the information of created and deleted message like this:</p>
+        <pre><code>Created a new message { id: 0, text: 'First message' }
+Created a new message { id: 1, text: 'Second message' }
+Deleted message { id: 1, text: 'Second message' }
+Available messages [ { id: 0, text: 'First message' } ]
+</code></pre>
+    </section>
+{% endblock %}

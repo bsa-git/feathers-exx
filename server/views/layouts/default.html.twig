@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    {#--- Set theme ---#}
+    <link rel='stylesheet' href='/css/themes/{{ color_theme }}.css'/>
+    <!--- Polyfills --->
+    {% include "layouts/includes/polyfills.script.twig" %}
+</head>
+<body>
+<!--- TopNav --->
+{% include "layouts/includes/top-nav.html.twig" %}
+<!--- Message --->
+{% include "layouts/includes/message.html.twig" %}
+<!--- Sidebar --->
+{% block sidebar %}{% endblock %}
+<!--- Content --->
+{% block content %}{% endblock %}
+<!--- Footer --->
+{% include "layouts/includes/footer.html.twig" %}
+
+<!-- Java Scripts -->
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js" defer></script>
+<script type="text/javascript" src="/js/app.client.bundle.js" defer></script>
+
+{#<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js" ></script>#}
+{#<script type="text/javascript" src="/js/app.client.bundle.js" ></script>#}
+</body>
+</html>

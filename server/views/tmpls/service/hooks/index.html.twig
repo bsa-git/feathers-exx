@@ -1,0 +1,249 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+
+
+        <h1 id="hooks">Hooks<a class="anchorjs-link " href="#hooks" aria-label="Anchor link for: hooks"
+                               data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h1>
+        <p>As we have seen the <a href="services.html">previous chapter</a>, Feathers services are a great way to
+            implement data storage and modification. Technically, we could implement all our application logic within
+            services but very often an application requires similar functionality across multiple services. For example,
+            we might want to check for all services if a user is allowed to even call the service method or add the
+            current date to all data that we are saving. With just using services we would have to implement this every
+            time again.</p>
+        <p>This is where Feathers hooks come in. Hooks are pluggable middleware functions that can be registered
+            <strong>before</strong>, <strong>after</strong> or on <strong>error</strong>s of a service method. You can
+            register a single hook function or create a chain of them to create complex work-flows. </p>
+        <p>Just like services themselves, hooks are <em>transport independent</em>. They are usually also service
+            agnostic, meaning they can be used with ​<em>any</em>​ service. This pattern keeps your application logic
+            flexible, composable, and much easier to trace through and debug.</p>
+        <blockquote>
+            <p><strong>Note:</strong> A full overview of the hook API can be found in the <a
+                        href="../../api/hooks.html">hooks API documentation</a>.</p>
+        </blockquote>
+        <p>Hooks are commonly used to handle things like validation, authorization, logging, populating related
+            entities, sending notifications and more. </p>
+        <blockquote>
+            <p><strong>Pro tip:</strong> For more information about the design patterns behind hooks see <a
+                        href="https://blog.feathersjs.com/api-service-composition-with-hooks-47af13aa6c01"
+                        target="_blank">this blog post</a>.</p>
+        </blockquote>
+        <h2 id="quick-example">Quick example<a class="anchorjs-link " href="#quick-example"
+                                               aria-label="Anchor link for: quick example" data-anchorjs-icon="#"
+                                               style="padding-left: 0.375em;"></a></h2>
+        <p>Here is a quick example for a hook that adds a <code>createdAt</code> property to the data before calling the
+            actual <code>create</code> service method:</p>
+        <pre><code class="lang-js">app.service(<span class="hljs-string">'messages'</span>).hooks({
+  before: {
+    create: <span class="hljs-keyword">async</span> context =&gt; {
+      context.data.createdAt = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+
+      <span class="hljs-keyword">return</span> context;
+    }
+  }
+})
+</code></pre>
+        <h2 id="hook-functions">Hook functions<a class="anchorjs-link " href="#hook-functions"
+                                                 aria-label="Anchor link for: hook functions" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h2>
+        <p>A hook function is a function that takes the <a href="#hook-context">hook context</a> as the parameter and
+            returns that context or nothing. Hook functions run in the order they are registered and will only continue
+            to the next once the current hook function completes. If a hook function throws an error, all remaining
+            hooks (and possibly the service call) will be skipped and the error will be returned.</p>
+        <p>A common pattern to make hooks more re-usable (e.g. making the <code>createdAt</code> property name from the
+            example above configurable) is to create a wrapper function that takes those options and returns a hook
+            function:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> setTimestamp = name =&gt; {
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">async</span> context =&gt; {
+    context.data[name] = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+
+    <span class="hljs-keyword">return</span> context;
+  }
+}
+
+app.service(<span class="hljs-string">'messages'</span>).hooks({
+  before: {
+    create: setTimestamp(<span class="hljs-string">'createdAt'</span>),
+    update: setTimestamp(<span class="hljs-string">'updatedAt'</span>)
+  }
+});
+</code></pre>
+        <p>Now we have a re-usable hook that can set the timestamp on any property.</p>
+        <h2 id="hook-context">Hook context<a class="anchorjs-link " href="#hook-context"
+                                             aria-label="Anchor link for: hook context" data-anchorjs-icon="#"
+                                             style="padding-left: 0.375em;"></a></h2>
+        <p>The hook <code>context</code> is an object which contains information about the service method call. It has
+            read-only and writable properties. Read-only properties are:</p>
+        <ul>
+            <li><code>context.app</code> - The Feathers application object</li>
+            <li><code>context.service</code> - The service this hook is currently running on</li>
+            <li><code>context.path</code> - The path of the service</li>
+            <li><code>context.method</code> - The service method</li>
+            <li><code>context.type</code> - The hook type (<code>before</code>, <code>after</code> or <code>error</code>)
+            </li>
+        </ul>
+        <p>Writeable properties are:</p>
+        <ul>
+            <li><code>context.params</code> - The service method call <code>params</code>. For external calls, <code>params</code>
+                usually contains:
+                <ul>
+                    <li><code>context.params.query</code> - The query (e.g. query string for REST) for the service call
+                    </li>
+                    <li><code>context.params.provider</code> - The name of the transport (which we will look at in the
+                        next chapter) the call has been made through. Usually <code>rest</code>, <code>socketio</code>,
+                        <code>primus</code>. Will be <code>undefined</code> for internal calls.
+                    </li>
+                </ul>
+            </li>
+            <li><code>context.id</code> - The <code>id</code> for a <code>get</code>, <code>remove</code>,
+                <code>update</code> and <code>patch</code> service method call
+            </li>
+            <li><code>context.data</code> - The <code>data</code> sent by the user in a <code>create</code>, <code>update</code>
+                and <code>patch</code> service method call
+            </li>
+            <li><code>context.error</code> - The error that was thrown (in <code>error</code> hooks)</li>
+            <li><code>context.result</code> - The result of the service method call (in <code>after</code> hooks)</li>
+        </ul>
+        <blockquote>
+            <p><strong>Note:</strong> For more information about the hook context see the <a
+                        href="https://docs.feathersjs.com/api/hooks.html">hooks API documentation</a>.</p>
+        </blockquote>
+        <h2 id="registering-hooks">Registering hooks<a class="anchorjs-link " href="#registering-hooks"
+                                                       aria-label="Anchor link for: registering hooks"
+                                                       data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>The most common way to register hooks is in an object like this:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> messagesHooks = {
+  before: {
+    all: [],
+    find: [],
+    get: [],
+    create: [],
+    update: [],
+    patch: [],
+    remove: [],
+  },
+  after: {
+    all: [],
+    find: [],
+    create: [],
+    update: [],
+    patch: [],
+    remove: [],
+  }
+};
+
+app.service(<span class="hljs-string">'messages'</span>).hooks(messagesHooks);
+</code></pre>
+        <p>This makes it easy to see at one glance in which order hooks are executed and for which method.</p>
+        <blockquote>
+            <p><strong>Note:</strong> <code>all</code> is a special keyword which means those hooks will run before the
+                method specific hooks in this chain.</p>
+        </blockquote>
+        <p>A flow how different hooks will be executed like this:</p>
+        <p><img src="https://docs.feathersjs.com/guides/basics/assets/hook-flow.jpg" alt="Hook flow"></p>
+        <p>Can be registered like this:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> messagesHooks = {
+  before: {
+    all: [ hook01() ],
+    find: [ hook11() ],
+    get: [ hook21() ],
+    create: [ hook31(), hook32() ],
+    update: [ hook41() ],
+    patch: [ hook51() ],
+    remove: [ hook61() ],
+  },
+  after: {
+    all: [ hook05() ],
+    find: [ hook15(), hook16() ],
+    create: [ hook35() ],
+    update: [ hook45() ],
+    patch: [ hook55() ],
+    remove: [ hook65() ],
+  }
+};
+
+app.service(<span class="hljs-string">'messages'</span>).hooks(messagesHooks);
+</code></pre>
+        <h2 id="validating-data">Validating data<a class="anchorjs-link " href="#validating-data"
+                                                   aria-label="Anchor link for: validating data" data-anchorjs-icon="#"
+                                                   style="padding-left: 0.375em;"></a></h2>
+        <p>If a hook throws an error, all following hooks will be skipped and the error will be returned to the user.
+            This makes <code>before</code> hooks a great place to validate incoming data by throwing an error for
+            invalid data. We can throw a normal <a
+                    href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error"
+                    target="_blank">JavaScript error</a> or <a href="../../api/errors.html">Feathers error</a> which has
+            some additional functionality (like returning the proper error code for REST calls). </p>
+        <p><code>@feathersjs/errors</code> is a separate module, so you must add it to your project before requiring it:
+        </p>
+        <pre><code class="lang-bash">npm install @feathersjs/errors --save
+</code></pre>
+        <p>We will only need the hook for <code>create</code>, <code>update</code> and <code>patch</code> since those
+            are the only service methods that allow user submitted data:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> { BadRequest } = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/errors'</span>);
+
+<span class="hljs-keyword">const</span> validate = <span class="hljs-keyword">async</span> context =&gt; {
+  <span class="hljs-keyword">const</span> { data } = context;
+
+  <span class="hljs-comment">// Check if there is `text` property</span>
+  <span class="hljs-keyword">if</span>(!data.text) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BadRequest(<span class="hljs-string">'Message text must exist'</span>);
+  }
+
+  <span class="hljs-comment">// Check if it is a string and not just whitespace</span>
+  <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> data.text !== <span class="hljs-string">'string'</span> || data.text.trim() === <span
+                        class="hljs-string">''</span>) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BadRequest(<span class="hljs-string">'Message text is invalid'</span>);
+  }
+
+  <span class="hljs-comment">// Change the data to be only the text</span>
+  <span class="hljs-comment">// This prevents people from adding other properties to our database</span>
+  context.data = {
+    text: data.text.toString()
+  }
+
+  <span class="hljs-keyword">return</span> context;
+};
+
+app.service(<span class="hljs-string">'messages'</span>).hooks({
+  before: {
+    create: validate,
+    update: validate,
+    patch: validate
+  }
+});
+</code></pre>
+        <blockquote>
+            <p><strong>Note:</strong> Throwing an appropriate <a href="../../api/errors.html">Feathers errors</a> allows
+                to add more information and return the correct HTTP status code.</p>
+        </blockquote>
+        <h2 id="application-hooks">Application hooks<a class="anchorjs-link " href="#application-hooks"
+                                                       aria-label="Anchor link for: application hooks"
+                                                       data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>Sometimes we want to automatically add a hook to every service in our Feathers application. This is what
+            application hooks can be used for. They work the same as service specific hooks but run in a more specific
+            order:</p>
+        <ul>
+            <li><code>before</code> application hooks will always run <em>before</em> all service <code>before</code>
+                hooks
+            </li>
+            <li><code>after</code> application hooks will always run <em>after</em> all service <code>after</code> hooks
+            </li>
+            <li><code>error</code> application hooks will always run <em>after</em> all service <code>error</code> hooks
+            </li>
+        </ul>
+        <h2 id="error-logging">Error logging<a class="anchorjs-link " href="#error-logging"
+                                               aria-label="Anchor link for: error logging" data-anchorjs-icon="#"
+                                               style="padding-left: 0.375em;"></a></h2>
+        <p>A good use for application hooks is to log any service method call error. The following example logs every
+            service method error with the path and method name as well as the error stack:</p>
+        <pre><code class="lang-js">app.hooks({
+  error: <span class="hljs-keyword">async</span> context =&gt; {
+    <span class="hljs-built_in">console</span>.error(<span class="hljs-string">`Error in '<span class="hljs-subst">${context.path}</span>' service method '<span
+                            class="hljs-subst">${context.method}</span>'`</span>, context.error.stack);
+  }
+});
+</code></pre>
+    </section>
+{% endblock %}

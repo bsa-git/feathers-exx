@@ -1,0 +1,14 @@
+<section>
+    <hr>
+    <h3>Client Example Output</h3>
+    <span>Available data of service "messages" (http://localhost:3030/messages): </span>
+    <ul style="list-style: none;">
+        [
+        {% for message in messages %}
+            <li>
+                <p>{ id: {{ message.id }}, text: '{{ message.text }}' }{% if not loop.last %},{% endif %}</p>
+            </li>
+        {% endfor %}
+        ]
+    </ul>
+</section>

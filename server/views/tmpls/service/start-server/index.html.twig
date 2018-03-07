@@ -1,0 +1,57 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+        <h2 id="your-first-app">Your first app<a class="anchorjs-link " href="#your-first-app"
+                                                 aria-label="Anchor link for: your first app" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h2>
+        <p>The base of any Feathers application is the <a href="https://docs.feathersjs.com/api/application.html">app object</a> which can be
+            created like this:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> app = feathers();
+</code></pre>
+        <p>This application object has several methods, most importantly it allows us to register services. We will
+            learn more about services in the next chapter, for now let's register and use a simple service that has only
+            a <code>get</code> method by creating an <code>app.js</code> file (in the current folder) like this:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> app = feathers();
+
+<span class="hljs-comment">// Register a simple todo service that return the name and a text</span>
+app.use(<span class="hljs-string">'todos'</span>, {
+  <span class="hljs-keyword">async</span> get(name) {
+    <span class="hljs-comment">// Return an object in the form of { name, text }</span>
+    <span class="hljs-keyword">return</span> {
+      name,
+      text: <span class="hljs-string">`You have to do <span class="hljs-subst">${name}</span>`</span>
+    };
+  }
+});
+
+<span class="hljs-comment">// A function that gets and logs a todo from the service</span>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span
+                            class="hljs-title">getTodo</span>(<span class="hljs-params">name</span>) </span>{
+  <span class="hljs-comment">// Get the service we registered above</span>
+  <span class="hljs-keyword">const</span> service = app.service(<span class="hljs-string">'todos'</span>);
+  <span class="hljs-comment">// Call the `get` method with a name</span>
+  <span class="hljs-keyword">const</span> todo = <span class="hljs-keyword">await</span> service.get(name);
+
+  <span class="hljs-comment">// Log the todo we got back</span>
+  <span class="hljs-built_in">console</span>.log(todo);
+}
+
+getTodo(<span class="hljs-string">'dishes'</span>);
+</code></pre>
+        <p>We can run it with</p>
+        <pre><code>node app.js
+</code></pre>
+        <p>And should see</p>
+        <pre><code class="lang-js">{ name: <span class="hljs-string">'dishes'</span>, text: <span class="hljs-string">'You have to do dishes'</span> }
+</code></pre>
+        <blockquote>
+            <p><strong>Pro tip:</strong> For more information about the Feathers application object see the <a
+                        href="https://docs.feathersjs.com/api/application.html">Application API documentation</a>.</p>
+        </blockquote>
+    </section>
+{% endblock %}

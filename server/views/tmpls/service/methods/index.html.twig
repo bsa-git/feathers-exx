@@ -1,0 +1,40 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+        <h2 id="using-services">Using services<a class="anchorjs-link " href="#using-services"
+                                                 aria-label="Anchor link for: using services" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h2>
+        <p>A service object can be registered on a Feathers application by calling <code>app.use(path, service)</code>.
+            <code>path</code> will be the name of the service (and the URL if it is exposed as an API which we will
+            learn later).</p>
+        <p>We can retrieve that service via <code>app.service(path)</code> and then call any of its service methods. Add
+            the following to the end of <code>app.js</code>, look in the section "About":</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span
+                            class="hljs-keyword">function</span> <span class="hljs-title">processMessages</span>(<span
+                            class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">await</span> app.service(<span class="hljs-string">'messages'</span>).create({
+    text: <span class="hljs-string">'First message'</span>
+  });
+
+  <span class="hljs-keyword">await</span> app.service(<span class="hljs-string">'messages'</span>).create({
+    text: <span class="hljs-string">'Second message'</span>
+  });
+
+  <span class="hljs-keyword">const</span> messageList = <span class="hljs-keyword">await</span> app.service(<span
+                        class="hljs-string">'messages'</span>).find();
+
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Available messages'</span>, messageList);
+}
+
+processMessages();
+</code></pre>
+        <p>And run it with</p>
+        <pre><code>node app.js
+</code></pre>
+        <p>We should see this:</p>
+        <pre><code>Available messages [ { id: 0, text: 'First message' },
+  { id: 1, text: 'Second message' } ]
+</code></pre>
+    </section>
+{% endblock %}

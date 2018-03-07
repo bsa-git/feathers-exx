@@ -1,0 +1,86 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+        <h2 id="in-the-browser">In the browser<a class="anchorjs-link " href="#in-the-browser"
+                                                 aria-label="Anchor link for: in the browser" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h2>
+        <p>The Feathers application we created above can also run just the same in the browser. The easiest way to load
+            Feathers here is through a <code>&lt;script&gt;</code> tag pointing to the CDN version of Feathers. Loading
+            it will make a <code>feathers</code> global variable available.</p>
+        <p>Let's put the browser files into a new folder</p>
+        <pre><code>mkdir public
+</code></pre>
+        <p>We will also need to host the folder with a webserver. This can be done with any webserver like Apache or
+            with the <a href="https://www.npmjs.com/package/http-server" target="_blank">http-server module</a> that we
+            can install and host the <code>public/</code> folder like this:</p>
+        <pre><code>npm install http-server -g
+http-server public/
+</code></pre>
+        <blockquote>
+            <p><strong>Note:</strong> You have to keep this server running for all browser examples in the basics guide
+                to work.</p>
+        </blockquote>
+        <p>In the <code>public/</code> folder we add two files, an <code>index.html</code> that will load Feathers:</p>
+        <pre><code class="lang-html"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span
+            class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span
+              class="hljs-string">"UTF-8"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Feathers Basics<span
+                        class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Welcome to Feathers<span class="hljs-tag">&lt;/<span
+                            class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Open up the console in your browser.<span
+                        class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span
+              class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//unpkg.com/@feathersjs/client@^3.0.0/dist/feathers.js"</span>&gt;</span><span
+                        class="undefined"></span><span class="hljs-tag">&lt;/<span
+                            class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span
+              class="hljs-string">"client.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span
+                            class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
+        <p>And an <code>client.js</code> looking like this:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> app = feathers();
+
+<span class="hljs-comment">// Register a simple todo service that return the name and a text</span>
+app.use(<span class="hljs-string">'todos'</span>, {
+  <span class="hljs-keyword">async</span> get(name) {
+    <span class="hljs-comment">// Return an object in the form of { name, text }</span>
+    <span class="hljs-keyword">return</span> {
+      name,
+      text: <span class="hljs-string">`You have to do <span class="hljs-subst">${name}</span>`</span>
+    };
+  }
+});
+
+<span class="hljs-comment">// A function that gets and logs a todo from the service</span>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span
+                            class="hljs-title">logTodo</span>(<span class="hljs-params">name</span>) </span>{
+  <span class="hljs-comment">// Get the service we registered above</span>
+  <span class="hljs-keyword">const</span> service = app.service(<span class="hljs-string">'todos'</span>);
+  <span class="hljs-comment">// Call the `get` method with a name</span>
+  <span class="hljs-keyword">const</span> todo = <span class="hljs-keyword">await</span> service.get(name);
+
+  <span class="hljs-comment">// Log the todo we got back</span>
+  <span class="hljs-built_in">console</span>.log(todo);
+}
+
+logTodo(<span class="hljs-string">'dishes'</span>);
+</code></pre>
+        <p>You may notice that it is pretty much the same as our <code>app.js</code> for Node except the missing <code>feathers</code>
+            import (since it is already available as a global variable).</p>
+        <p>If you now go to <a href="http://localhost:8080" target="_blank">localhost:8080</a> with the console open you
+            will also see the result logged.</p>
+        <blockquote>
+            <p><strong>Note:</strong> You can also load Feathers with a module loader like Webpack or Browserify. For
+                more information see the <a href="https://docs.feathersjs.com/api/client.html">client API chapter</a>.</p>
+        </blockquote>
+    </section>
+{% endblock %}

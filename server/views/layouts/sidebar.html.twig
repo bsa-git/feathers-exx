@@ -1,0 +1,42 @@
+{% extends 'layouts/default.html.twig' %}
+{% block sidebar %}
+    <div id="sidebar-nav">
+        <div class="container">
+            <div class="tabs is-boxed">
+                <ul>
+                    {% for controller in controllers %}
+                        <li class="{% if req.controller == controller.name %}is-active{% endif %}">
+                            <a href="/{{ controller.name }}/about">
+                                <span class="icon is-small"><i class="fas {{ controller.icon }}"></i></span>
+                                <span>{{ controller.value }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <section id="sidebar-content" class="container">
+        <div class="columns">
+            <div class="column is-3">
+                <aside class="menu">
+                    <p class="menu-label">
+                        <strong class="is-size-4 has-text-primary has-text-weight-light">Actions</strong>
+                    </p>
+                    <ul class="menu-list">
+                        {% for action in actions[req.controller] %}
+                            <li><a class="{% if req.action == action.name %}is-active{% endif %}" href="{{ action.url }}">{{ action.value }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+            </div>
+            <div class="column is-9">
+                <h1 class="title">{{ title }}</h1>
+                <div class="box content">
+                    {#--- sidebarContent ---#}
+                    {% block sidebar_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

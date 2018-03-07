@@ -1,0 +1,287 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+        <h1 id="services">Services<a class="anchorjs-link " href="#services" aria-label="Anchor link for: services"
+                                     data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h1>
+        <p>Services are the heart of every Feathers application and JavaScript objects or instances of <a
+                    href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes" target="_blank">a
+                class</a> that implement certain methods. Services provide a uniform, protocol independent interface for
+            how to interact with any kind of data like:</p>
+        <ul>
+            <li>Reading and/or writing from a database</li>
+            <li>Interacting with the file system</li>
+            <li>Call another API</li>
+            <li>Call other services like
+                <ul>
+                    <li>Sending an email</li>
+                    <li>Processing a payment</li>
+                    <li>Returning the current weather for a location, etc.</li>
+                </ul>
+            </li>
+        </ul>
+        <p>Protocol independent means that to a Feathers service it does not matter if it has been called internally,
+            through a REST API or websockets (both of which we will look at later) or any other way.</p>
+        <h2 id="service-methods">Service methods<a class="anchorjs-link " href="#service-methods"
+                                                   aria-label="Anchor link for: service methods" data-anchorjs-icon="#"
+                                                   style="padding-left: 0.375em;"></a></h2>
+        <p>Service methods are <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete" target="_blank">CRUD</a>
+            methods that a service object can implement. Feathers service methods are:</p>
+        <ul>
+            <li><code>find</code> - Find all data (potentially matching a query)</li>
+            <li><code>get</code> - Get a single data entry by its unique identifier</li>
+            <li><code>create</code> - Create new data</li>
+            <li><code>update</code> - Update an existing data entry by completely replacing it</li>
+            <li><code>patch</code> - Update one or more data entries by merging with the new data</li>
+            <li><code>remove</code> - Remove one or more existing data entries</li>
+        </ul>
+        <p>Below is an example of Feathers service interface as a normal object and a JavaScript class:</p>
+        <p></p>
+        <div class="codetabs">
+            <div class="codetabs-header">
+                <p class="tab active" data-codetab="0">Object/Class</p>
+                {#<div class="tab" data-codetab="1">Class</div>#}
+            </div>
+            <div class="codetabs-body">
+                <div class="tab active" data-codetab="0"><pre><code class="lang-js"><span
+                                    class="hljs-keyword">const</span> myService = {
+  <span class="hljs-keyword">async</span> find(params) {
+    <span class="hljs-keyword">return</span> [];
+  },
+  <span class="hljs-keyword">async</span> get(id, params) {},
+  <span class="hljs-keyword">async</span> create(data, params) {},
+  <span class="hljs-keyword">async</span> update(id, data, params) {},
+  <span class="hljs-keyword">async</span> patch(id, data, params) {},
+  <span class="hljs-keyword">async</span> remove(id, params) {}
+}
+
+app.use(<span class="hljs-string">'/my-service'</span>, myService);</code></pre>
+                </div>
+                <div class="tab" data-codetab="1"><pre><code class="lang-js"><span class="hljs-class"><span
+                                        class="hljs-keyword">class</span> <span
+                                        class="hljs-title">myService</span> </span>{
+  <span class="hljs-keyword">async</span> find(params) {
+    <span class="hljs-keyword">return</span> [];
+  }
+  <span class="hljs-keyword">async</span> get(id, params) {}
+  <span class="hljs-keyword">async</span> create(data, params) {}
+  <span class="hljs-keyword">async</span> update(id, data, params) {}
+  <span class="hljs-keyword">async</span> patch(id, data, params) {}
+  <span class="hljs-keyword">async</span> remove(id, params) {}
+}
+
+app.use(<span class="hljs-string">'/my-service'</span>, <span class="hljs-keyword">new</span> myService());</code></pre>
+                </div>
+            </div>
+        </div>
+        <p></p>
+        <p>The parameters for service methods are:</p>
+        <ul>
+            <li><code>id</code> - The unique identifier for the data</li>
+            <li><code>data</code> - The data sent by the user (for creating and updating)</li>
+            <li><code>params</code> (<em>optional</em>) - Additional parameters, for example the authenticated user or
+                the query
+            </li>
+        </ul>
+        <blockquote>
+            <p><strong>Note:</strong> A service does not have to implement all those methods but must have at least one.
+            </p>
+        </blockquote>
+        <!-- -->
+        <blockquote>
+            <p><strong>Pro tip:</strong> For more information about service, service methods and parameters see the <a
+                        href="https://docs.feathersjs.com/api/services.html">Service API documentation</a>.</p>
+        </blockquote>
+        <h2 id="a-messages-service">A messages service<a class="anchorjs-link " href="#a-messages-service"
+                                                         aria-label="Anchor link for: a messages service"
+                                                         data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>Now that we know how service methods look like we can implement our own chat message service that allows us
+            to find, create, remove and update messages in-memory. Here we will use a JavaScript class to work with our
+            messages but as we've seen above it could also be a normal object.</p>
+        <p>Below is the complete updated <code>app.js</code> with comments:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Messages</span> </span>{
+  <span class="hljs-keyword">constructor</span>() {
+    <span class="hljs-keyword">this</span>.messages = [];
+    <span class="hljs-keyword">this</span>.currentId = <span class="hljs-number">0</span>;
+  }
+
+  <span class="hljs-keyword">async</span> find(params) {
+    <span class="hljs-comment">// Return the list of all messages</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.messages;
+  }
+
+  <span class="hljs-keyword">async</span> get(id, params) {
+    <span class="hljs-comment">// Find the message by id</span>
+    <span class="hljs-keyword">const</span> message = <span class="hljs-keyword">this</span>.messages.find(message =&gt; message.id === <span
+                        class="hljs-built_in">parseInt</span>(id, <span class="hljs-number">10</span>));
+
+    <span class="hljs-comment">// Throw an error if it wasn't found</span>
+    <span class="hljs-keyword">if</span>(!message) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span
+                        class="hljs-built_in">Error</span>(<span class="hljs-string">`Message with id <span
+                            class="hljs-subst">${id}</span> not found`</span>);
+    }
+
+    <span class="hljs-comment">// Otherwise return the message</span>
+    <span class="hljs-keyword">return</span> message;
+  }
+
+  <span class="hljs-keyword">async</span> create(data, params) {
+    <span class="hljs-comment">// Create a new object with the original data and an id</span>
+    <span class="hljs-comment">// taken from the incrementing `currentId` counter</span>
+    <span class="hljs-keyword">const</span> message = <span class="hljs-built_in">Object</span>.assign({
+      id: ++<span class="hljs-keyword">this</span>.currentId
+    }, data);
+
+    <span class="hljs-keyword">this</span>.messages.push(message);
+
+    <span class="hljs-keyword">return</span> message;
+  }
+
+  <span class="hljs-keyword">async</span> patch(id, data, params) {
+    <span class="hljs-comment">// Get the existing message. Will throw an error if not found</span>
+    <span class="hljs-keyword">const</span> message = <span class="hljs-keyword">await</span> <span
+                        class="hljs-keyword">this</span>.get(id);
+
+    <span class="hljs-comment">// Merge the existing message with the new data</span>
+    <span class="hljs-comment">// and return the result</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.assign(message, data);
+  }
+
+  <span class="hljs-keyword">async</span> remove(id, params) {
+    <span class="hljs-comment">// Get the message by id (will throw an error if not found)</span>
+    <span class="hljs-keyword">const</span> message = <span class="hljs-keyword">await</span> <span
+                        class="hljs-keyword">this</span>.get(id);
+    <span class="hljs-comment">// Find the index of the message in our message array</span>
+    <span class="hljs-keyword">const</span> index = <span class="hljs-keyword">this</span>.messages.indexOf(message);
+
+    <span class="hljs-comment">// Remove the found message from our array</span>
+    <span class="hljs-keyword">this</span>.messages.splice(index, <span class="hljs-number">1</span>);
+
+    <span class="hljs-comment">// Return the removed message</span>
+    <span class="hljs-keyword">return</span> message;
+  }
+}
+
+<span class="hljs-keyword">const</span> app = feathers();
+
+<span class="hljs-comment">// Initialize the messages service by creating</span>
+<span class="hljs-comment">// a new instance of our class</span>
+app.use(<span class="hljs-string">'messages'</span>, <span class="hljs-keyword">new</span> Messages());
+</code></pre>
+        <h2 id="using-services">Using services<a class="anchorjs-link " href="#using-services"
+                                                 aria-label="Anchor link for: using services" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h2>
+        <p>A service object can be registered on a Feathers application by calling <code>app.use(path, service)</code>.
+            <code>path</code> will be the name of the service (and the URL if it is exposed as an API which we will
+            learn later).</p>
+        <p>We can retrieve that service via <code>app.service(path)</code> and then call any of its service methods. Add
+            the following to the end of <code>app.js</code>:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span
+                            class="hljs-keyword">function</span> <span class="hljs-title">processMessages</span>(<span
+                            class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">await</span> app.service(<span class="hljs-string">'messages'</span>).create({
+    text: <span class="hljs-string">'First message'</span>
+  });
+
+  <span class="hljs-keyword">await</span> app.service(<span class="hljs-string">'messages'</span>).create({
+    text: <span class="hljs-string">'Second message'</span>
+  });
+
+  <span class="hljs-keyword">const</span> messageList = <span class="hljs-keyword">await</span> app.service(<span
+                        class="hljs-string">'messages'</span>).find();
+
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Available messages'</span>, messageList);
+}
+
+processMessages();
+</code></pre>
+        <p>And run it with</p>
+        <pre><code>node app.js
+</code></pre>
+        <p>We should see this:</p>
+        <pre><code>Available messages [ { id: 0, text: 'First message' },
+  { id: 1, text: 'Second message' } ]
+</code></pre>
+        <h2 id="service-events">Service events<a class="anchorjs-link " href="#service-events"
+                                                 aria-label="Anchor link for: service events" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h2>
+        <p>When you register a service it will automatically become a <a href="https://nodejs.org/api/events.html"
+                                                                         target="_blank">NodeJS EventEmitter</a> that
+            sends events with the new data when a service method that modifies data (<code>create</code>,
+            <code>update</code>, <code>patch</code> and <code>remove</code>) returns. Events can be listened to with
+            <code>app.service('messages').on('eventName', data =&gt; {})</code>. Here is a list of the service methods
+            and their corresponding events:</p>
+        <table>
+            <thead>
+            <tr>
+                <th>Service method</th>
+                <th>Service event</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><code>service.create()</code></td>
+                <td><code>service.on('created')</code></td>
+            </tr>
+            <tr>
+                <td><code>service.update()</code></td>
+                <td><code>service.on('updated')</code></td>
+            </tr>
+            <tr>
+                <td><code>service.patch()</code></td>
+                <td><code>service.on('patched')</code></td>
+            </tr>
+            <tr>
+                <td><code>service.remove()</code></td>
+                <td><code>service.on('removed')</code></td>
+            </tr>
+            </tbody>
+        </table>
+        <p>We will see later that this is the key to how Feathers enables real-time functionality. For now, let's update
+            the <code>processMessages</code> function in <code>app.js</code> as follows:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span
+                            class="hljs-keyword">function</span> <span class="hljs-title">processMessages</span>(<span
+                            class="hljs-params"></span>) </span>{
+  app.service(<span class="hljs-string">'messages'</span>).on(<span class="hljs-string">'created'</span>, message =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Created a new message'</span>, message);
+  });
+
+  app.service(<span class="hljs-string">'messages'</span>).on(<span class="hljs-string">'removed'</span>, message =&gt; {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Deleted message'</span>, message);
+  });
+
+  <span class="hljs-keyword">await</span> app.service(<span class="hljs-string">'messages'</span>).create({
+    text: <span class="hljs-string">'First message'</span>
+  });
+
+  <span class="hljs-keyword">const</span> lastMessage = <span class="hljs-keyword">await</span> app.service(<span
+                        class="hljs-string">'messages'</span>).create({
+    text: <span class="hljs-string">'Second message'</span>
+  });
+
+  <span class="hljs-comment">// Remove the message we just created</span>
+  <span class="hljs-keyword">await</span> app.service(<span class="hljs-string">'messages'</span>).remove(lastMessage.id);
+
+  <span class="hljs-keyword">const</span> messageList = <span class="hljs-keyword">await</span> app.service(<span
+                        class="hljs-string">'messages'</span>).find();
+
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Available messages'</span>, messageList);
+}
+
+processMessages();
+</code></pre>
+        <p>If we now run the file via</p>
+        <pre><code>node app.js
+</code></pre>
+        <p>We will see how the event handlers are logging the information of created and deleted message like this:</p>
+        <pre><code>Created a new message { id: 0, text: 'First message' }
+Created a new message { id: 1, text: 'Second message' }
+Deleted message { id: 1, text: 'Second message' }
+Available messages [ { id: 0, text: 'First message' } ]
+</code></pre>
+    </section>
+{% endblock %}

@@ -1,0 +1,14 @@
+<article class="message is-danger">
+    <div class="message-header">
+        <p>{% if error.name %}{{ error.name }}{% else %}Error{% endif %}</p>
+        <button class="delete" aria-label="delete"></button>
+    </div>
+    <div class="message-body content">
+        <div class="has-text-centered">
+            <h1><strong>{{ error.message }}</strong></h1>
+            <h2>{% if error.code %}Code: {{ error.code }}; {% endif %}{% if error.type %}Type: {{ error.type }}; {% endif %}</h2>
+        </div>
+        <pre>{{ error.stack }}</pre>
+    </div>
+</article>
+

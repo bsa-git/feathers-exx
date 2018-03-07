@@ -1,0 +1,26 @@
+//--- Base style ---//
+@import "../mixins";
+
+//--- Set user UI ---//
+
+// Exotic font
+@include exotic-font;
+
+// Common style
+@include common-style;
+
+// Darkly theme
+@include darkly-theme;
+
+// Highlight.js style
+@import "../highlight/xcode.css";
+
+//--- Import the initial theme variables ---//
+@import "../../../../node_modules/bulmaswatch/darkly/variables";
+//--- Import the rest of Bulma ---//
+@import "../../../../node_modules/bulma/bulma";
+//--- Import the theme overrides ---//
+@import "../../../../node_modules/bulmaswatch/darkly/overrides";
+
+
+

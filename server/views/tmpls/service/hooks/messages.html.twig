@@ -1,0 +1,14 @@
+<section>
+    <h3>Server Example Output</h3>
+    <span>Available messages: </span>
+    <ul style="list-style: none;">
+        [
+        {% for message in messages %}
+            <li>
+                <p>{ id: {{ message.id }}, text: "{{ message.text }}", {% if message.createdAt %}createdAt: "{{ message.createdAt }}" {% endif %}{% if message.updatedAt %}, updatedAt: "{{ message.updatedAt }}"{% endif %} }{% if not loop.last %},{% endif %}</p>
+            </li>
+        {% endfor %}
+        ]
+    </ul>
+    <p class="has-text-centered"><a class="button is-link" href="/service/hooks/err">Validation error</a></p>
+</section>

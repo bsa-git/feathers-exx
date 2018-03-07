@@ -1,0 +1,5 @@
+<div class="has-text-centered">
+    <h1><strong>{{ error.message }}</strong></h1>
+    <h2>{% if error.code %}Code: {{ error.code }}; {% endif %}{% if error.type %}Type: {{ error.type }}; {% endif %}</h2>
+</div>
+<pre>{{ error.stack }}</pre>
