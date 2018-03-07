@@ -1,8 +1,6 @@
 "use strict";
 
 import Service from '../controllers/service.class'
-// import axios from 'axios'
-import fetch from 'cross-fetch';
 
 class ServiceRouter {
     constructor(client) {
