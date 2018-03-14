@@ -28,10 +28,10 @@ class Bulma {
         if ($deleteButtons.length > 0) {
             // Add a click event on each of them
             for (let i = 0, len = $deleteButtons.length; i < len; i++) {
-                const $deleteButton =  $deleteButtons[i];
+                let $deleteButton =  $deleteButtons[i];
                 $deleteButton.addEventListener('click', function () {
                     // Get element for id
-                    const $msg = document.getElementById(id);
+                    let $msg = document.getElementById(id);
                     // Add class 'is-hidden'
                     $msg.classList.add('is-hidden');
                 });
@@ -46,11 +46,11 @@ class Bulma {
         if ($navbarBurgers.length > 0) {
             // Add a click event on each of them
             for (let i = 0, len = $navbarBurgers.length; i < len; i++) {
-                const $el =  $navbarBurgers[i];
+                let $el =  $navbarBurgers[i];
                 $el.addEventListener('click', function () {
                     // Get the target from the "data-target" attribute
-                    const target = $el.dataset.target;
-                    const $target = document.getElementById(target);
+                    let target = $el.dataset.target;
+                    let $target = document.getElementById(target);
                     // Toggle the class on both the "navbar-burger" and the "navbar-menu"
                     $el.classList.toggle('is-active');
                     $target.classList.toggle('is-active');
@@ -67,7 +67,7 @@ class Bulma {
         if ($elms.length > 0) {
             // Is class
             for (let i = 0, len = $elms.length; i < len; i++) {
-                const $el =  $elms[i];
+                let $el =  $elms[i];
                 _isClass = $el.classList.contains(className);
             }
         }
@@ -113,13 +113,24 @@ class Bulma {
             if ($elms.length > 0) {
                 // Add my message to message-box
                 for (let i = 0, len = $elms.length; i < len; i++) {
-                    const $el =  $elms[i];
-                    const _message =  $el.innerHTML;
+                    let $el =  $elms[i];
+                    let _message =  $el.innerHTML;
                     $el.innerHTML = _message +  message;
                     if(self.isClass(`#${self.opts.idMsgBox}`, 'is-hidden')){
                         $msg.classList.toggle('is-hidden');
                     }
                 }
+            }
+        }
+    }
+
+    addListener(query, cb){
+        const $elms = Array.prototype.slice.call(document.querySelectorAll(query), 0);
+        if ($elms.length > 0) {
+            // Add a click event on each of them
+            for (let i = 0, len = $elms.length; i < len; i++) {
+                let $elm =  $elms[i];
+                $elm.addEventListener('click', cb);
             }
         }
     }
@@ -130,13 +141,8 @@ class Bulma {
         // Check if there are any query items
         if ($elms.length > 0) {
             // Remove class
-            $elms.forEach(function ($el) {
-                if($el.classList.contains(classForRemove)){
-                    $el.classList.remove(classForRemove);
-                }
-            });
             for (let i = 0, len = $elms.length; i < len; i++) {
-                const $el =  $elms[i];
+                let $el =  $elms[i];
                 if($el.classList.contains(classForRemove)){
                     $el.classList.remove(classForRemove);
                 }

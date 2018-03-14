@@ -21,59 +21,52 @@ class ServiceRouter {
     }
 
     /**
-     * Our first Feathers application on client
-     * @param name String
+     * REST and services
      * @return Promise
      */
     async serviceRestApis() {
-        // Find message
-        const url = `${this.client.req.protocol}//${this.client.req.hostname}:${this.client.config.app.exxPort}/messages`;
-        console.log(`HttpBox.get url: `, url);
-        let messages = await this.client.req.get(url);
-        console.log(`HttpBox.get response: `, messages);
-        // Render twig template
-        const template = require('../tmpls/service/rest-apis/messages.html.twig');
-        const html = template({messages, port: 1234});
-        this.client.bulma.addMessage(html);
-        // Create message
-        messages = await this.client.req.post('http://localhost:3030/messages',{text: 'Client message'});
-        console.log(`HttpBox.post response: `, messages);
 
-        // Patch message
-        messages = await this.client.req.patch('http://localhost:3030/messages/4',{text: 'Patch Client message'});
-        console.log(`HttpBox.patch response: `, messages);
+        // // Add listener for 'create button'
+        const cbs = await this.service.restApis();
+        this.client.bulma.addListener('#create-message', cbs['create']);
 
-        // Update message
-        messages = await this.client.req.put('http://localhost:3030/messages/4',{text: 'Update Client message'});
-        console.log(`HttpBox.put response: `, messages);
+        // Add listener for 'get button'
+        this.client.bulma.addListener('#get-message', cbs['get']);
 
-        // Update message
-        messages = await this.client.req.delete('http://localhost:3030/messages/4');
-        console.log(`HttpBox.delete response: `, messages);
+        // Add listener for 'find button'
+        this.client.bulma.addListener('#find-messages', cbs['find']);
 
-        /*
-        let configFetch = {
-            method: 'GET', // *GET, PUT, DELETE, etc.
-            mode: 'no-cors', // no-cors, *same-origin
-        };
-        let response = await fetch('http://localhost:3030/messages', configFetch);
-        let messages = await response.json();
-        console.log(`HttpBox.get response: `, messages);
+        // Add listener for 'patch button'
+        this.client.bulma.addListener('#patch-message', cbs['patch']);
 
-        let data = {text: 'Client message'};
-        configFetch = {
-            body: JSON.stringify(data), // must match 'Content-Type' header
-            method: 'POST', // *GET, PUT, DELETE, etc.
-            mode: 'no-cors', // no-cors, *same-origin
-            headers: {
-                'content-type': 'application/json'
-            },
-        };
+        // Add listener for 'delete button'
+        this.client.bulma.addListener('#remove-message', cbs['delete']);
 
-        response = await fetch('http://localhost:3030/messages', configFetch);
-        messages = await response.json();
-        console.log(`HttpBox.get response: `, messages);
-        */
+        return 'ok';
+    }
+
+    /**
+     * REST Client
+     * @return Promise
+     */
+    async serviceRestClient() {
+
+        // Add listener for 'create button'
+        const cbs = await this.service.restClient();
+        this.client.bulma.addListener('#create-message', cbs['create']);
+
+        // Add listener for 'get button'
+        this.client.bulma.addListener('#get-message', cbs['get']);
+
+        // Add listener for 'find button'
+        this.client.bulma.addListener('#find-messages', cbs['find']);
+
+        // Add listener for 'patch button'
+        this.client.bulma.addListener('#patch-message', cbs['patch']);
+
+        // Add listener for 'delete button'
+        this.client.bulma.addListener('#remove-message', cbs['delete']);
+
         return 'ok';
     }
 }

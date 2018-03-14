@@ -1,0 +1,297 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+
+
+        <blockquote>
+            <p><strong>Note:</strong> For directly using a Feathers REST API (via HTTP) without using Feathers on the
+                client see the <a href="#http-api">HTTP API</a> section.</p>
+        </blockquote>
+        <h2 id="feathersjsrest-client">@feathersjs/rest-client<a class="anchorjs-link " href="#feathersjsrest-client"
+                                                                 aria-label="Anchor link for: feathersjsrest client"
+                                                                 data-anchorjs-icon="#"
+                                                                 style="padding-left: 0.375em;"></a></h2>
+        <p><a href="https://github.com/feathersjs/rest-client/" target="_blank"><img
+                        src="https://img.shields.io/github/stars/feathersjs/rest-client.png?style=social&amp;label=Star"
+                        alt="GitHub stars"></a>
+            <a href="https://www.npmjs.com/package/@feathersjs/rest-client" target="_blank"><img
+                        src="https://img.shields.io/npm/v/@feathersjs/rest-client.png?style=flat-square"
+                        alt="npm version"></a>
+            <a href="https://github.com/feathersjs/rest-client/blob/master/CHANGELOG.md" target="_blank"><img
+                        src="https://img.shields.io/badge/changelog-.md-blue.png?style=flat-square" alt="Changelog"></a>
+        </p>
+        <pre><code>$ npm install @feathersjs/rest-client --save
+</code></pre>
+        <p><code>@feathersjs/rest-client</code> allows to connect to a service exposed through the <a
+                    href="https://docs.feathersjs.com/api/express.html#expressrest">Express REST API</a> using <a href="https://jquery.com/"
+                                                                                     target="_blank">jQuery</a>, <a
+                    href="https://github.com/request/request" target="_blank">request</a>, <a
+                    href="http://visionmedia.github.io/superagent/" target="_blank">Superagent</a>, <a
+                    href="https://github.com/mzabriskie/axios" target="_blank">Axios</a> or <a
+                    href="https://facebook.github.io/react-native/docs/network.html" target="_blank">Fetch</a> as the
+            AJAX library.</p>
+        <!-- -->
+        <blockquote>
+            <p><strong>ProTip:</strong> REST client services do emit <code>created</code>, <code>updated</code>, <code>patched</code>
+                and <code>removed</code> events but only <em>locally for their own instance</em>. Real-time events from
+                other clients can only be received by using a websocket connection.</p>
+        </blockquote>
+        <!-- -->
+        <blockquote>
+            <p><strong>Note:</strong> A client application can only use a single transport (either REST, Socket.io or
+                Primus). Using two transports in the same client application is normally not necessary.</p>
+        </blockquote>
+        <h3 id="restbaseurl">rest([baseUrl])<a class="anchorjs-link " href="#restbaseurl"
+                                               aria-label="Anchor link for: restbaseurl" data-anchorjs-icon="#"
+                                               style="padding-left: 0.375em;"></a></h3>
+        <p>REST client services can be initialized by loading <code>@feathersjs/rest-client</code> and initializing a
+            client object with a base URL:</p>
+        <p></p>
+        <div class="codetabs">
+            <div class="codetabs-header">
+                <div class="tab active" data-codetab="0">Modular/@feathersjs/client</div>
+            </div>
+            <div class="codetabs-body">
+                <div class="tab active" data-codetab="0"><pre><code class="lang-js"><span
+                                    class="hljs-keyword">const</span> feathers = <span
+                                    class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> rest = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/rest-client'</span>);
+
+<span class="hljs-keyword">const</span> app = feathers();
+
+<span class="hljs-comment">// Connect to the same as the browser URL (only in the browser)</span>
+<span class="hljs-keyword">const</span> restClient = rest();
+
+<span class="hljs-comment">// Connect to a different URL</span>
+<span class="hljs-keyword">const</span> restClient = rest(<span class="hljs-string">'http://feathers-api.com'</span>)
+
+<span class="hljs-comment">// Configure an AJAX library (see below) with that client </span>
+app.configure(restClient.fetch(<span class="hljs-built_in">window</span>.fetch));
+
+<span class="hljs-comment">// Connect to the `http://feathers-api.com/messages` service</span>
+<span class="hljs-keyword">const</span> messages = app.service(<span
+                                    class="hljs-string">'messages'</span>);</code></pre>
+                </div>
+                <div class="tab" data-codetab="1"><pre><code class="lang-html"><span class="hljs-tag">&lt;<span
+                                        class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span
+                                        class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span
+                                        class="hljs-string">"//cdnjs.cloudflare.com/ajax/libs/core-js/2.1.4/core.min.js"</span>&gt;</span><span
+                                    class="undefined"></span><span class="hljs-tag">&lt;/<span
+                                        class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span
+            class="hljs-string">"//unpkg.com/@feathersjs/client@^3.0.0/dist/feathers.js"</span>&gt;</span><span
+                                    class="undefined"></span><span class="hljs-tag">&lt;/<span
+                                        class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+  <span class="hljs-keyword">var</span> app = feathers();
+  <span class="hljs-comment">// Connect to a different URL</span>
+  <span class="hljs-keyword">var</span> restClient = feathers.rest(<span
+                                        class="hljs-string">'http://feathers-api.com'</span>)
+
+  <span class="hljs-comment">// Configure an AJAX library (see below) with that client </span>
+  app.configure(restClient.fetch(<span class="hljs-built_in">window</span>.fetch));
+
+  <span class="hljs-comment">// Connect to the `http://feathers-api.com/messages` service</span>
+  <span class="hljs-keyword">const</span> messages = app.service(<span class="hljs-string">'messages'</span>);
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+                </div>
+            </div>
+        </div>
+        <p></p>
+        <!-- -->
+        <blockquote>
+            <p><strong>ProTip:</strong> In the browser, the base URL is relative from where services are registered.
+                That means that a service at <code>http://api.feathersjs.com/api/v1/messages</code> with a base URL of
+                <code>http://api.feathersjs.com</code> would be available as <code>app.service('api/v1/messages')</code>.
+                With a base URL of <code>http://api.feathersjs.com/api/v1</code> it would be <code>app.service('messages')</code>.
+            </p>
+        </blockquote>
+        <h3 id="paramsheaders">params.headers<a class="anchorjs-link " href="#paramsheaders"
+                                                aria-label="Anchor link for: paramsheaders" data-anchorjs-icon="#"
+                                                style="padding-left: 0.375em;"></a></h3>
+        <p>Request specific headers can be through <code>params.headers</code> in a service call:</p>
+        <pre><code class="lang-js">app.service(<span class="hljs-string">'messages'</span>).create({
+  text: <span class="hljs-string">'A message from a REST client'</span>
+}, {
+  headers: { <span class="hljs-string">'X-Requested-With'</span>: <span class="hljs-string">'FeathersJS'</span> }
+});
+</code></pre>
+        <h3 id="jquery">jQuery<a class="anchorjs-link " href="#jquery" aria-label="Anchor link for: jquery"
+                                 data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>Pass the instance of jQuery (<code>$</code>) to <code>restClient.jquery</code>:</p>
+        <pre><code class="lang-js">app.configure(restClient.jquery(<span class="hljs-built_in">window</span>.jQuery));
+</code></pre>
+        <p>Or with a module loader:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">import</span> $ <span
+                        class="hljs-keyword">from</span> <span class="hljs-string">'jquery'</span>;
+
+app.configure(restClient.jquery($));
+</code></pre>
+        <h3 id="request">Request<a class="anchorjs-link " href="#request" aria-label="Anchor link for: request"
+                                   data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>The <a href="https://github.com/request/request" target="_blank">request</a> object needs to be passed
+            explicitly to <code>feathers.request</code>. Using <a
+                    href="https://github.com/request/request#convenience-methods" target="_blank">request.defaults</a> -
+            which creates a new request object - is a great way to set things like default headers or authentication
+            information:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> request = <span
+                        class="hljs-built_in">require</span>(<span class="hljs-string">'request'</span>);
+<span class="hljs-keyword">const</span> requestClient = request.defaults({
+  <span class="hljs-string">'auth'</span>: {
+    <span class="hljs-string">'user'</span>: <span class="hljs-string">'username'</span>,
+    <span class="hljs-string">'pass'</span>: <span class="hljs-string">'password'</span>,
+    <span class="hljs-string">'sendImmediately'</span>: <span class="hljs-literal">false</span>
+  }
+});
+
+app.configure(restClient.request(requestClient));
+</code></pre>
+        <h3 id="superagent">Superagent<a class="anchorjs-link " href="#superagent"
+                                         aria-label="Anchor link for: superagent" data-anchorjs-icon="#"
+                                         style="padding-left: 0.375em;"></a></h3>
+        <p><a href="http://visionmedia.github.io/superagent/" target="_blank">Superagent</a> currently works with a
+            default configuration:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> superagent = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'superagent'</span>);
+
+app.configure(restClient.superagent(superagent));
+</code></pre>
+        <h3 id="axios">Axios<a class="anchorjs-link " href="#axios" aria-label="Anchor link for: axios"
+                               data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p><a href="http://github.com/mzabriskie/axios" target="_blank">Axios</a> currently works with a default
+            configuration:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> axios = <span
+                        class="hljs-built_in">require</span>(<span class="hljs-string">'axios'</span>);
+
+app.configure(restClient.axios(axios));
+</code></pre>
+        <h3 id="fetch">Fetch<a class="anchorjs-link " href="#fetch" aria-label="Anchor link for: fetch"
+                               data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>Fetch also uses a default configuration:</p>
+        <pre><code class="lang-js"><span class="hljs-comment">// In Node</span>
+<span class="hljs-keyword">const</span> fetch = <span class="hljs-built_in">require</span>(<span class="hljs-string">'node-fetch'</span>);
+
+app.configure(restClient.fetch(fetch));
+
+<span class="hljs-comment">// In modern browsers</span>
+app.configure(restClient.fetch(<span class="hljs-built_in">window</span>.fetch));
+</code></pre>
+        <h2 id="http-api">HTTP API<a class="anchorjs-link " href="#http-api" aria-label="Anchor link for: http api"
+                                     data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>You can communicate with a Feathers REST API using any other HTTP REST client. The following section
+            describes what HTTP method, body and query parameters belong to which service method call.</p>
+        <p>All query parameters in a URL will be set as <code>params.query</code> on the server. Other service
+            parameters can be set through <a href="https://docs.feathersjs.com/api/hooks.html">hooks</a> and <a href="https://docs.feathersjs.com/api/express.html">Express
+                middleware</a>. URL query parameter values will always be strings. Conversion (e.g. the string <code>'true'</code>
+            to boolean <code>true</code>) can be done in a hook as well.</p>
+        <p>The body type for <code>POST</code>, <code>PUT</code> and <code>PATCH</code> requests is determined by the
+            Express <a href="http://expressjs.com/en/4x/api.html#express.json" target="_blank">body-parser</a>
+            middleware which has to be registered <em>before</em> any service. You should also make sure you are setting
+            your <code>Accept</code> header to <code>application/json</code>.</p>
+        <h3 id="authentication">Authentication<a class="anchorjs-link " href="#authentication"
+                                                 aria-label="Anchor link for: authentication" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h3>
+        <p>Authenticating HTTP (REST) requests is a two step process. First you have to obtain a JWT from the <a
+                    href="https://docs.feathersjs.com/api/authentication/server.html">authentication service</a> by POSTing the strategy you want to
+            use:</p>
+        <pre><code class="lang-json"><span class="hljs-comment">// POST /authentication the Content-Type header set to application/json</span>
+{
+  <span class="hljs-string">"strategy"</span>: <span class="hljs-string">"local"</span>,
+  <span class="hljs-string">"email"</span>: <span class="hljs-string">"your email"</span>,
+  <span class="hljs-string">"password"</span>: <span class="hljs-string">"your password"</span>
+}
+</code></pre>
+        <p>Here is what that looks like with curl:</p>
+        <pre><code class="lang-bash">curl -H <span
+                        class="hljs-string">"Content-Type: application/json"</span> -X POST <span
+                        class="hljs-_">-d</span> <span class="hljs-string">'{"strategy":"local","email":"your email","password":"your password"}'</span> http://localhost:3030/authentication
+</code></pre>
+        <p>Then to authenticate subsequent requests, add the returned <code>accessToken</code> to the <code>Authorization</code>
+            header:</p>
+        <pre><code class="lang-bash">curl -H <span class="hljs-string">"Content-Type: application/json"</span> -H <span
+                        class="hljs-string">"Authorization: &lt;your access token&gt;"</span> -X POST http://localhost:3030/authentication
+</code></pre>
+        <p>Also see the <a href="https://docs.feathersjs.com/api/authentication/jwt.html">JWT</a> and <a
+                    href="https://docs.feathersjs.com/api/authentication/local.html">local</a> authentication chapter.</p>
+        <h3 id="find">find<a class="anchorjs-link " href="#find" aria-label="Anchor link for: find"
+                             data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>Retrieves a list of all matching resources from the service</p>
+        <pre><code>GET /messages?status=read&amp;user=10
+</code></pre>
+        <p>Will call <code>messages.find({ query: { status: 'read', user: '10' } })</code> on the server.</p>
+        <p>If you want to use any of the built-in find operands ($le, $lt, $ne, $eq, $in, etc.) the general format is as
+            follows:</p>
+        <pre><code>GET /messages?field[$operand]=value&amp;field[$operand]=value2
+</code></pre>
+        <p>For example, to find the records where field <em>status</em> is not equal to <strong>active</strong> you
+            could do</p>
+        <pre><code>GET /messages?status[$ne]=active
+</code></pre>
+        <p>More information about the possible parameters for official database adapters can be found <a
+                    href="https://docs.feathersjs.com/api/databases/querying.html">in the database querying section</a>.</p>
+        <h3 id="get">get<a class="anchorjs-link " href="#get" aria-label="Anchor link for: get" data-anchorjs-icon="#"
+                           style="padding-left: 0.375em;"></a></h3>
+        <p>Retrieve a single resource from the service.</p>
+        <pre><code>GET /messages/1
+</code></pre>
+        <p>Will call <code>messages.get(1, {})</code> on the server.</p>
+        <pre><code>GET /messages/1?fetch=all
+</code></pre>
+        <p>Will call <code>messages.get(1, { query: { fetch: 'all' } })</code> on the server.</p>
+        <h3 id="create">create<a class="anchorjs-link " href="#create" aria-label="Anchor link for: create"
+                                 data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>Create a new resource with <code>data</code> which may also be an array.</p>
+        <pre><code>POST /messages
+{ "text": "I really have to iron" }
+</code></pre>
+        <p>Will call <code>messages.create({ "text": "I really have to iron" }, {})</code> on the server.</p>
+        <pre><code>POST /messages
+[
+  { "text": "I really have to iron" },
+  { "text": "Do laundry" }
+]
+</code></pre>
+        <h3 id="update">update<a class="anchorjs-link " href="#update" aria-label="Anchor link for: update"
+                                 data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>Completely replace a single or multiple resources.</p>
+        <pre><code>PUT /messages/2
+{ "text": "I really have to do laundry" }
+</code></pre>
+        <p>Will call <code>messages.update(2, { "text": "I really have to do laundry" }, {})</code> on the server. When
+            no <code>id</code> is given by sending the request directly to the endpoint something like:</p>
+        <pre><code>PUT /messages?complete=false
+{ "complete": true }
+</code></pre>
+        <p>Will call <code>messages.update(null, { "complete": true }, { query: { complete: 'false' } })</code> on the
+            server.</p>
+        <blockquote>
+            <p><strong>ProTip:</strong> <code>update</code> is normally expected to replace an entire resource which is
+                why the database adapters only support <code>patch</code> for multiple records.</p>
+        </blockquote>
+        <h3 id="patch">patch<a class="anchorjs-link " href="#patch" aria-label="Anchor link for: patch"
+                               data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>Merge the existing data of a single or multiple resources with the new <code>data</code>.</p>
+        <pre><code>PATCH /messages/2
+{ "read": true }
+</code></pre>
+        <p>Will call <code>messages.patch(2, { "read": true }, {})</code> on the server. When no <code>id</code> is
+            given by sending the request directly to the endpoint something like:</p>
+        <pre><code>PATCH /messages?complete=false
+{ "complete": true }
+</code></pre>
+        <p>Will call <code>messages.patch(null, { complete: true }, { query: { complete: 'false' } })</code> on the
+            server to change the status for all read messages.</p>
+        <p>This is supported out of the box by the Feathers <a href="https://docs.feathersjs.com/api/databases/readme.md">database adapters</a></p>
+        <h3 id="remove">remove<a class="anchorjs-link " href="#remove" aria-label="Anchor link for: remove"
+                                 data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>Remove a single or multiple resources:</p>
+        <pre><code>DELETE /messages/2?cascade=true
+</code></pre>
+        <p>Will call <code>messages.remove(2, { query: { cascade: 'true' } })</code>.</p>
+        <p>When no <code>id</code> is given by sending the request directly to the endpoint something like:</p>
+        <pre><code>DELETE /messages?read=true
+</code></pre>
+        <p>Will call <code>messages.remove(null, { query: { read: 'true' } })</code> to delete all read messages.</p>
+    </section>
+{% endblock %}

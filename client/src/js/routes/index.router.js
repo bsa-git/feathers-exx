@@ -11,8 +11,10 @@ export default async function (client) {
             return await serviceRouter.serviceStartClient('dishes');
             break;
         case 'service/rest-apis':
-            // authRouter(client);
             return await serviceRouter.serviceRestApis();
+            break;
+        case 'service/rest-client':
+            return await serviceRouter.serviceRestClient();
             break;
         default:
             return `Does not match controller/action:  '${client.req.controller}/${client.req.action}'`

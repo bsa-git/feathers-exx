@@ -8,8 +8,6 @@
     <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
     {#--- Set theme ---#}
     <link rel='stylesheet' href='/css/themes/{{ color_theme }}.css'/>
-    <!--- Polyfills --->
-    {% include "layouts/includes/polyfills.script.twig" %}
 </head>
 <body>
 <!--- TopNav --->
@@ -24,10 +22,11 @@
 {% include "layouts/includes/footer.html.twig" %}
 
 <!-- Java Scripts -->
+<!--- Polyfills --->
+<script src="/js/polyfills.bundle.js" defer></script>
+<!--- Font Awesome --->
 <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js" defer></script>
+<!--- App Client --->
 <script type="text/javascript" src="/js/app.client.bundle.js" defer></script>
-
-{#<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js" ></script>#}
-{#<script type="text/javascript" src="/js/app.client.bundle.js" ></script>#}
 </body>
 </html>

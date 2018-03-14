@@ -19,7 +19,8 @@ module.exports = {
                 {'name':'methods', 'url': '/service/methods', 'value': 'Methods'},
                 {'name':'events', 'url': '/service/events', 'value': 'Events'},
                 {'name':'hooks', 'url': '/service/hooks/ok', 'value': 'Hooks'},
-                {'name':'rest-apis', 'url': '/service/rest-apis', 'value': 'REST APIs'}
+                {'name':'rest-apis', 'url': '/service/rest-apis', 'value': 'REST APIs'},
+                {'name':'rest-client', 'url': '/service/rest-client', 'value': 'REST Client'}
             ],
             'auth': [
                 {'name':'about', 'url': '/auth/about', 'value': 'About'},

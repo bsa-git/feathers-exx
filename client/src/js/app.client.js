@@ -5,7 +5,6 @@ import './plugins/webpack/runtime'
 import 'jstorage'
 import Bulma from './plugins/bulma/bulma.class'
 import config from '../../../config/env/index.client'
-import Location from './plugins/http/location.class'
 import HttpBox from './plugins/http/http-box.class'
 import indexRouter from './routes/index.router'
 
@@ -80,5 +79,6 @@ const bootstrap = async () =>{
 
 // Run bootstrap
 bootstrap();
+
 
 

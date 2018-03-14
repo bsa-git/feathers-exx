@@ -196,4 +196,35 @@ router.get('/rest-apis', async function (req, res, next) {
 
 });
 
+router.get('/rest-client', async function (req, res, next) {
+    const context = {
+        title: 'REST Client',
+        req: req,
+        res: res
+    };
+    if (config.debug) {
+        console.log('Router.get: ', req.originalUrl);
+    }
+    try {
+        // Create controller
+        const service = new Service(context);
+        // Perform the action "service.restApis"
+        const messages = await service.restClient();
+
+        // Render twig template
+        const html = await  Base.twigRender('messages.html.twig', req, {messages});
+        // Set view params
+        res.locals.msgBox = {type: 'info', text: html};
+        // View render
+        res.render('tmpls/service/rest-client/index.html.twig', context);
+        if (config.debug) {
+            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+        }
+    }
+    catch (ex) {
+        Base.showError(ex, req, res);
+    }
+
+});
+
 module.exports = router;

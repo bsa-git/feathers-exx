@@ -1,17 +1,41 @@
 <script>
+    function loadScript(url, callback) {
+        const script = document.createElement("script")
+        script.type = "text/javascript";
+        script.async = false;
+
+        if (script.readyState) {  //IE
+            script.onreadystatechange = function () {
+                if (script.readyState == "loaded" ||
+                    script.readyState == "complete") {
+                    script.onreadystatechange = null;
+                    console.log('Added - polyfills.bundle.js');
+                    if (callback) {
+                        callback();
+                    }
+                }
+            };
+        } else {  //Others
+            script.onload = function () {
+                console.log('Added - polyfills.bundle.js');
+                if (callback) {
+                    callback();
+                }
+            };
+        }
+        script.src = url;
+        document.getElementsByTagName("head")[0].appendChild(script);
+    }
+
     const modernBrowser = (
-        'assign' in Object
-//        'assign' in Object &&
-//        'fetch' in window
+//        'assign' in Object
+        'assign' in Object &&
+        'fetch' in window
     );
 
     if (!modernBrowser) {
-        const scriptElement = document.createElement('script');
-
-        scriptElement.async = false;
-        scriptElement.src = '/js/polyfills.bundle.js';
-        document.head.appendChild(scriptElement);
-
-        console.log('Added - polyfills.bundle.js')
+        loadScript('/js/polyfills.bundle.js', null);
     }
+
+
 </script>
