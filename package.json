@@ -18,6 +18,7 @@
     "@feathersjs/errors": "^3.3.0",
     "@feathersjs/express": "^1.2.0",
     "@feathersjs/feathers": "^3.1.0",
+    "@feathersjs/socketio": "^3.2.0",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "body-parser": "~1.18.2",

@@ -55,6 +55,15 @@ class HttpBox extends LocationHelper {
     }
 
     /**
+     * Get info location
+     * @param url String
+     */
+    getInfoLocation(url) {
+        const location = new LocationHelper(url);
+        return location;
+    }
+
+    /**
      * Get method for axios
      * @param url String
      * @param config Object
@@ -62,16 +71,18 @@ class HttpBox extends LocationHelper {
      */
     async get(url, config) {
         const configDefault = {
+            // headers: {'X-Requested-With': 'XMLHttpRequest'}
         };
+
         const _config = Object.assign(configDefault, config);
         const response = await axios.get(url, _config);
-        if(response.statusText !== 'OK') {
+        if (response.statusText !== 'OK') {
             throw new Error(`HttpBox.get Error: Network response was not OK; url: '${url}'; config: `, _config);
         }
         const contentType = response.headers["content-type"];
-        if(contentType && contentType.includes("application/json")) {
+        if (contentType && contentType.includes("application/json")) {
             return response.data;
-        }else {
+        } else {
             throw new TypeError(`HttpBox.get Error:  we haven't got JSON;  url: '${url}'; config: `, _config);
         }
     }
@@ -84,17 +95,16 @@ class HttpBox extends LocationHelper {
      * @return {Promise.<void>}
      */
     async post(url, data, config) {
-        const configDefault = {
-        };
+        const configDefault = {};
         const _config = Object.assign(configDefault, config);
         const response = await axios.post(url, data, _config);
-        if(response.statusText !== 'Created') {
+        if (response.statusText !== 'Created') {
             throw new Error(`HttpBox.post Error: Network response was not OK; url: '${url}'; config: `, _config);
         }
         const contentType = response.headers["content-type"];
-        if(contentType && contentType.includes("application/json")) {
+        if (contentType && contentType.includes("application/json")) {
             return response.data;
-        }else {
+        } else {
             throw new TypeError(`HttpBox.post Error:  we haven't got JSON;  url: '${url}'; config: `, _config);
         }
     }
@@ -107,17 +117,16 @@ class HttpBox extends LocationHelper {
      * @return {Promise.<void>}
      */
     async put(url, data, config) {
-        const configDefault = {
-        };
+        const configDefault = {};
         const _config = Object.assign(configDefault, config);
         const response = await axios.put(url, data, _config);
-        if(response.statusText !== 'OK') {
+        if (response.statusText !== 'OK') {
             throw new Error(`HttpBox.put Error: Network response was not OK; url: '${url}'; config: `, _config);
         }
         const contentType = response.headers["content-type"];
-        if(contentType && contentType.includes("application/json")) {
+        if (contentType && contentType.includes("application/json")) {
             return response.data;
-        }else {
+        } else {
             throw new TypeError(`HttpBox.put Error:  we haven't got JSON;  url: '${url}'; config: `, _config);
         }
     }
@@ -130,17 +139,16 @@ class HttpBox extends LocationHelper {
      * @return {Promise.<void>}
      */
     async patch(url, data, config) {
-        const configDefault = {
-        };
+        const configDefault = {};
         const _config = Object.assign(configDefault, config);
         const response = await axios.patch(url, data, _config);
-        if(response.statusText !== 'OK') {
+        if (response.statusText !== 'OK') {
             throw new Error(`HttpBox.patch Error: Network response was not OK; url: '${url}'; config: `, _config);
         }
         const contentType = response.headers["content-type"];
-        if(contentType && contentType.includes("application/json")) {
+        if (contentType && contentType.includes("application/json")) {
             return response.data;
-        }else {
+        } else {
             throw new TypeError(`HttpBox.patch Error:  we haven't got JSON;  url: '${url}'; config: `, _config);
         }
     }
@@ -153,17 +161,16 @@ class HttpBox extends LocationHelper {
      * @return {Promise.<void>}
      */
     async delete(url, config) {
-        const configDefault = {
-        };
+        const configDefault = {};
         const _config = Object.assign(configDefault, config);
         const response = await axios.delete(url, _config);
-        if(response.statusText !== 'OK') {
+        if (response.statusText !== 'OK') {
             throw new Error(`HttpBox.delete Error: Network response was not OK; url: '${url}'; config: `, _config);
         }
         const contentType = response.headers["content-type"];
-        if(contentType && contentType.includes("application/json")) {
+        if (contentType && contentType.includes("application/json")) {
             return response.data;
-        }else {
+        } else {
             throw new TypeError(`HttpBox.delete Error:  we haven't got JSON;  url: '${url}'; config: `, _config);
         }
     }

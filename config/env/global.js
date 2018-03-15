@@ -20,7 +20,8 @@ module.exports = {
                 {'name':'events', 'url': '/service/events', 'value': 'Events'},
                 {'name':'hooks', 'url': '/service/hooks/ok', 'value': 'Hooks'},
                 {'name':'rest-apis', 'url': '/service/rest-apis', 'value': 'REST APIs'},
-                {'name':'rest-client', 'url': '/service/rest-client', 'value': 'REST Client'}
+                {'name':'rest-client', 'url': '/service/rest-client', 'value': 'REST Client'},
+                {'name':'real-time', 'url': '/service/real-time', 'value': 'Real-time APIs'}
             ],
             'auth': [
                 {'name':'about', 'url': '/auth/about', 'value': 'About'},

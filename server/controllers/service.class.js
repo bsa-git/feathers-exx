@@ -13,8 +13,7 @@ class Service extends Base {
      * @return Promise
      */
     startServer(name) {
-        const self = this;
-        //------------------
+
         const feathers = require('@feathersjs/feathers');
         const app = feathers();
 
@@ -197,17 +196,8 @@ class Service extends Base {
         const Messages = require('./lib/services/messages.class');
         //------------------------------------------------
 
-
-
         // This creates an app that is both, an Express and Feathers app
         const app = express(feathers());
-
-        // Turn on JSON body parsing for REST services
-        app.use(express.json());
-        // Turn on URL-encoded body parsing for REST services
-        app.use(express.urlencoded({extended: true}));
-        // Set up REST transport using Express
-        app.configure(express.rest());
 
         // CORS
         app.use(function(req, res, next) {
@@ -216,6 +206,13 @@ class Service extends Base {
             res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
             next();
         });
+
+        // Turn on JSON body parsing for REST services
+        app.use(express.json());
+        // Turn on URL-encoded body parsing for REST services
+        app.use(express.urlencoded({extended: true}));
+        // Set up REST transport using Express
+        app.configure(express.rest());
 
         // Initialize the messages service by creating
         // a new instance of our class with CORS
@@ -272,17 +269,8 @@ class Service extends Base {
         const Messages = require('./lib/services/messages.class');
         //------------------------------------------------
 
-
-
         // This creates an app that is both, an Express and Feathers app
         const app = express(feathers());
-
-        // Turn on JSON body parsing for REST services
-        app.use(express.json());
-        // Turn on URL-encoded body parsing for REST services
-        app.use(express.urlencoded({extended: true}));
-        // Set up REST transport using Express
-        app.configure(express.rest());
 
         // CORS
         app.use(function(req, res, next) {
@@ -291,6 +279,95 @@ class Service extends Base {
             res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
             next();
         });
+
+        // Turn on JSON body parsing for REST services
+        app.use(express.json());
+        // Turn on URL-encoded body parsing for REST services
+        app.use(express.urlencoded({extended: true}));
+        // Set up REST transport using Express
+        app.configure(express.rest());
+
+        // Initialize the messages service by creating
+        // a new instance of our class with CORS
+        app.use('messages', new Messages());
+
+        // Set up an error handler that gives us nicer errors
+        app.use(express.errorHandler());
+
+        // Start the server on port 3030
+        // If the server exists, then we close it
+        if(this.req.app.get('httpServer')){
+            this.req.app.get('httpServer').close(()=>{
+                if(self.config.debug){
+                    console.log(`Feathers REST API closed at http://localhost:${self.config.app.exxPort}`);
+                }
+                self.createServer(app);
+            });
+        }else {
+            this.createServer(app);
+        }
+
+        // Process messages service
+        async function processMessages() {
+            // Use the service to create a new message on the server
+            await app.service('messages').create({
+                text: 'Hello from the server'
+            });
+            await app.service('messages').create({
+                text: 'First message'
+            });
+            await app.service('messages').create({
+                text: 'Second message'
+            });
+
+            await app.service('messages').update(3, {
+                text: 'Update Second message'
+            });
+
+            const messages = await app.service('messages').find();
+            return messages;
+        }
+
+        return processMessages();
+    }
+
+    /**
+     * Service Real Time
+     * @return Promise
+     */
+    realTime() {
+        const self = this;
+        const feathers = require('@feathersjs/feathers');
+        const express = require('@feathersjs/express');
+        const socketio = require('@feathersjs/socketio');
+        const Messages = require('./lib/services/messages.class');
+        //------------------------------------------------
+
+
+
+        // This creates an app that is both, an Express and Feathers app
+        const app = express(feathers());
+
+        // CORS
+        app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "*");
+            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+            next();
+        });
+
+        // Turn on JSON body parsing for REST services
+        app.use(express.json());
+        // Turn on URL-encoded body parsing for REST services
+        app.use(express.urlencoded({extended: true}));
+        // Set up REST transport using Express
+        app.configure(express.rest());
+        // Configure the Socket.io transport
+        app.configure(socketio());
+        // On any real-time connection, add it to the 'everybody' channel
+        app.on('connection', connection => app.channel('everybody').join(connection));
+        // Publish all events to the 'everybody' channel
+        app.publish(() => app.channel('everybody'));
 
         // Initialize the messages service by creating
         // a new instance of our class with CORS

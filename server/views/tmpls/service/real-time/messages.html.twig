@@ -1,0 +1,38 @@
+<section>
+    <div class="server-body">
+        <h3>Server Example Output</h3>
+        <span>Available data of service "messages" on (localhost:3030): </span>
+        <ul style="list-style: none;">
+            [
+            {% for message in messages %}
+                <li>
+                    <p>{ id: {{ message.id }}, text: '{{ message.text }}' }{% if not loop.last %},{% endif %}</p>
+                </li>
+            {% endfor %}
+            ]
+        </ul>
+    </div>
+    <div class="client-body">
+
+    </div>
+    <div class="server-footer">
+        <hr>
+        <div class="level">
+            <div class="level-item">
+                <a id="create-message" class="button is-link" title="Service method .create()">CREATE message</a>
+            </div>
+            <div class="level-item">
+                <a id="find-messages" class="button is-link" title="Service method .find()">FIND messages</a>
+            </div>
+            <div class="level-item">
+                <a id="get-message" class="button is-link" title="Service method .get()">GET message</a>
+            </div>
+            <div class="level-item">
+                <a id="patch-message" class="button is-link" title="Service method .patch()">PATCH message</a>
+            </div>
+            <div class="level-item">
+                <a id="remove-message" class="button is-link" title="Service method .remove()">DELETE message</a>
+            </div>
+        </div>
+    </div>
+</section>

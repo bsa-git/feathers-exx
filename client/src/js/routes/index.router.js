@@ -16,6 +16,9 @@ export default async function (client) {
         case 'service/rest-client':
             return await serviceRouter.serviceRestClient();
             break;
+        case 'service/real-time':
+            return await serviceRouter.serviceRealTime();
+            break;
         default:
             return `Does not match controller/action:  '${client.req.controller}/${client.req.action}'`
     }

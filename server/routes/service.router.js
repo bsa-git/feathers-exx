@@ -227,4 +227,35 @@ router.get('/rest-client', async function (req, res, next) {
 
 });
 
+router.get('/real-time', async function (req, res, next) {
+    const context = {
+        title: 'Real-time APIs',
+        req: req,
+        res: res
+    };
+    if (config.debug) {
+        console.log('Router.get: ', req.originalUrl);
+    }
+    try {
+        // Create controller
+        const service = new Service(context);
+        // Perform the action "service.restApis"
+        const messages = await service.realTime();
+
+        // Render twig template
+        const html = await  Base.twigRender('messages.html.twig', req, {messages});
+        // Set view params
+        res.locals.msgBox = {type: 'info', text: html};
+        // View render
+        res.render('tmpls/service/real-time/index.html.twig', context);
+        if (config.debug) {
+            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+        }
+    }
+    catch (ex) {
+        Base.showError(ex, req, res);
+    }
+
+});
+
 module.exports = router;
