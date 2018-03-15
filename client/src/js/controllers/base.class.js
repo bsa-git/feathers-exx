@@ -9,15 +9,42 @@ class Base {
     }
 
     /**
-     * Render Twig template
-     * @param filePath String
-     * @param data {*}
-     * @return String | Error
+     * Load script
+     * @param url String
+     * @param callback Function
+     * @return {Promise.<void>}
      */
-    // async twigRender(filePath, data) {
-    //     const template = require(filePath);
-    //     return template(data);
-    // }
+    static loadScript(url, callback) {
+        return new Promise(function(resolve, reject) {
+            const script = document.createElement("script")
+            script.type = "text/javascript";
+            // script.async = false;
+
+            if (script.readyState) {  //IE
+                script.onreadystatechange = function () {
+                    if (script.readyState == "loaded" ||
+                        script.readyState == "complete") {
+                        script.onreadystatechange = null;
+                        console.log('Loaded - ' + url);
+                        if (callback) {
+                            callback();
+                        }
+                        resolve('ok');
+                    }
+                };
+            } else {  //Others
+                script.onload = function () {
+                    console.log('Loaded - ' + url);
+                    if (callback) {
+                        callback();
+                    }
+                    resolve('ok');
+                };
+            }
+            script.src = url;
+            document.getElementsByTagName("head")[0].appendChild(script);
+        });
+    }
 }
 
 export default Base

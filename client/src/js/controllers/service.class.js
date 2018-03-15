@@ -77,66 +77,90 @@ class Service extends Base {
 
         const MethodList = {
             create: async () => {
-                // Find messages
-                const messages = await self.req.get(url);
-                // Create message
-                const message = await self.req.post(url, {text: `Client create message-${messages.length + 1}`});
-                console.log(`HttpBox.post message: `, message);
-                _showMessages('create()', 'POST');
+                try {
+                    // Find messages
+                    const messages = await self.req.get(url);
+                    // Create message
+                    const message = await self.req.post(url, {text: `Client create message-${messages.length + 1}`});
+                    console.log(`HttpBox.post message: `, message);
+                    _showMessages('create()', 'POST');
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
+                }
             },
             get: async () => {
-                // Find messages
-                const messages = await self.req.get(url);
-                if (messages.length > 0) {
-                    const lastMessageId = messages[messages.length - 1].id;
-                    const message = await self.req.get(`${url}/${lastMessageId}`);
-                    console.log(`HttpBox.get message: `, message);
-                    _showMessage('get()', 'GET', lastMessageId);
-                } else {
-                    console.log(`HttpBox.get message: `, '[]');
-                    _showMessages('get()', 'GET', 1);
+                try {
+                    // Find messages
+                    const messages = await self.req.get(url);
+                    if (messages.length > 0) {
+                        const lastMessageId = messages[messages.length - 1].id;
+                        const message = await self.req.get(`${url}/${lastMessageId}`);
+                        console.log(`HttpBox.get message: `, message);
+                        _showMessage('get()', 'GET', lastMessageId);
+                    } else {
+                        console.log(`HttpBox.get message: `, '[]');
+                        _showMessages('get()', 'GET', 1);
+                    }
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
                 }
             },
             find: async () => {
-                _showMessages('find()', 'GET');
+                try {
+                    _showMessages('find()', 'GET');
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
+                }
             },
             patch: async () => {
-                // Find messages
-                const messages = await self.req.get(url);
-                if (messages.length > 0) {
-                    const lastMessageId = messages[messages.length - 1].id;
-                    const message = await this.req.patch(`${url}/${lastMessageId}`, {text: `Client patch last message-${lastMessageId}`});
-                    console.log(`HttpBox.patch message: `, message);
-                    _showMessages('patch()', 'PATCH', lastMessageId);
-                } else {
-                    console.log(`HttpBox.patch messages: `, '[]');
-                    _showMessages('patch()', 'PATCH', 1);
+                try {
+                    // Find messages
+                    const messages = await self.req.get(url);
+                    if (messages.length > 0) {
+                        const lastMessageId = messages[messages.length - 1].id;
+                        const message = await this.req.patch(`${url}/${lastMessageId}`, {text: `Client patch last message-${lastMessageId}`});
+                        console.log(`HttpBox.patch message: `, message);
+                        _showMessages('patch()', 'PATCH', lastMessageId);
+                    } else {
+                        console.log(`HttpBox.patch messages: `, '[]');
+                        _showMessages('patch()', 'PATCH', 1);
+                    }
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
                 }
             },
             update: async () => {
-                // Find messages
-                const messages = await self.req.get(url);
-                if (messages.length > 0) {
-                    const lastMessageId = messages[messages.length - 1].id;
-                    const message = await this.req.put(`${url}/${lastMessageId}`, {text: `Client put last message-${lastMessageId}`});
-                    console.log(`HttpBox.put message: `, message);
-                    _showMessages('.update()', 'PUT', lastMessageId);
-                } else {
-                    console.log(`HttpBox.put messages: `, '[]');
-                    _showMessages('update()', 'PUT', 1);
+                try {
+                    // Find messages
+                    const messages = await self.req.get(url);
+                    if (messages.length > 0) {
+                        const lastMessageId = messages[messages.length - 1].id;
+                        const message = await this.req.put(`${url}/${lastMessageId}`, {text: `Client put last message-${lastMessageId}`});
+                        console.log(`HttpBox.put message: `, message);
+                        _showMessages('.update()', 'PUT', lastMessageId);
+                    } else {
+                        console.log(`HttpBox.put messages: `, '[]');
+                        _showMessages('update()', 'PUT', 1);
+                    }
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
                 }
             },
             delete: async () => {
-                // Find messages
-                const messages = await self.req.get(url);
-                if (messages.length > 0) {
-                    const lastMessageId = messages[messages.length - 1].id;
-                    const message = await this.req.delete(`${url}/${lastMessageId}`, {text: `Client delete last message-${lastMessageId}`});
-                    console.log(`HttpBox.delete message: `, message);
-                    _showMessages('remove()', 'DELETE', lastMessageId);
-                } else {
-                    console.log(`HttpBox.delete messages: `, '[]');
-                    _showMessages('remove()', 'DELETE', 1);
+                try {
+                    // Find messages
+                    const messages = await self.req.get(url);
+                    if (messages.length > 0) {
+                        const lastMessageId = messages[messages.length - 1].id;
+                        const message = await this.req.delete(`${url}/${lastMessageId}`, {text: `Client delete last message-${lastMessageId}`});
+                        console.log(`HttpBox.delete message: `, message);
+                        _showMessages('remove()', 'DELETE', lastMessageId);
+                    } else {
+                        console.log(`HttpBox.delete messages: `, '[]');
+                        _showMessages('remove()', 'DELETE', 1);
+                    }
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
                 }
             }
         };
@@ -152,7 +176,6 @@ class Service extends Base {
         const url = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}/messages`;
         const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
         const feathers = require('@feathersjs/client');
-        // const rest = require('@feathersjs/rest-client');
         const axios = require('axios');
         //---------------------------------
 
@@ -167,7 +190,6 @@ class Service extends Base {
 
         // Connect to the `http://localhost:3030/messages` service
         const serviceMessages = app.service('messages');
-
 
         // Render twig template
         const _twigRender = (data) => {
@@ -197,70 +219,94 @@ class Service extends Base {
 
         const MethodList = {
             create: async () => {
-                // Find messages
-                const messages = await serviceMessages.find();
-                const message = await serviceMessages.create({text: `Client create message-${messages.length + 1}`});
-                console.log(`HttpBox.post message: `, message);
-                _showMessages('create()', 'POST');
+                try {
+                    // Find messages
+                    const messages = await serviceMessages.find();
+                    const message = await serviceMessages.create({text: `Client create message-${messages.length + 1}`});
+                    console.log(`HttpBox.post message: `, message);
+                    _showMessages('create()', 'POST');
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
+                }
             },
             get: async () => {
-                // Find messages
-                const messages = await serviceMessages.find();
-                if (messages.length > 0) {
-                    const lastMessageId = messages[messages.length - 1].id;
-                    const message = await serviceMessages.get(lastMessageId);
-                    console.log(`HttpBox.get message: `, message);
-                    _showMessage('get()', 'GET', lastMessageId);
-                } else {
-                    console.log(`HttpBox.get message: `, '[]');
-                    _showMessages('get()', 'GET', 1);
+                try {
+                    // Find messages
+                    const messages = await serviceMessages.find();
+                    if (messages.length > 0) {
+                        const lastMessageId = messages[messages.length - 1].id;
+                        const message = await serviceMessages.get(lastMessageId);
+                        console.log(`HttpBox.get message: `, message);
+                        _showMessage('get()', 'GET', lastMessageId);
+                    } else {
+                        console.log(`HttpBox.get message: `, '[]');
+                        _showMessages('get()', 'GET', 1);
+                    }
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
                 }
             },
             find: async () => {
-                _showMessages('find()', 'GET');
+                try {
+                    _showMessages('find()', 'GET');
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
+                }
             },
             patch: async () => {
-                // Find messages
-                const messages = await serviceMessages.find();
-                if (messages.length > 0) {
-                    const lastMessageId = messages[messages.length - 1].id;
-                    const message = await serviceMessages.patch(lastMessageId, {text: `Client patch last message-${lastMessageId}`});
-                    console.log(`HttpBox.patch message: `, message);
-                    _showMessages('patch()', 'PATCH', lastMessageId);
-                } else {
-                    console.log(`HttpBox.patch messages: `, '[]');
-                    _showMessages('patch()', 'PATCH', 1);
+                try {
+                    // Find messages
+                    const messages = await serviceMessages.find();
+                    if (messages.length > 0) {
+                        const lastMessageId = messages[messages.length - 1].id;
+                        const message = await serviceMessages.patch(lastMessageId, {text: `Client patch last message-${lastMessageId}`});
+                        console.log(`HttpBox.patch message: `, message);
+                        _showMessages('patch()', 'PATCH', lastMessageId);
+                    } else {
+                        console.log(`HttpBox.patch messages: `, '[]');
+                        _showMessages('patch()', 'PATCH', 1);
+                    }
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
                 }
             },
             update: async () => {
-                // Find messages
-                const messages = await serviceMessages.find();
-                if (messages.length > 0) {
-                    const lastMessageId = messages[messages.length - 1].id;
-                    const message = await serviceMessages.update(lastMessageId, {text: `Client put last message-${lastMessageId}`});
-                    console.log(`HttpBox.put message: `, message);
-                    _showMessages('.update()', 'PUT', lastMessageId);
-                } else {
-                    console.log(`HttpBox.put messages: `, '[]');
-                    _showMessages('update()', 'PUT', 1);
+                try {
+                    // Find messages
+                    const messages = await serviceMessages.find();
+                    if (messages.length > 0) {
+                        const lastMessageId = messages[messages.length - 1].id;
+                        const message = await serviceMessages.update(lastMessageId, {text: `Client put last message-${lastMessageId}`});
+                        console.log(`HttpBox.put message: `, message);
+                        _showMessages('.update()', 'PUT', lastMessageId);
+                    } else {
+                        console.log(`HttpBox.put messages: `, '[]');
+                        _showMessages('update()', 'PUT', 1);
+                    }
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
                 }
             },
             delete: async () => {
-                // Find messages
-                const messages = await serviceMessages.find();
-                if (messages.length > 0) {
-                    const lastMessageId = messages[messages.length - 1].id;
-                    const message = await serviceMessages.remove(lastMessageId, {text: `Client delete last message-${lastMessageId}`});
-                    console.log(`HttpBox.delete message: `, message);
-                    _showMessages('remove()', 'DELETE', lastMessageId);
-                } else {
-                    console.log(`HttpBox.delete messages: `, '[]');
-                    _showMessages('remove()', 'DELETE', 1);
+                try {
+                    // Find messages
+                    const messages = await serviceMessages.find();
+                    if (messages.length > 0) {
+                        const lastMessageId = messages[messages.length - 1].id;
+                        const message = await serviceMessages.remove(lastMessageId, {text: `Client delete last message-${lastMessageId}`});
+                        console.log(`HttpBox.delete message: `, message);
+                        _showMessages('remove()', 'DELETE', lastMessageId);
+                    } else {
+                        console.log(`HttpBox.delete messages: `, '[]');
+                        _showMessages('remove()', 'DELETE', 1);
+                    }
+                } catch (ex) {
+                    self.bulma.showError({error: ex});
                 }
             }
         };
+        // return Promise.resolve(MethodList);
         return Promise.resolve(MethodList);
-        // return Promise.resolve('ok');
     }
 }
 

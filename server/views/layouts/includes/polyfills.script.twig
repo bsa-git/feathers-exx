@@ -9,7 +9,7 @@
                 if (script.readyState == "loaded" ||
                     script.readyState == "complete") {
                     script.onreadystatechange = null;
-                    console.log('Added - polyfills.bundle.js');
+                    console.log('Loaded - ' + url);
                     if (callback) {
                         callback();
                     }
@@ -17,7 +17,7 @@
             };
         } else {  //Others
             script.onload = function () {
-                console.log('Added - polyfills.bundle.js');
+                console.log('Loaded - ' + url);
                 if (callback) {
                     callback();
                 }
