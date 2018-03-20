@@ -9,7 +9,8 @@ module.exports = {
         exxPort: 3030,
         controllers: [
             {'icon':'fa-cog', 'name':'service', 'value': 'Services'},
-            {'icon':'fa-key', 'name':'auth', 'value': 'Authentication'}
+            {'icon':'fa-key', 'name':'auth', 'value': 'Authentication'},
+            {'icon':'fa-database', 'name':'database', 'value': 'Database'}
         ],
         actions: {
             'service': [
@@ -31,6 +32,10 @@ module.exports = {
                 {'name':'jwt', 'url': '/auth/jwt', 'value': 'JWT'},
                 {'name':'oauth1', 'url': '/auth/oauth1', 'value': 'OAuth1'},
                 {'name':'oauth2', 'url': '/auth/oauth2', 'value': 'OAuth1'}
+            ],
+            'database': [
+                {'name':'about', 'url': '/database/about', 'value': 'About'},
+                {'name':'feathers-memory', 'url': '/database/feathers-memory', 'value': 'Database in memory'}
             ]
         }
     },

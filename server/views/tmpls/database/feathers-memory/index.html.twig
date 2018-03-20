@@ -1,0 +1,171 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <article class="markdown-body entry-content" itemprop="text">
+        <h1><a href="#feathers-memory" aria-hidden="true" class="anchor" id="user-content-feathers-memory">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>feathers-memory
+        </h1>
+        <p><a href="https://greenkeeper.io/" rel="nofollow"><img
+                        src="https://camo.githubusercontent.com/8df3a26479bb0f02a635c2f420da991a4edf656a/68747470733a2f2f6261646765732e677265656e6b65657065722e696f2f66656174686572736a732d65636f73797374656d2f66656174686572732d6d656d6f72792e737667"
+                        alt="Greenkeeper badge"
+                        data-canonical-src="https://badges.greenkeeper.io/feathersjs-ecosystem/feathers-memory.svg"
+                        style="max-width:100%;"></a></p>
+        <p><a href="https://travis-ci.org/feathersjs-ecosystem/feathers-memory" rel="nofollow"><img
+                        src="https://camo.githubusercontent.com/62ae384b8acd9dd933845c97ca01539fccf39a5f/68747470733a2f2f7472617669732d63692e6f72672f66656174686572736a732d65636f73797374656d2f66656174686572732d6d656d6f72792e706e673f6272616e63683d6d6173746572"
+                        alt="Build Status"
+                        data-canonical-src="https://travis-ci.org/feathersjs-ecosystem/feathers-memory.png?branch=master"
+                        style="max-width:100%;"></a>
+            <a href="https://david-dm.org/feathersjs-ecosystem/feathers-memory" rel="nofollow"><img
+                        src="https://camo.githubusercontent.com/11f091ae9e041fb699b0cdd18c175aae284ff4da/68747470733a2f2f696d672e736869656c64732e696f2f64617669642f66656174686572736a732d65636f73797374656d2f66656174686572732d6d656d6f72792e7376673f7374796c653d666c61742d737175617265"
+                        alt="Dependency Status"
+                        data-canonical-src="https://img.shields.io/david/feathersjs-ecosystem/feathers-memory.svg?style=flat-square"
+                        style="max-width:100%;"></a>
+            <a href="https://www.npmjs.com/package/feathers-memory" rel="nofollow"><img
+                        src="https://camo.githubusercontent.com/5db35cfa8b5b9be2d51826a202dc58e3f65611b4/68747470733a2f2f696d672e736869656c64732e696f2f6e706d2f646d2f66656174686572732d6d656d6f72792e7376673f7374796c653d666c61742d737175617265"
+                        alt="Download Status"
+                        data-canonical-src="https://img.shields.io/npm/dm/feathers-memory.svg?style=flat-square"
+                        style="max-width:100%;"></a></p>
+        <p>A <a href="https://feathersjs.com" rel="nofollow">Feathers</a> service adapter for in-memory data storage
+            that works on all platforms.</p>
+        <div class="highlight highlight-source-shell">
+            <pre><code class="hljs">$ npm install --save feathers-memory</code></pre>
+        </div>
+        <blockquote>
+            <p><strong>Important:</strong> <code>feathers-memory</code> implements the <a
+                        href="https://docs.feathersjs.com/api/databases/common.html" rel="nofollow">Feathers Common
+                    database adapter API</a> and <a href="https://docs.feathersjs.com/api/databases/querying.html"
+                                                    rel="nofollow">querying syntax</a>.</p>
+        </blockquote>
+        <h2><a href="#api" aria-hidden="true" class="anchor" id="user-content-api">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>API
+        </h2>
+        <h3><a href="#serviceoptions" aria-hidden="true" class="anchor" id="user-content-serviceoptions">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a><code>service([options])</code></h3>
+        <p>Returns a new service instance initialized with the given options.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">service</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>feathers-memory<span class="pl-pds">'</span></span>);
+
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">service</span>());
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">service</span>({ id, startId, store, events, paginate }));</code></pre>
+        </div>
+        <p><strong>Options:</strong></p>
+        <ul>
+            <li><code>id</code> (<em>optional</em>, default: <code>'id'</code>) - The name of the id field property.
+            </li>
+            <li><code>startId</code> (<em>optional</em>, default: <code>0</code>) - An id number to start with that will
+                be incremented for every new record (unless it is already set).
+            </li>
+            <li><code>store</code> (<em>optional</em>) - An object with id to item assignments to pre-initialize the
+                data store
+            </li>
+            <li><code>events</code> (<em>optional</em>) - A list of <a
+                        href="https://docs.feathersjs.com/api/events.html#custom-events" rel="nofollow">custom service
+                    events</a> sent by this service
+            </li>
+            <li><code>paginate</code> (<em>optional</em>) - A <a
+                        href="https://docs.feathersjs.com/api/databases/common.html#pagination" rel="nofollow">pagination
+                    object</a> containing a <code>default</code> and <code>max</code> page size
+            </li>
+        </ul>
+        <h2><a href="#example" aria-hidden="true" class="anchor" id="user-content-example">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Example
+        </h2>
+        <p>Here is an example of a Feathers server with a <code>messages</code> in-memory service that supports
+            pagination:</p>
+        <pre><code class="hljs">$ npm install @feathersjs/feathers @feathersjs/express @feathersjs/socketio @feathersjs/errors feathers-memory
+</code></pre>
+        <p>In <code>app.js</code>:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">feathers</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>@feathersjs/feathers<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">express</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>@feathersjs/express<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">socketio</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>@feathersjs/socketio<span
+                            class="pl-pds">'</span></span>);
+
+<span class="pl-k">const</span> <span class="pl-c1">memory</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>feathers-memory<span class="pl-pds">'</span></span>);
+
+<span class="pl-c"><span class="pl-c">//</span> Create an Express compatible Feathers application instance.</span>
+<span class="pl-k">const</span> <span class="pl-c1">app</span> <span class="pl-k">=</span> <span
+                        class="pl-en">express</span>(<span class="pl-en">feathers</span>());
+<span class="pl-c"><span class="pl-c">//</span> Turn on JSON parser for REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">json</span>());
+<span class="pl-c"><span class="pl-c">//</span> Turn on URL-encoded parser for REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">urlencoded</span>({ extended<span
+                        class="pl-k">:</span> <span class="pl-c1">true</span> }));
+<span class="pl-c"><span class="pl-c">//</span> Enable REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">configure</span>(<span class="pl-smi">express</span>.<span
+                        class="pl-en">rest</span>());
+<span class="pl-c"><span class="pl-c">//</span> Enable REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">configure</span>(<span class="pl-en">socketio</span>());
+<span class="pl-c"><span class="pl-c">//</span> Create an in-memory Feathers service with a default page size of 2 items</span>
+<span class="pl-c"><span class="pl-c">//</span> and a maximum size of 4</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">memory</span>({
+  paginate<span class="pl-k">:</span> {
+    default<span class="pl-k">:</span> <span class="pl-c1">2</span>,
+    max<span class="pl-k">:</span> <span class="pl-c1">4</span>
+  }
+}));
+<span class="pl-c"><span class="pl-c">//</span> Set up default error handler</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">errorHandler</span>());
+
+<span class="pl-c"><span class="pl-c">//</span> Create a dummy Message</span>
+<span class="pl-smi">app</span>.<span class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
+                            class="pl-pds">'</span></span>).<span class="pl-en">create</span>({
+  text<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Message created on server<span
+                            class="pl-pds">'</span></span>
+}).<span class="pl-en">then</span>(<span class="pl-smi">message</span> <span class="pl-k">=&gt;</span> <span
+                        class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>Created message<span class="pl-pds">'</span></span>, message));
+
+<span class="pl-c"><span class="pl-c">//</span> Start the server.</span>
+<span class="pl-k">const</span> <span class="pl-c1">port</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">3030</span>;
+
+<span class="pl-smi">app</span>.<span class="pl-en">listen</span>(port, () <span class="pl-k">=&gt;</span> {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">`</span>Feathers server listening on port <span
+                            class="pl-s1"><span class="pl-pse">${</span>port<span class="pl-pse">}</span></span><span
+                            class="pl-pds">`</span></span>)
+                    });</code></pre>
+        </div>
+        <p>Run the example with <code>node app</code> and go to <a href="http://localhost:3030/messages" rel="nofollow">localhost:3030/messages</a>.
+        </p>
+        <h2><a href="#license" aria-hidden="true" class="anchor" id="user-content-license">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>License
+        </h2>
+    </article>
+{% endblock %}

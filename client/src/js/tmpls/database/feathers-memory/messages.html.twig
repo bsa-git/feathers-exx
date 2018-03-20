@@ -1,0 +1,18 @@
+<section>
+    <h5>{{ name }}</h5>
+    <p>{{ description }}</p>
+    <p><strong>app.service('messages').find({ </strong>: {{ strQuery }} <strong>})</strong></p>
+    <ul style="list-style: none;">
+        [
+        {% for message in messages %}
+            <li>
+                {% if name == '$select' %}
+                    <p>{ counter: {{ message.counter }}, message: '{{ message.message }}' }</p>
+                {% else %}
+                    <p>{ id: {{ message.id }}, counter: {{ message.counter }}, message: '{{ message.message }}' }</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+        ]
+    </ul>
+</section>

@@ -12,6 +12,7 @@ const Http = require('./plugins/http.class');
 const index = require('./routes/index.router');
 const service = require('./routes/service.router');
 const auth = require('./routes/auth.router');
+const database = require('./routes/database.router');
 // Require middleware
 const iniApp = require('./middleware/ini-app.server');
 
@@ -35,6 +36,7 @@ app.use('*', iniApp);
 app.use('/', index);
 app.use('/service', service);
 app.use('/auth', auth);
+app.use('/database', database);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

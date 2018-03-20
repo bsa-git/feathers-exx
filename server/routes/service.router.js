@@ -6,7 +6,7 @@ const config = require('../../config/env');
 const Base = require('../controllers/base.class');
 const Service = require('../controllers/service.class');
 
-/* GET service listing. */
+// GET service listing.
 router.get('/about', function (req, res, next) {
     const context = {
         title: 'Feathers Service',

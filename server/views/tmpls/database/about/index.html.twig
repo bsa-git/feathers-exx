@@ -1,0 +1,264 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+
+
+        <h1 id="databases">Databases<a class="anchorjs-link " href="#databases" aria-label="Anchor link for: databases"
+                                       data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h1>
+        <p>In the <a href="https://docs.feathersjs.com/guides/basics/services.html">services chapter</a> we created a custom in-memory messages service that can
+            create, update and delete messages. You can probably imagine how we could implement the same thing using a
+            database instead of storing the messages in memory so there isn't really a database that Feathers doesn't
+            support.</p>
+        <p>Writing all that code yourself is pretty repetitive and cumbersome though which is why Feathers has a
+            collection of pre-built services for different databases. They offer most the basic functionality and can
+            always be fully customized to your requirements using <a href="https://docs.feathersjs.com/guides/basics/hooks.html">hooks</a>. Feathers database
+            adapters support a common <a href="https://docs.feathersjs.com/api/databases/common.html">usage API</a>, pagination and <a
+                    href="https://docs.feathersjs.com/api/databases/querying.html">querying syntax</a> for many popular databases and NodeJS
+            ORMs:</p>
+        <table>
+            <thead>
+            <tr>
+                <th>Database</th>
+                <th>Adapter</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>In memory</td>
+                <td><a href="https://github.com/feathersjs-ecosystem/feathers-memory"
+                       target="_blank">feathers-memory</a>, <a
+                            href="https://github.com/feathersjs-ecosystem/feathers-nedb"
+                            target="_blank">feathers-nedb</a></td>
+            </tr>
+            <tr>
+                <td>Localstorage, AsyncStorage</td>
+                <td><a href="https://github.com/feathersjs-ecosystem/feathers-localstorage" target="_blank">feathers-localstorage</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Filesystem</td>
+                <td><a href="https://github.com/feathersjs-ecosystem/feathers-nedb" target="_blank">feathers-nedb</a>
+                </td>
+            </tr>
+            <tr>
+                <td>MongoDB</td>
+                <td><a href="https://github.com/feathersjs-ecosystem/feathers-mongodb"
+                       target="_blank">feathers-mongodb</a>, <a
+                            href="https://github.com/feathersjs-ecosystem/feathers-mongoose" target="_blank">feathers-mongoose</a>
+                </td>
+            </tr>
+            <tr>
+                <td>MySQL, PostgreSQL, MariaDB, SQLite, MSSQL</td>
+                <td><a href="https://github.com/feathersjs-ecosystem/feathers-knex" target="_blank">feathers-knex</a>,
+                    <a href="https://github.com/feathersjs-ecosystem/feathers-sequelize" target="_blank">feathers-sequelize</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Elasticsearch</td>
+                <td><a href="https://github.com/feathersjs-ecosystem/feathers-elasticsearch" target="_blank">feathers-elasticsearch</a>
+                </td>
+            </tr>
+            <tr>
+                <td>RethinkDB</td>
+                <td><a href="https://github.com/feathersjs-ecosystem/feathers-rethinkdb" target="_blank">feathers-rethinkdb</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <blockquote>
+            <p><strong>Pro tip:</strong> Each one of the the linked adapters has a complete REST API example in their
+                readme.</p>
+        </blockquote>
+        <p>In this chapter we will look at the basic usage of the in-memory database adapter and create a persistent
+            REST API using <a href="https://github.com/louischatriot/nedb" target="_blank">NEDB</a>.</p>
+        <blockquote>
+            <p><strong>Important:</strong> You should be familiar with the database technology and ORM (<a
+                        href="http://docs.sequelizejs.com/" target="_blank">Sequelize</a>, <a href="http://knexjs.org/"
+                                                                                              target="_blank">KnexJS</a>
+                or <a href="http://mongoosejs.com/" target="_blank">Mongoose</a>) before using a Feathers database
+                adapter.</p>
+        </blockquote>
+        <h2 id="an-in-memory-database">An in-memory database<a class="anchorjs-link " href="#an-in-memory-database"
+                                                               aria-label="Anchor link for: an in memory database"
+                                                               data-anchorjs-icon="#"
+                                                               style="padding-left: 0.375em;"></a></h2>
+        <p><a href="https://github.com/feathersjs-ecosystem/feathers-memory" target="_blank">feathers-memory</a> is a
+            Feathers database adapter that - similar to our messages service - stores its data in memory. We will use it
+            for the examples because it also works in the browser. Let's install it with:</p>
+        <pre><code>npm install feathers-memory --save
+</code></pre>
+        <p>We can use the adapter by requiring it and initializing it with the options we want. Here we enable
+            pagination showing 10 entries by default and a maximum of 25 (so that clients can't just request all data at
+            once and crash our server):</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> memory = <span class="hljs-built_in">require</span>(<span class="hljs-string">'feathers-memory'</span>);
+
+<span class="hljs-keyword">const</span> app = feathers();
+
+app.use(<span class="hljs-string">'messages'</span>, memory({
+  paginate: {
+    <span class="hljs-keyword">default</span>: <span class="hljs-number">10</span>,
+    max: <span class="hljs-number">25</span>
+  }
+}));
+</code></pre>
+        <p>That's it. We have a complete CRUD service for our messages with querying functionality.</p>
+        <h2 id="in-the-browser">In the browser<a class="anchorjs-link " href="#in-the-browser"
+                                                 aria-label="Anchor link for: in the browser" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h2>
+        <p>We can also include <code>feathers-memory</code> in the browser, most easily by loading its browser build
+            which will add it as <code>feathers.memory</code>. In <code>public/index.html</code>:</p>
+        <pre><code class="lang-html"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span
+            class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span
+              class="hljs-string">"UTF-8"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Feathers Basics<span
+                        class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Welcome to Feathers<span class="hljs-tag">&lt;/<span
+                            class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Open up the console in your browser.<span
+                        class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span
+              class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//unpkg.com/@feathersjs/client@^3.0.0/dist/feathers.js"</span>&gt;</span><span
+                        class="undefined"></span><span class="hljs-tag">&lt;/<span
+                            class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span
+              class="hljs-string">"text/javascript"</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"//unpkg.com/feathers-memory@^2.0.0/dist/feathers-memory.js"</span>&gt;</span><span
+                        class="undefined"></span><span class="hljs-tag">&lt;/<span
+                            class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span
+              class="hljs-string">"client.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span
+                            class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
+        <p>And <code>public/client.js</code>:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> app = feathers();
+
+app.use(<span class="hljs-string">'messages'</span>, feathers.memory({
+  paginate: {
+    <span class="hljs-keyword">default</span>: <span class="hljs-number">10</span>,
+    max: <span class="hljs-number">25</span>
+  }
+}));
+</code></pre>
+        <h2 id="querying">Querying<a class="anchorjs-link " href="#querying" aria-label="Anchor link for: querying"
+                                     data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>As mentioned, all database adapters support a common way of querying the data in a <code>find</code> method
+            call using <code>params.query</code>. You can find a complete list in the <a
+                    href="https://docs.feathersjs.com/api/databases/querying.html">querying syntax API</a>.</p>
+        <p>With pagination enabled, the <code>find</code> method will return an object with the following properties:
+        </p>
+        <ul>
+            <li><code>data</code> - The current list of data</li>
+            <li><code>limit</code> - The page size</li>
+            <li><code>skip</code> - The number of entries that were skipped</li>
+            <li><code>total</code> - The total number of entries for this query</li>
+        </ul>
+        <p>The following example automatically creates a couple of messages and makes some queries. You can add it at
+            the end of both <code>app.js</code> and <code>public/client.js</code> to see it in Node and the browser:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">async</span> <span class="hljs-function"><span
+                            class="hljs-keyword">function</span> <span class="hljs-title">createAndFind</span>(<span
+                            class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// Stores a reference to the messages service so we don't have to call it all the time</span>
+  <span class="hljs-keyword">const</span> messages = app.service(<span class="hljs-string">'messages'</span>);
+
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> counter = <span
+                        class="hljs-number">0</span>; counter &lt; <span class="hljs-number">100</span>; counter++) {
+    <span class="hljs-keyword">await</span> messages.create({
+      counter,
+      message: <span class="hljs-string">`Message number <span class="hljs-subst">${counter}</span>`</span>
+    });
+  }
+
+  <span class="hljs-comment">// We show 10 entries by default. By skipping 10 we go to page 2</span>
+  <span class="hljs-keyword">const</span> page2 = <span class="hljs-keyword">await</span> messages.find({
+    query: { $skip: <span class="hljs-number">10</span> }
+  });
+
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Page number 2'</span>, page2);
+
+  <span class="hljs-comment">// Show 20 items per page</span>
+  <span class="hljs-keyword">const</span> largePage = <span class="hljs-keyword">await</span> messages.find({
+    query: { $limit: <span class="hljs-number">20</span> }
+  });
+
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'20 items'</span>, largePage);
+
+  <span class="hljs-comment">// Find the first 10 items with counter greater 50 and less than 70</span>
+  <span class="hljs-keyword">const</span> counterList = <span class="hljs-keyword">await</span> messages.find({
+    query: {
+      counter: { $gt: <span class="hljs-number">50</span>, $lt: <span class="hljs-number">70</span> }
+    }
+  });
+
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Counter greater 50 and less than 70'</span>, counterList);
+
+  <span class="hljs-comment">// Find all entries with text "Message number 20"</span>
+  <span class="hljs-keyword">const</span> message20 = <span class="hljs-keyword">await</span> messages.find({
+    query: {
+      message: <span class="hljs-string">'Message number 20'</span>
+    }
+  });
+
+  <span class="hljs-built_in">console</span>.log(<span
+                        class="hljs-string">'Entries with text "Message number 20"'</span>, message20);
+}
+
+createAndFind();
+</code></pre>
+        <h2 id="as-a-rest-api">As a REST API<a class="anchorjs-link " href="#as-a-rest-api"
+                                               aria-label="Anchor link for: as a rest api" data-anchorjs-icon="#"
+                                               style="padding-left: 0.375em;"></a></h2>
+        <p>In the <a href="https://docs.feathersjs.com/guides/basics/rest.html">REST API chapter</a> we created a REST API from our custom messages service. Using
+            a database adapter instead will make our <code>app.js</code> a lot shorter:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/express'</span>);
+<span class="hljs-keyword">const</span> memory = <span class="hljs-built_in">require</span>(<span class="hljs-string">'feathers-memory'</span>);
+
+<span class="hljs-keyword">const</span> app = express(feathers());
+
+<span class="hljs-comment">// Turn on JSON body parsing for REST services</span>
+app.use(express.json())
+<span class="hljs-comment">// Turn on URL-encoded body parsing for REST services</span>
+app.use(express.urlencoded({ extended: <span class="hljs-literal">true</span> }));
+<span class="hljs-comment">// Set up REST transport using Express</span>
+app.configure(express.rest());
+<span class="hljs-comment">// Set up an error handler that gives us nicer errors</span>
+app.use(express.errorHandler());
+
+<span class="hljs-comment">// Initialize the messages service</span>
+app.use(<span class="hljs-string">'messages'</span>, memory({
+  paginate: {
+    <span class="hljs-keyword">default</span>: <span class="hljs-number">10</span>,
+    max: <span class="hljs-number">25</span>
+  }
+}));
+
+<span class="hljs-comment">// Start the server on port 3030</span>
+<span class="hljs-keyword">const</span> server = app.listen(<span class="hljs-number">3030</span>);
+
+<span class="hljs-comment">// Use the service to create a new message on the server</span>
+app.service(<span class="hljs-string">'messages'</span>).create({
+  text: <span class="hljs-string">'Hello from the server'</span>
+});
+
+server.on(<span class="hljs-string">'listening'</span>, () =&gt; <span class="hljs-built_in">console</span>.log(<span
+                        class="hljs-string">'Feathers REST API started at localhost:3030'</span>));
+</code></pre>
+        <p>After starting the server with <code>node app.js</code> we can pass a query e.g. by going to <a
+                    href="http://localhost:3030/messages?$limit=2" target="_blank">localhost:3030/messages?$limit=2</a>.
+        </p>
+        <blockquote>
+            <p><strong>Note:</strong> The <a href="https://docs.feathersjs.com/api/databases/querying.html">querying syntax API
+                    documentation</a> has more examples how URLs should look like.</p>
+        </blockquote>
+    </section>
+{% endblock %}

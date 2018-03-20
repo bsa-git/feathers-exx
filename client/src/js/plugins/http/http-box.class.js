@@ -2,6 +2,7 @@
 
 import LocationHelper from 'location-helper'
 import axios from 'axios'
+import Base from '../../controllers/base.class'
 
 /**
  * HttpBox class
@@ -29,7 +30,7 @@ import axios from 'axios'
 class HttpBox extends LocationHelper {
     constructor(url) {
         super(url);
-        this.pathname = this.pathname.startsWith('/') ? this.pathname.slice(1) : this.pathname;
+        this.pathname = Base.stripSlashes(this.pathname);
         this.controller = this._getControllerAction().controller;
         this.action = this._getControllerAction().action;
     }
