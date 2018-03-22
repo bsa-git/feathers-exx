@@ -17,9 +17,9 @@ const validate = async context => {
     // This prevents people from adding other properties to our database
     context.data = {
         text: data.text.toString()
-    }
+    };
 
     return context;
 };
 
-module.exports = validate
+module.exports = validate;

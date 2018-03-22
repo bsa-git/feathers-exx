@@ -25,7 +25,7 @@ router.get('/about', function (req, res, next) {
 router.get('/feathers-memory', async function (req, res, next) {
     try {
         const context = {
-            title: 'Database in memory',
+            title: 'Feathers Memory',
             req: req
         };
         if (config.debug) {
@@ -42,6 +42,35 @@ router.get('/feathers-memory', async function (req, res, next) {
         res.locals.msgBox = {type: 'info', text: html};
         // View render
         res.render('tmpls/database/feathers-memory/index.html.twig', context);
+        if (config.debug) {
+            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+        }
+    } catch
+        (ex) {
+        Base.showError(ex, req, res);
+    }
+});
+
+router.get('/feathers-nedb', async function (req, res, next) {
+    try {
+        const context = {
+            title: 'Feathers NeDB',
+            req: req
+        };
+        if (config.debug) {
+            console.log('Router.get: ', req.originalUrl);
+        }
+        // Create controller
+        const db = new Database(context);
+        // Perform the action "service.startServer"
+        const messages = await db.feathersNeDB();
+
+        // Render twig template
+        const html = await Base.twigRender('messages.html.twig', req, messages);
+        // Set view params
+        res.locals.msgBox = {type: 'info', text: html};
+        // View render
+        res.render('tmpls/database/feathers-nedb/index.html.twig', context);
         if (config.debug) {
             console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
         }

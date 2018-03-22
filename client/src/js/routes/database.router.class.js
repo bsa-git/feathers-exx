@@ -9,12 +9,22 @@ class DatabaseRouter {
     }
 
     /**
-     * Real-time APIs
+     * Database Feathers Memory
      * @return Promise
      */
     async databaseFeathersMemory() {
         // Run feathersMemory action
         await this.database.feathersMemory();
+        return 'ok';
+    }
+
+    /**
+     * Database Feathers NeDB
+     * @return Promise
+     */
+    async databaseFeathersNeDB() {
+        // Run feathersNeDB action
+        await this.database.feathersNeDB();
         return 'ok';
     }
 }

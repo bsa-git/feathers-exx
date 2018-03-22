@@ -24,6 +24,9 @@ export default async function (client) {
         case 'database/feathers-memory':
             return await databaseRouter.databaseFeathersMemory();
             break;
+        case 'database/feathers-nedb':
+            return await databaseRouter.databaseFeathersNeDB();
+            break;
         default:
             return `Does not match controller/action:  '${client.req.controller}/${client.req.action}'`
     }

@@ -6,15 +6,19 @@
 
         <h1 id="databases">Databases<a class="anchorjs-link " href="#databases" aria-label="Anchor link for: databases"
                                        data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h1>
-        <p>In the <a href="https://docs.feathersjs.com/guides/basics/services.html">services chapter</a> we created a custom in-memory messages service that can
+        <p>In the <a href="https://docs.feathersjs.com/guides/basics/services.html">services chapter</a> we created a
+            custom in-memory messages service that can
             create, update and delete messages. You can probably imagine how we could implement the same thing using a
             database instead of storing the messages in memory so there isn't really a database that Feathers doesn't
             support.</p>
         <p>Writing all that code yourself is pretty repetitive and cumbersome though which is why Feathers has a
             collection of pre-built services for different databases. They offer most the basic functionality and can
-            always be fully customized to your requirements using <a href="https://docs.feathersjs.com/guides/basics/hooks.html">hooks</a>. Feathers database
-            adapters support a common <a href="https://docs.feathersjs.com/api/databases/common.html">usage API</a>, pagination and <a
-                    href="https://docs.feathersjs.com/api/databases/querying.html">querying syntax</a> for many popular databases and NodeJS
+            always be fully customized to your requirements using <a
+                    href="https://docs.feathersjs.com/guides/basics/hooks.html">hooks</a>. Feathers database
+            adapters support a common <a href="https://docs.feathersjs.com/api/databases/common.html">usage API</a>,
+            pagination and <a
+                    href="https://docs.feathersjs.com/api/databases/querying.html">querying syntax</a> for many popular
+            databases and NodeJS
             ORMs:</p>
         <table>
             <thead>
@@ -79,6 +83,60 @@
                 or <a href="http://mongoosejs.com/" target="_blank">Mongoose</a>) before using a Feathers database
                 adapter.</p>
         </blockquote>
+        <h2 id="memoryfilesystem">Memory/Filesystem<a class="anchorjs-link " href="#memoryfilesystem"
+                                                      aria-label="Anchor link for: memoryfilesystem"
+                                                      data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
+        </h2>
+        <ul>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-memory"
+                   target="_blank">feathers-memory</a> - An in-memory database adapter
+            </li>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-localstorage" target="_blank">feathers-localstorage</a>
+                - An adapter for <a href="../client.html">Client side Feathers</a> that can use the browsers <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage" target="_blank">LocalStorage</a>
+                or ReactNative's <a href="https://facebook.github.io/react-native/docs/asyncstorage.html"
+                                    target="_blank">AsyncStorage</a>.
+            </li>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-nedb" target="_blank">feathers-nedb</a> -
+                A database adapter for <a href="https://github.com/louischatriot/nedb" target="_blank">NeDB</a> an
+                in-memory or file system based standalone database.
+            </li>
+        </ul>
+        <h2 id="sql">SQL<a class="anchorjs-link " href="#sql" aria-label="Anchor link for: sql"
+                           data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <ul>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-knex" target="_blank">feathers-knex</a> -
+                An adapter for <a href="http://knexjs.org/" target="_blank">KnexJS</a>, an SQL query builder for
+                NodeJS supporting PostgreSQL, MySQL, SQLite and MSSQL
+            </li>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-sequelize"
+                   target="_blank">feathers-sequelize</a>
+                - An adapter for <a href="http://docs.sequelizejs.com/" target="_blank">Sequelize</a> an ORM for
+                NodeJS supporting PostgreSQL, MySQL, SQLite and MSSQL
+            </li>
+        </ul>
+        <h2 id="nosql">NoSQL<a class="anchorjs-link " href="#nosql" aria-label="Anchor link for: nosql"
+                               data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <ul>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-mongoose"
+                   target="_blank">feathers-mongoose</a>
+                - A database adapter for <a href="http://mongoosejs.com/" target="_blank">Mongoose</a> an Object
+                Modelling library for NodeJS and MongoDB
+            </li>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-mongodb"
+                   target="_blank">feathers-mongodb</a> - A database adapter for <a href="https://www.mongodb.com/"
+                                                                                    target="_blank">MongoDB</a>
+                using the official NodeJS database driver
+            </li>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-elasticsearch" target="_blank">feathers-elasticsearch</a>
+                - A database adapter for <a href="https://github.com/elastic/elasticsearch" target="_blank">Elasticsearch</a>
+            </li>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-rethinkdb"
+                   target="_blank">feathers-rethinkdb</a>
+                - A database adapter for <a href="https://www.rethinkdb.com/" target="_blank">RethinkDB</a> a
+                real-time database.
+            </li>
+        </ul>
         <h2 id="an-in-memory-database">An in-memory database<a class="anchorjs-link " href="#an-in-memory-database"
                                                                aria-label="Anchor link for: an in memory database"
                                                                data-anchorjs-icon="#"
@@ -216,7 +274,8 @@ createAndFind();
         <h2 id="as-a-rest-api">As a REST API<a class="anchorjs-link " href="#as-a-rest-api"
                                                aria-label="Anchor link for: as a rest api" data-anchorjs-icon="#"
                                                style="padding-left: 0.375em;"></a></h2>
-        <p>In the <a href="https://docs.feathersjs.com/guides/basics/rest.html">REST API chapter</a> we created a REST API from our custom messages service. Using
+        <p>In the <a href="https://docs.feathersjs.com/guides/basics/rest.html">REST API chapter</a> we created a REST
+            API from our custom messages service. Using
             a database adapter instead will make our <code>app.js</code> a lot shorter:</p>
         <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
                         class="hljs-string">'@feathersjs/feathers'</span>);
@@ -257,7 +316,8 @@ server.on(<span class="hljs-string">'listening'</span>, () =&gt; <span class="hl
                     href="http://localhost:3030/messages?$limit=2" target="_blank">localhost:3030/messages?$limit=2</a>.
         </p>
         <blockquote>
-            <p><strong>Note:</strong> The <a href="https://docs.feathersjs.com/api/databases/querying.html">querying syntax API
+            <p><strong>Note:</strong> The <a href="https://docs.feathersjs.com/api/databases/querying.html">querying
+                    syntax API
                     documentation</a> has more examples how URLs should look like.</p>
         </blockquote>
     </section>

@@ -10,7 +10,7 @@
                 {% if name == '$select' %}
                     <p>{ message: '{{ message.message }}' }</p>
                 {% else %}
-                    <p>{ id: {{ message.id }}, counter: {{ message.counter }}, message: '{{ message.message }}' }</p>
+                    <p>{ _id: {{ message._id }}, counter: {{ message.counter }}, message: '{{ message.message }}' }</p>
                 {% endif %}
             </li>
         {% endfor %}

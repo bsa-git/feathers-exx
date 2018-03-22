@@ -35,7 +35,8 @@ module.exports = {
             ],
             'database': [
                 {'name':'about', 'url': '/database/about', 'value': 'About'},
-                {'name':'feathers-memory', 'url': '/database/feathers-memory', 'value': 'Database in memory'}
+                {'name':'feathers-memory', 'url': '/database/feathers-memory', 'value': 'Feathers Memory'},
+                {'name':'feathers-nedb', 'url': '/database/feathers-nedb', 'value': 'Feathers NeDB'}
             ]
         }
     },
