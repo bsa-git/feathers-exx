@@ -80,4 +80,23 @@ router.get('/feathers-nedb', async function (req, res, next) {
     }
 });
 
+router.get('/feathers-localstorage', async function (req, res, next) {
+    const context = {
+        title: 'Feathers LocalStorage',
+        req: req
+    };
+    if (config.debug) {
+        console.log('Router.get: ', req.originalUrl);
+    }
+    // Render twig template
+    const html = await Base.twigRender('messages.html.twig', req);
+    // Set view params
+    res.locals.msgBox = {type: 'info', text: html};
+    // View render
+    res.render('tmpls/database/feathers-localstorage/index.html.twig', context);
+    if (config.debug) {
+        console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+    }
+});
+
 module.exports = router;

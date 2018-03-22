@@ -31,7 +31,7 @@ class Database extends Base {
     }
 
     /**
-     * Database feathers memory
+     * Database Feathers NeDB
      * @return Promise
      */
     async feathersNeDB() {
@@ -53,6 +53,62 @@ class Database extends Base {
         return this._serviceMessagesFind(app, 'nedb');
     }
 
+    /**
+     * Database Feathers LocalStorage
+     * @return Promise
+     */
+    async feathersLocalStorage() {
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
+        const feathers = require('@feathersjs/client');
+        const service = require('feathers-localstorage');
+        //---------------------------------
+
+        const app = feathers();
+        app.use('/messages', service({
+            storage: window.localStorage || AsyncStorage,
+            paginate: {
+                default: 5,
+                max: 10
+            }
+        }));
+
+        const messages = app.service('messages');
+
+        // If there are messages, then we do not create new ones
+        const _msessages = await messages.find();
+        if (parseInt(_msessages.total) === 0) {
+            for (let counter = 1; counter <= 10; counter++) {
+                await messages.create({
+                    counter,
+                    message: `Message number ${counter}`
+                });
+            }
+        }
+        const messages_1 = await messages.find({
+            query: {
+                $limit: 3,
+                $sort: {counter: 1}
+            }
+        });
+
+        const messages_2 = await messages.find({
+            query: {
+                $limit: 1,
+                $sort: {counter: -1}
+            }
+
+        });
+
+        // Show messages list from LocalStorage
+        const data = {messages_1: messages_1.data, messages_2: messages_2.data};
+        const template = require('../tmpls/database/feathers-localstorage/messages-1.html.twig');
+        const html = template(data);
+        this.bulma.addMessage(html);
+
+        // Service messages find
+        return this._serviceMessagesFind(app, 'localstorage');
+    }
+
     // Process messages find
     async  _serviceMessagesFind(app, tmpl) {
         const self = this;
@@ -68,6 +124,8 @@ class Database extends Base {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
             }else if (tmpl === 'nedb'){
                 template = require('../tmpls/database/feathers-nedb/messages.html.twig');
+            }else if (tmpl === 'localstorage'){
+                template = require('../tmpls/database/feathers-localstorage/messages-2.html.twig');
             }else {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
             }

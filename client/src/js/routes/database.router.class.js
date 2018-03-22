@@ -27,6 +27,15 @@ class DatabaseRouter {
         await this.database.feathersNeDB();
         return 'ok';
     }
+
+    /**
+     * DataBase Feathers LocalStorage
+     * @return Promise
+     */
+    async databaseFeathersLocalStorage() {
+        await this.database.feathersLocalStorage();
+        return 'ok';
+    }
 }
 
 export default DatabaseRouter

@@ -1,0 +1,195 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <article class="markdown-body entry-content" itemprop="text">
+        <h1><a id="user-content-feathers-localstorage" class="anchor" aria-hidden="true" href="#feathers-localstorage">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>feathers-localstorage
+        </h1>
+        <p><a href="https://github.com/feathersjs-ecosystem/feathers-localstorage/">feathers-localstorage</a> is a
+            database service adapter that extends <a
+                    href="https://github.com/feathersjs-ecosystem/feathers-localstorage/blob/master/memory.md">feathers-memory</a> and
+            stores data in <a href="https://developer.mozilla.org/en/docs/Web/API/Window/localStorage" rel="nofollow">localStorage</a>
+            in the browser or <a href="https://facebook.github.io/react-native/docs/asyncstorage.html" rel="nofollow">AsyncStorage</a>
+            in React Native.</p>
+        <div class="highlight highlight-source-shell">
+            <pre><code class="hljs">$ npm install --save feathers-localstorage</code></pre>
+        </div>
+        <blockquote>
+            <p><strong>Important:</strong> <code>feathers-localstorage</code> implements the <a
+                        href="https://docs.feathersjs.com/api/databases/common.html" rel="nofollow">Feathers Common
+                    database adapter API</a> and <a href="https://docs.feathersjs.com/api/databases/querying.html"
+                                                    rel="nofollow">querying syntax</a>.</p>
+        </blockquote>
+        <h2><a id="user-content-api" class="anchor" aria-hidden="true" href="#api">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>API
+        </h2>
+        <h3><a id="user-content-serviceoptions" class="anchor" aria-hidden="true" href="#serviceoptions">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a><code>service(options)</code></h3>
+        <p>Returns a new service instance initialized with the given options.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">service</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>feathers-localstorage<span
+                            class="pl-pds">'</span></span>);
+
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">service</span>({
+  storage<span class="pl-k">:</span> <span class="pl-c1">window</span>.<span class="pl-smi">localStorage</span> <span
+                        class="pl-k">||</span> AsyncStorage
+}));
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                                class="pl-pds">'</span></span>, <span class="pl-en">service</span>({ storage, id, startId, name, store, paginate }));</code></pre>
+        </div>
+        <p><strong>Options:</strong></p>
+        <ul>
+            <li><code>storage</code> (<strong>required</strong>) - The local storage engine. You can pass in the
+                browsers <code>window.localStorage</code>, React Native's <code>AsyncStorage</code> or a NodeJS
+                localstorage module.
+            </li>
+            <li><code>id</code> (<em>optional</em>, default: <code>'id'</code>) - The name of the id field property.
+            </li>
+            <li><code>startId</code> (<em>optional</em>, default: <code>0</code>) - An id number to start with that will
+                be incremented for new record.
+            </li>
+            <li><code>name</code> (<em>optional</em>, default: <code>'feathers'</code>) - The key to store data under in
+                local or async storage.
+            </li>
+            <li><code>store</code> (<em>optional</em>) - An object with id to item assignments to pre-initialize the
+                data store
+            </li>
+            <li><code>events</code> (<em>optional</em>) - A list of <a
+                        href="https://docs.feathersjs.com/api/events.html#custom-events" rel="nofollow">custom service
+                    events</a> sent by this service
+            </li>
+            <li><code>paginate</code> (<em>optional</em>) - A <a
+                        href="https://docs.feathersjs.com/api/databases/common.html#pagination" rel="nofollow">pagination
+                    object</a> containing a <code>default</code> and <code>max</code> page size
+            </li>
+        </ul>
+        <h2><a id="user-content-example" class="anchor" aria-hidden="true" href="#example">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Example
+        </h2>
+        <p>See the <a href="https://docs.feathersjs.com/api/client.html" rel="nofollow">clients</a> chapter for more
+            information about using Feathers in the browser and React Native.</p>
+        <h3><a id="user-content-browser" class="anchor" aria-hidden="true" href="#browser">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Browser
+        </h3>
+        <div class="highlight highlight-text-html-basic"><pre><code class="hljs">&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span
+                        class="pl-s"><span class="pl-pds">"</span>text/javascript<span
+                            class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span
+                            class="pl-pds">"</span>socket.io/socket.io.js<span
+                            class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
+&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span
+                            class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span
+                            class="pl-pds">"</span>//unpkg.com/@feathersjs/client@^3.0.0/dist/feathers.js<span
+                            class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
+&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span
+                            class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span
+                            class="pl-pds">"</span>//unpkg.com/feathers-localstorage@^2.0.0/dist/localstorage.js<span
+                            class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
+&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span
+                            class="pl-pds">"</span></span>&gt;<span class="pl-s1"></span>
+<span class="pl-s1">  <span class="pl-k">var</span> service <span class="pl-k">=</span> <span
+            class="pl-smi">feathers</span>.<span class="pl-en">localstorage</span>({</span>
+<span class="pl-s1">    storage<span class="pl-k">:</span> <span class="pl-c1">window</span>.<span class="pl-smi">localStorage</span></span>
+<span class="pl-s1">  });</span>
+<span class="pl-s1">  <span class="pl-k">var</span> app <span class="pl-k">=</span> <span class="pl-en">feathers</span>().<span
+            class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                class="pl-pds">'</span></span>, service);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">  <span class="pl-k">var</span> messages <span class="pl-k">=</span> <span class="pl-smi">app</span>.<span
+            class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
+                class="pl-pds">'</span></span>);</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">  <span class="pl-smi">messages</span>.<span class="pl-en">on</span>(<span class="pl-s"><span
+                class="pl-pds">'</span>created<span class="pl-pds">'</span></span>, <span
+            class="pl-k">function</span>(<span class="pl-smi">message</span>) {</span>
+<span class="pl-s1">    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span
+                class="pl-pds">'</span>Someone created a message<span class="pl-pds">'</span></span>, message);</span>
+<span class="pl-s1">  });</span>
+<span class="pl-s1"></span>
+<span class="pl-s1">  <span class="pl-smi">messages</span>.<span class="pl-en">create</span>({</span>
+<span class="pl-s1">    text<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Message created in browser<span
+                class="pl-pds">'</span></span></span>
+<span class="pl-s1">  });</span>
+                    <span class="pl-s1"></span><span class="pl-s1">&lt;</span>/<span class="pl-ent">script</span>&gt;</code></pre>
+        </div>
+        <h3><a id="user-content-react-native" class="anchor" aria-hidden="true" href="#react-native">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>React Native
+        </h3>
+        <div class="highlight highlight-source-shell">
+            <pre><code class="hljs">$ npm install @feathersjs/feathers feathers-localstorage --save</code></pre>
+        </div>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">import</span> <span
+                        class="pl-smi">React</span> <span class="pl-k">from</span> <span class="pl-s"><span
+                            class="pl-pds">'</span>react-native<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">feathers</span> <span class="pl-k">from</span> <span class="pl-s"><span
+                            class="pl-pds">'</span>@feathersjs/feathers<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">localstorage</span> <span class="pl-k">from</span> <span
+                        class="pl-s"><span class="pl-pds">'</span>feathers-localstorage<span
+                            class="pl-pds">'</span></span>;
+
+<span class="pl-k">const</span> { <span class="pl-c1">AsyncStorage</span> } <span class="pl-k">=</span> React;
+
+<span class="pl-k">const</span> <span class="pl-c1">app</span> <span class="pl-k">=</span> <span
+                        class="pl-en">feathers</span>()
+  .<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span class="pl-pds">'</span></span>, <span
+                        class="pl-en">localstorage</span>({ storage<span class="pl-k">:</span> AsyncStorage }));
+
+<span class="pl-k">const</span> <span class="pl-c1">messages</span> <span class="pl-k">=</span> <span
+                        class="pl-smi">app</span>.<span class="pl-en">service</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>messages<span class="pl-pds">'</span></span>);
+
+<span class="pl-smi">messages</span>.<span class="pl-en">on</span>(<span class="pl-s"><span class="pl-pds">'</span>created<span
+                            class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">message</span>) {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>Someone created a message<span
+                            class="pl-pds">'</span></span>, message);
+});
+
+<span class="pl-smi">messages</span>.<span class="pl-en">create</span>({
+  text<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Message from React Native<span
+                            class="pl-pds">'</span></span>
+                    });</code></pre>
+        </div>
+        <h2><a id="user-content-license" class="anchor" aria-hidden="true" href="#license">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>License
+        </h2>
+        <p>Copyright (c) 2017</p>
+        <p>Licensed under the <a href="https://github.com/feathersjs-ecosystem/feathers-localstorage/blob/master/LICENSE">MIT license</a>.
+        </p>
+    </article>
+{% endblock %}

@@ -25,6 +25,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.15.5",
+    "feathers-localstorage": "^2.0.1",
     "feathers-memory": "^2.1.1",
     "feathers-nedb": "^3.0.0",
     "fetch-polyfill": "^0.8.2",
