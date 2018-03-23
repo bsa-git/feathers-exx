@@ -189,7 +189,7 @@ class Service extends Base {
      * Service REST APIs
      * @return Promise
      */
-    restApis() {
+    async restApis() {
         const self = this;
         const feathers = require('@feathersjs/feathers');
         const express = require('@feathersjs/express');
@@ -199,13 +199,8 @@ class Service extends Base {
         // This creates an app that is both, an Express and Feathers app
         const app = express(feathers());
 
-        // CORS
-        app.use(function(req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "*");
-            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-            next();
-        });
+        // CORS Middleware
+        this.corsMiddleware(app);
 
         // Turn on JSON body parsing for REST services
         app.use(express.json());
@@ -221,18 +216,8 @@ class Service extends Base {
         // Set up an error handler that gives us nicer errors
         app.use(express.errorHandler());
 
-        // Start the server on port 3030
-        // If the server exists, then we close it
-        if(this.req.app.get('httpServer')){
-            this.req.app.get('httpServer').close(()=>{
-                if(self.config.debug){
-                    console.log(`Feathers REST API closed at http://localhost:${self.config.app.exxPort}`);
-                }
-                self.createServer(app);
-            });
-        }else {
-            this.createServer(app);
-        }
+        // Restart the server on port 3030
+        await this.restartServer(app);
 
         // Process messages service
         async function processMessages() {
@@ -262,7 +247,7 @@ class Service extends Base {
      * Service REST Client
      * @return Promise
      */
-    restClient() {
+    async restClient() {
         const self = this;
         const feathers = require('@feathersjs/feathers');
         const express = require('@feathersjs/express');
@@ -272,13 +257,8 @@ class Service extends Base {
         // This creates an app that is both, an Express and Feathers app
         const app = express(feathers());
 
-        // CORS
-        app.use(function(req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "*");
-            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-            next();
-        });
+        // CORS Middleware
+        this.corsMiddleware(app);
 
         // Turn on JSON body parsing for REST services
         app.use(express.json());
@@ -294,18 +274,8 @@ class Service extends Base {
         // Set up an error handler that gives us nicer errors
         app.use(express.errorHandler());
 
-        // Start the server on port 3030
-        // If the server exists, then we close it
-        if(this.req.app.get('httpServer')){
-            this.req.app.get('httpServer').close(()=>{
-                if(self.config.debug){
-                    console.log(`Feathers REST API closed at http://localhost:${self.config.app.exxPort}`);
-                }
-                self.createServer(app);
-            });
-        }else {
-            this.createServer(app);
-        }
+        // Restart the server on port 3030
+        await this.restartServer(app);
 
         // Process messages service
         async function processMessages() {
@@ -335,7 +305,7 @@ class Service extends Base {
      * Service Real Time
      * @return Promise
      */
-    realTime() {
+    async realTime() {
         const self = this;
         const feathers = require('@feathersjs/feathers');
         const express = require('@feathersjs/express');
@@ -348,13 +318,8 @@ class Service extends Base {
         // This creates an app that is both, an Express and Feathers app
         const app = express(feathers());
 
-        // CORS
-        app.use(function(req, res, next) {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "*");
-            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-            next();
-        });
+        // CORS Middleware
+        this.corsMiddleware(app);
 
         // Turn on JSON body parsing for REST services
         app.use(express.json());
@@ -376,18 +341,8 @@ class Service extends Base {
         // Set up an error handler that gives us nicer errors
         app.use(express.errorHandler());
 
-        // Start the server on port 3030
-        // If the server exists, then we close it
-        if(this.req.app.get('httpServer')){
-            this.req.app.get('httpServer').close(()=>{
-                if(self.config.debug){
-                    console.log(`Feathers REST API closed at http://localhost:${self.config.app.exxPort}`);
-                }
-                self.createServer(app);
-            });
-        }else {
-            this.createServer(app);
-        }
+        // Restart the server on port 3030
+        await this.restartServer(app);
 
         // Process messages service
         async function processMessages() {

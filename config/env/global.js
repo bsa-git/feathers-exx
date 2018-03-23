@@ -35,9 +35,10 @@ module.exports = {
             ],
             'database': [
                 {'name':'about', 'url': '/database/about', 'value': 'About'},
+                {'name':'feathers-localstorage', 'url': '/database/feathers-localstorage', 'value': 'Feathers LocalStorage'},
                 {'name':'feathers-memory', 'url': '/database/feathers-memory', 'value': 'Feathers Memory'},
                 {'name':'feathers-nedb', 'url': '/database/feathers-nedb', 'value': 'Feathers NeDB'},
-                {'name':'feathers-localstorage', 'url': '/database/feathers-localstorage', 'value': 'Feathers LocalStorage'}
+                {'name':'feathers-knex', 'url': '/database/feathers-knex', 'value': 'Feathers Knex'}
             ]
         }
     },

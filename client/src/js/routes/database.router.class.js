@@ -2,6 +2,9 @@
 
 import Database from '../controllers/database.class'
 
+/**
+ * Database router
+ */
 class DatabaseRouter {
     constructor(client) {
         this.client = client;
@@ -9,31 +12,40 @@ class DatabaseRouter {
     }
 
     /**
-     * Database Feathers Memory
+     * Route database feathers-memory
      * @return Promise
      */
-    async databaseFeathersMemory() {
+    async routeFeathersMemory() {
         // Run feathersMemory action
         await this.database.feathersMemory();
         return 'ok';
     }
 
     /**
-     * Database Feathers NeDB
+     * Route database feathers-nedb
      * @return Promise
      */
-    async databaseFeathersNeDB() {
+    async routeFeathersNeDB() {
         // Run feathersNeDB action
         await this.database.feathersNeDB();
         return 'ok';
     }
 
     /**
-     * DataBase Feathers LocalStorage
+     * Route database feathers-localstorage
      * @return Promise
      */
-    async databaseFeathersLocalStorage() {
+    async routeFeathersLocalStorage() {
         await this.database.feathersLocalStorage();
+        return 'ok';
+    }
+
+    /**
+     * Route database feathers-knex
+     * @return Promise
+     */
+    async routeFeathersKnex() {
+        await this.database.feathersKnex();
         return 'ok';
     }
 }

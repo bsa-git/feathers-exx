@@ -9,11 +9,11 @@ class ServiceRouter {
     }
 
     /**
-     * Our first Feathers application on client
+     * Route our first feathers application on client
      * @param name String
      * @return Promise
      */
-    async serviceStartClient(name) {
+    async routeServiceStartClient(name) {
         const result = await this.service.startClient(name);
         const msgBox = {type: 'info', text: result};
         this.client.bulma.showMessage({msgBox: msgBox});
@@ -21,10 +21,10 @@ class ServiceRouter {
     }
 
     /**
-     * REST and services
+     * Route REST and services
      * @return Promise
      */
-    async serviceRestApis() {
+    async routeServiceRestApis() {
 
         // // Add listener for 'create button'
         const cbs = await this.service.restApis();
@@ -46,10 +46,10 @@ class ServiceRouter {
     }
 
     /**
-     * REST Client
+     * Route REST Client
      * @return Promise
      */
-    async serviceRestClient() {
+    async routeServiceRestClient() {
 
         // Add listener for 'create button'
         const cbs = await this.service.restClient();
@@ -71,10 +71,10 @@ class ServiceRouter {
     }
 
     /**
-     * Real-time APIs
+     * Route Real-time APIs
      * @return Promise
      */
-    async serviceRealTime() {
+    async routeServiceRealTime() {
 
         // Add listener for 'create button'
         const cbs = await this.service.realTime();

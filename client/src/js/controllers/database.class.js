@@ -8,7 +8,7 @@ class Database extends Base {
     }
 
     /**
-     * Database feathers memory
+     * Action database feathers-memory
      * @return Promise
      */
     async feathersMemory() {
@@ -31,7 +31,7 @@ class Database extends Base {
     }
 
     /**
-     * Database Feathers NeDB
+     * Action database feathers-nedb
      * @return Promise
      */
     async feathersNeDB() {
@@ -54,7 +54,7 @@ class Database extends Base {
     }
 
     /**
-     * Database Feathers LocalStorage
+     * Action database feathers-localstorage
      * @return Promise
      */
     async feathersLocalStorage() {
@@ -109,6 +109,29 @@ class Database extends Base {
         return this._serviceMessagesFind(app, 'localstorage');
     }
 
+    /**
+     * Action database feathers-knex
+     * @return Promise
+     */
+    async feathersKnex() {
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
+        const feathers = require('@feathersjs/client');
+        const axios = require('axios');
+        //---------------------------------
+
+        const app = feathers();
+
+        // Connect to a different URL
+        const restClient = feathers.rest(restURL);
+
+        // Configure an AJAX library (see below) with that client
+        // app.configure(restClient.axios(axios));
+        app.configure(restClient.axios(axios));
+
+        // Service messages find
+        return this._serviceMessagesFind(app, 'knex');
+    }
+
     // Process messages find
     async  _serviceMessagesFind(app, tmpl) {
         const self = this;
@@ -126,6 +149,8 @@ class Database extends Base {
                 template = require('../tmpls/database/feathers-nedb/messages.html.twig');
             }else if (tmpl === 'localstorage'){
                 template = require('../tmpls/database/feathers-localstorage/messages-2.html.twig');
+            }else if (tmpl === 'knex'){
+                template = require('../tmpls/database/feathers-knex/messages.html.twig');
             }else {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
             }

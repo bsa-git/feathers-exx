@@ -1,0 +1,27 @@
+<section>
+    <div class="server-body">
+        <h3>Server Example Output</h3>
+        <span>Available data of service "messages" on (localhost:3030): </span>
+        <ul style="list-style: none;">
+            [
+            {% for message_1 in messages_1 %}
+                <li>
+                    <p>{ _id: {{ message_1._id }}, counter: {{ message_1.counter }}, message: '{{ message_1.message }}' }{% if not loop.last %},{% endif %}</p>
+                </li>
+            {% endfor %}
+            ...
+            {% for message_2 in messages_2 %}
+                <li>
+                    <p>{ _id: {{ message_2._id }}, counter: {{ message_2.counter }}, message: '{{ message_2.message }}' }{% if not loop.last %},{% endif %}</p>
+                </li>
+            {% endfor %}
+            ]
+        </ul>
+    </div>
+    <div class="client-body">
+        <hr>
+        <h3>Client Example Output</h3>
+        <h4>Examples Querying</h4>
+    </div>
+    <div class="server-footer"></div>
+</section>

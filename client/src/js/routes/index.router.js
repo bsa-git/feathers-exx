@@ -10,25 +10,28 @@ export default async function (client) {
     // const authRouter = new AuthRouter(client);
     switch (`${client.req.controller}/${client.req.action}`) {
         case 'service/start-client':
-            return await serviceRouter.serviceStartClient('dishes');
+            return await serviceRouter.routeServiceStartClient('dishes');
             break;
         case 'service/rest-apis':
-            return await serviceRouter.serviceRestApis();
+            return await serviceRouter.routeServiceRestApis();
             break;
         case 'service/rest-client':
-            return await serviceRouter.serviceRestClient();
+            return await serviceRouter.routeServiceRestClient();
             break;
         case 'service/real-time':
-            return await serviceRouter.serviceRealTime();
+            return await serviceRouter.routeServiceRealTime();
             break;
         case 'database/feathers-memory':
-            return await databaseRouter.databaseFeathersMemory();
+            return await databaseRouter.routeFeathersMemory();
             break;
         case 'database/feathers-nedb':
-            return await databaseRouter.databaseFeathersNeDB();
+            return await databaseRouter.routeFeathersNeDB();
             break;
         case 'database/feathers-localstorage':
-            return await databaseRouter.databaseFeathersLocalStorage();
+            return await databaseRouter.routeFeathersLocalStorage();
+            break;
+        case 'database/feathers-knex':
+            return await databaseRouter.routeFeathersKnex();
             break;
         default:
             return `Does not match controller/action:  '${client.req.controller}/${client.req.action}'`

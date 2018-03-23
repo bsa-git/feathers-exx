@@ -14,6 +14,23 @@ class Base {
     }
 
     /**
+     * Restart server
+     * @param app Application
+     */
+    async restartServer(app) {
+        // Restart the server on port 3030
+        if (this.req.app.get('httpServer')) {
+            await this.req.app.get('httpServer').close();
+            if (this.config.debug) {
+                console.log(`Feathers REST API closed at http://localhost:${this.config.app.exxPort}`);
+            }
+            this.createServer(app);
+        } else {
+            this.createServer(app);
+        }
+    }
+
+    /**
      * Create http.server
      * @param app Application
      */
@@ -25,6 +42,19 @@ class Base {
         httpServer.on('listening', () => {
             self.req.app.set('httpServer', httpServer);
             console.log(`Feathers REST API started at http://localhost:${self.config.app.exxPort}`);
+        });
+    }
+
+    /**
+     * CORS middleware
+     * @param app Application
+     */
+    corsMiddleware(app){
+        app.use(function (req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "*");
+            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+            next();
         });
     }
 
