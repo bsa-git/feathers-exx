@@ -12,7 +12,7 @@ class Database extends Base {
      * @return Promise
      */
     async feathersMemory() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
         const feathers = require('@feathersjs/client');
         const axios = require('axios');
         //---------------------------------
@@ -35,7 +35,7 @@ class Database extends Base {
      * @return Promise
      */
     async feathersNeDB() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
         const feathers = require('@feathersjs/client');
         const axios = require('axios');
         //---------------------------------
@@ -58,7 +58,7 @@ class Database extends Base {
      * @return Promise
      */
     async feathersLocalStorage() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
         const feathers = require('@feathersjs/client');
         const service = require('feathers-localstorage');
         //---------------------------------
@@ -109,12 +109,13 @@ class Database extends Base {
         return this._serviceMessagesFind(app, 'localstorage');
     }
 
+
     /**
      * Action database feathers-knex
      * @return Promise
      */
     async feathersKnex() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
         const feathers = require('@feathersjs/client');
         const axios = require('axios');
         //---------------------------------
@@ -132,8 +133,37 @@ class Database extends Base {
         return this._serviceMessagesFind(app, 'knex');
     }
 
-    // Process messages find
-    async  _serviceMessagesFind(app, tmpl) {
+    /**
+     * Action database feathers-sequelize
+     * @return Promise
+     */
+    async featherSequelize() {
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
+        const feathers = require('@feathersjs/client');
+        const axios = require('axios');
+        //---------------------------------
+
+        const app = feathers();
+
+        // Connect to a different URL
+        const restClient = feathers.rest(restURL);
+
+        // Configure an AJAX library (see below) with that client
+        // app.configure(restClient.axios(axios));
+        app.configure(restClient.axios(axios));
+
+        // Service messages find
+        return this._serviceMessagesFind(app, 'sequelize');
+    }
+
+    /**
+     * Process messages find
+     * @param app
+     * @param tmpl
+     * @return {Promise.<string>}
+     * @private
+     */
+    async _serviceMessagesFind(app, tmpl) {
         const self = this;
         //------------------------
 
@@ -143,15 +173,17 @@ class Database extends Base {
         // Render twig template
         let template;
         const _twigRender = (data) => {
-            if(tmpl === 'memory'){
+            if (tmpl === 'memory') {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
-            }else if (tmpl === 'nedb'){
+            } else if (tmpl === 'nedb') {
                 template = require('../tmpls/database/feathers-nedb/messages.html.twig');
-            }else if (tmpl === 'localstorage'){
+            } else if (tmpl === 'localstorage') {
                 template = require('../tmpls/database/feathers-localstorage/messages-2.html.twig');
-            }else if (tmpl === 'knex'){
+            } else if (tmpl === 'knex') {
                 template = require('../tmpls/database/feathers-knex/messages.html.twig');
-            }else {
+            } else if (tmpl === 'sequelize') {
+                template = require('../tmpls/database/feathers-sequelize/messages.html.twig');
+            } else {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
             }
 
@@ -311,6 +343,22 @@ class Database extends Base {
             description: 'Find all records that match any of the given criteria.'
         };
         await serviceMessagesFind(context);
+
+        if (tmpl === 'knex') {
+            // '$like'
+            context = {
+                query: {
+                    message: {$like: 'Message number 1%'}
+                },
+                strQuery: 'query: {message: {$like: \'Message number 1%\'}}',
+                urlQuery: 'message[$like]=Message number 1%',
+                name: '$like',
+                description: 'Find all records where the value matches the given string pattern.'
+            };
+            await serviceMessagesFind(context);
+        } else if (tmpl === 'nedb') {
+
+        }
 
         return 'ok';
     }

@@ -33,6 +33,9 @@ export default async function (client) {
         case 'database/feathers-knex':
             return await databaseRouter.routeFeathersKnex();
             break;
+        case 'database/feathers-sequelize':
+            return await databaseRouter.routeFeathersSequelize();
+            break;
         default:
             return `Does not match controller/action:  '${client.req.controller}/${client.req.action}'`
     }

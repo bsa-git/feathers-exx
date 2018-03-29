@@ -1,0 +1,731 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <article class="markdown-body entry-content" itemprop="text">
+        <h1><a id="user-content-feathers-sequelize" class="anchor" aria-hidden="true" href="#feathers-sequelize">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>feathers-sequelize
+        </h1>
+        <p>A <a href="https://feathersjs.com" rel="nofollow">Feathers</a> database adapter for <a
+                    href="http://sequelizejs.com" rel="nofollow">Sequelize</a>, an ORM for Node.js. It supports
+            PostgreSQL, MySQL, MariaDB, SQLite and MSSQL and features transaction support, relations, read replication
+            and more.</p>
+        <blockquote>
+            <p><strong>Very Important:</strong> Before using this adapter you have to be familiar with both, the <a
+                        href="https://docs.feathersjs.com/guides/basics/readme.html" rel="nofollow">Feathers Basics</a>
+                and general use of <a href="http://docs.sequelizejs.com/" rel="nofollow">Sequelize</a>. For associations
+                and relations see the <a href="#associations">associations</a> section. This adapter may not cover all
+                use cases but they can still be implemented using Sequelize models directly in a <a
+                        href="https://docs.feathersjs.com/guides/basics/services.html" rel="nofollow">Custom Feathers
+                    service</a>.</p>
+        </blockquote>
+        <div class="highlight highlight-source-shell">
+            <pre><code class="hljs">npm install --save feathers-sequelize</code></pre>
+        </div>
+        <p>And <a href="http://docs.sequelizejs.com/en/latest/docs/getting-started/" rel="nofollow">one of the
+                following</a>:</p>
+        <div class="highlight highlight-source-shell"><pre><code class="hljs">npm install --save pg pg-hstore
+npm install --save mysql // For both mysql and mariadb dialects
+npm install --save sqlite3
+npm install --save tedious // MSSQL
+                </code></pre>
+        </div>
+        <blockquote>
+            <p><strong>Important:</strong> <code>feathers-sequelize</code> implements the <a
+                        href="https://docs.feathersjs.com/api/databases/common.html" rel="nofollow">Feathers Common
+                    database adapter API</a> and <a href="https://docs.feathersjs.com/api/databases/querying.html"
+                                                    rel="nofollow">querying syntax</a>.
+                For more information about models and general Sequelize usage, follow up in the <a
+                        href="http://docs.sequelizejs.com/en/latest/" rel="nofollow">Sequelize documentation</a>.</p>
+        </blockquote>
+        <h2><a id="user-content-api" class="anchor" aria-hidden="true" href="#api">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>API
+        </h2>
+        <h3><a id="user-content-serviceoptions" class="anchor" aria-hidden="true" href="#serviceoptions">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a><code>service(options)</code></h3>
+        <p>Returns a new service instance initialized with the given options.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span class="pl-c1">Model</span> <span
+                        class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>./models/mymodel<span class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">service</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>feathers-sequelize<span class="pl-pds">'</span></span>);
+
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">service</span>({ Model }));
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                                class="pl-pds">'</span></span>, <span class="pl-en">service</span>({ Model, id, events, paginate }));</code></pre>
+        </div>
+        <p><strong>Options:</strong></p>
+        <ul>
+            <li><code>Model</code> (<strong>required</strong>) - The Sequelize model definition</li>
+            <li><code>id</code> (<em>optional</em>, default: <code>'id'</code>) - The name of the id field property.
+            </li>
+            <li><code>raw</code> (<em>optional</em>, default: <code>true</code>) - Runs queries faster by returning
+                plain objects instead of Sequelize models.
+            </li>
+            <li><code>events</code> (<em>optional</em>) - A list of <a
+                        href="https://docs.feathersjs.com/api/events.html#custom-events" rel="nofollow">custom service
+                    events</a> sent by this service
+            </li>
+            <li><code>paginate</code> (<em>optional</em>) - A <a
+                        href="https://docs.feathersjs.com/api/databases/common.html#pagination" rel="nofollow">pagination
+                    object</a> containing a <code>default</code> and <code>max</code> page size
+            </li>
+        </ul>
+        <h3><a id="user-content-paramssequelize" class="anchor" aria-hidden="true" href="#paramssequelize">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>params.sequelize
+        </h3>
+        <p>When making a <a href="https://docs.feathersjs.com/api/services.html" rel="nofollow">service method</a> call,
+            <code>params</code> can contain an <code>sequelize</code> property which allows to pass additional Sequelize
+            options. This can e.g. be used to <strong>retrieve associations</strong>. Normally this wil be set in a
+            before <a href="https://docs.feathersjs.com/api/hooks.html" rel="nofollow">hook</a>:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-smi">app</span>.<span
+                        class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
+                            class="pl-pds">'</span></span>).<span class="pl-en">hooks</span>({
+  before<span class="pl-k">:</span> {
+    <span class="pl-en">find</span>(<span class="pl-smi">context</span>) {
+      <span class="pl-c"><span
+                  class="pl-c">//</span> Get the Sequelize instance. In the generated application via:</span>
+      <span class="pl-k">const</span> <span class="pl-c1">sequelize</span> <span class="pl-k">=</span> <span
+                        class="pl-smi">context</span>.<span class="pl-smi">app</span>.<span
+                        class="pl-c1">get</span>(<span class="pl-s"><span class="pl-pds">'</span>sequelizeClient<span
+                            class="pl-pds">'</span></span>);
+
+      <span class="pl-smi">context</span>.<span class="pl-smi">params</span>.<span class="pl-smi">sequelize</span> <span
+                        class="pl-k">=</span> {
+        include<span class="pl-k">:</span> [ User ]
+      }
+    }
+  }
+});
+                </code></pre>
+        </div>
+        <h2><a id="user-content-sequelize-raw-queries" class="anchor" aria-hidden="true" href="#sequelize-raw-queries">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Sequelize <code>raw</code> queries
+        </h2>
+        <p>By default, all <code>feathers-sequelize</code> operations will return <code>raw</code> data (using <code>raw:
+                true</code> when querying the database). This results in faster execution and allows feathers-sequelize
+            to interoperate with feathers-common hooks and other 3rd party integrations. However, this will bypass some
+            of the "goodness" you get when using Sequelize as an ORM:</p>
+        <ul>
+            <li>custom getters/setters will be bypassed</li>
+            <li>model-level validations are bypassed</li>
+            <li>associated data loads a bit differently</li>
+            <li>...and several other issues that one might not expect</li>
+        </ul>
+        <p>Don't worry! The solution is easy. Please read the guides about <a
+                    href="#working-with-sequelize-model-instances">working with model instances</a>.</p>
+        <h2><a id="user-content-example" class="anchor" aria-hidden="true" href="#example">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Example
+        </h2>
+        <p>Here is an example of a Feathers server with a <code>messages</code> SQLite Sequelize Model:</p>
+        <pre><code class="hljs"><code>$ npm install @feathersjs/feathers @feathersjs/errors @feathersjs/express @feathersjs/socketio sequelize feathers-sequelize sqlite3
+                </code></code></pre>
+        <p>In <code>app.js</code>:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span class="pl-c1">path</span> <span
+                        class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>path<span class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">feathers</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>@feathersjs/feathers<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">express</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>@feathersjs/express<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">socketio</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>@feathersjs/socketio<span
+                            class="pl-pds">'</span></span>);
+
+<span class="pl-k">const</span> <span class="pl-c1">Sequelize</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>sequelize<span class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">service</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>feathers-sequelize<span class="pl-pds">'</span></span>);
+
+<span class="pl-k">const</span> <span class="pl-c1">sequelize</span> <span class="pl-k">=</span> <span
+                        class="pl-k">new</span> <span class="pl-en">Sequelize</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>sequelize<span class="pl-pds">'</span></span>, <span
+                        class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>, <span
+                        class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>, {
+  dialect<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>sqlite<span class="pl-pds">'</span></span>,
+  storage<span class="pl-k">:</span> <span class="pl-smi">path</span>.<span class="pl-c1">join</span>(<span
+                        class="pl-c1">__dirname</span>, <span class="pl-s"><span class="pl-pds">'</span>db.sqlite<span
+                            class="pl-pds">'</span></span>),
+  logging<span class="pl-k">:</span> <span class="pl-c1">false</span>
+});
+<span class="pl-k">const</span> <span class="pl-c1">Message</span> <span class="pl-k">=</span> <span class="pl-smi">sequelize</span>.<span
+                        class="pl-en">define</span>(<span class="pl-s"><span class="pl-pds">'</span>message<span
+                            class="pl-pds">'</span></span>, {
+  text<span class="pl-k">:</span> {
+    type<span class="pl-k">:</span> <span class="pl-smi">Sequelize</span>.<span class="pl-c1">STRING</span>,
+    allowNull<span class="pl-k">:</span> <span class="pl-c1">false</span>
+  }
+}, {
+  freezeTableName<span class="pl-k">:</span> <span class="pl-c1">true</span>
+});
+
+<span class="pl-c"><span class="pl-c">//</span> Create an Express compatible Feathers application instance.</span>
+<span class="pl-k">const</span> <span class="pl-c1">app</span> <span class="pl-k">=</span> <span
+                        class="pl-en">express</span>(<span class="pl-en">feathers</span>());
+
+<span class="pl-c"><span class="pl-c">//</span> Turn on JSON parser for REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">json</span>());
+<span class="pl-c"><span class="pl-c">//</span> Turn on URL-encoded parser for REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">urlencoded</span>({ extended<span
+                        class="pl-k">:</span> <span class="pl-c1">true</span> }));
+<span class="pl-c"><span class="pl-c">//</span> Enable REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">configure</span>(<span class="pl-smi">express</span>.<span
+                        class="pl-en">rest</span>());
+<span class="pl-c"><span class="pl-c">//</span> Enable Socket.io services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">configure</span>(<span class="pl-en">socketio</span>());
+<span class="pl-c"><span class="pl-c">//</span> Create an in-memory Feathers service with a default page size of 2 items</span>
+<span class="pl-c"><span class="pl-c">//</span> and a maximum size of 4</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">service</span>({
+  Model<span class="pl-k">:</span> Message,
+  paginate<span class="pl-k">:</span> {
+    default<span class="pl-k">:</span> <span class="pl-c1">2</span>,
+    max<span class="pl-k">:</span> <span class="pl-c1">4</span>
+  }
+}));
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">errorHandler</span>());
+
+<span class="pl-smi">Message</span>.<span class="pl-en">sync</span>({ force<span class="pl-k">:</span> <span
+                        class="pl-c1">true</span> }).<span class="pl-en">then</span>(() <span class="pl-k">=&gt;</span> {
+  <span class="pl-c"><span class="pl-c">//</span> Create a dummy Message</span>
+  <span class="pl-smi">app</span>.<span class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
+                            class="pl-pds">'</span></span>).<span class="pl-en">create</span>({
+    text<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Message created on server<span
+                            class="pl-pds">'</span></span>
+  }).<span class="pl-en">then</span>(<span class="pl-smi">message</span> <span class="pl-k">=&gt;</span> <span
+                        class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>Created message<span class="pl-pds">'</span></span>, message));
+});
+
+<span class="pl-c"><span class="pl-c">//</span> Start the server</span>
+<span class="pl-k">const</span> <span class="pl-c1">port</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">3030</span>;
+
+<span class="pl-smi">app</span>.<span class="pl-en">listen</span>(port, () <span class="pl-k">=&gt;</span> {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">`</span>Feathers server listening on port <span
+                            class="pl-s1"><span class="pl-pse">${</span>port<span class="pl-pse">}</span></span><span
+                            class="pl-pds">`</span></span>);
+});
+                </code></pre>
+        </div>
+        <p>Run the example with <code>node app</code> and go to <a href="http://localhost:3030/messages" rel="nofollow">localhost:3030/messages</a>.
+        </p>
+        <h2><a id="user-content-associations" class="anchor" aria-hidden="true" href="#associations">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Associations
+        </h2>
+        <h3><a id="user-content-embrace-the-orm" class="anchor" aria-hidden="true" href="#embrace-the-orm">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Embrace the ORM
+        </h3>
+        <p>The documentation on <a href="http://docs.sequelizejs.com/manual/tutorial/associations.html" rel="nofollow">Sequelize
+                associations and relations</a> is essential to implementing associations with this adapter and one of
+            the steepest parts of the Sequelize learning curve. If you have never used an ORM, let it do a lot of the
+            heavy lifting for you!</p>
+        <h3><a id="user-content-setting-paramssequelizeinclude" class="anchor" aria-hidden="true"
+               href="#setting-paramssequelizeinclude">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Setting <code>params.sequelize.include</code></h3>
+        <p>Once you understand how the <code>include</code> option works with Sequelize, you will want to set that
+            option from a <a href="https://docs.feathersjs.com/guides/basics/hooks.html" rel="nofollow">before hook</a>
+            in Feathers. Feathers will pass the value of <code>context.params.sequelize</code> as the options parameter
+            for all Sequelize method calls. This is what your hook might look like:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-c"><span class="pl-c">//</span> GET /my-service?name=John&amp;include=1</span>
+<span class="pl-k">function</span> (<span class="pl-smi">context</span>) {
+   <span class="pl-k">if</span> (<span class="pl-smi">hook</span>.<span class="pl-smi">params</span>.<span
+                        class="pl-smi">query</span>.<span class="pl-smi">include</span>) {
+      <span class="pl-k">const</span> <span class="pl-c1">AssociatedModel</span> <span class="pl-k">=</span> <span
+                        class="pl-smi">hook</span>.<span class="pl-smi">app</span>.<span class="pl-smi">services</span>.<span
+                        class="pl-smi">fooservice</span>.<span class="pl-smi">Model</span>;
+      <span class="pl-smi">hook</span>.<span class="pl-smi">params</span>.<span class="pl-smi">sequelize</span> <span
+                        class="pl-k">=</span> {
+         include<span class="pl-k">:</span> [{ model<span class="pl-k">:</span> AssociatedModel }]
+      };
+      <span class="pl-c"><span class="pl-c">//</span> delete any special query params so they are not used</span>
+      <span class="pl-c"><span class="pl-c">//</span> in the WHERE clause in the db query.</span>
+      <span class="pl-k">delete</span> <span class="pl-smi">context</span>.<span class="pl-smi">params</span>.<span
+                        class="pl-smi">query</span>.<span class="pl-smi">include</span>;
+   }
+
+   <span class="pl-k">return</span> <span class="pl-c1">Promise</span>.<span class="pl-en">resolve</span>(context);
+}
+                </code></pre>
+        </div>
+        <p>Underneath the hood, feathers will call your models find method sort of like this:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-c"><span class="pl-c">//</span> YourModel is a sequelize model</span>
+<span class="pl-k">const</span> <span class="pl-c1">options</span> <span class="pl-k">=</span> <span class="pl-c1">Object</span>.<span
+                        class="pl-en">assign</span>({ where<span class="pl-k">:</span> { name<span class="pl-k">:</span> <span
+                        class="pl-s"><span class="pl-pds">'</span>John<span class="pl-pds">'</span></span> }}, <span
+                        class="pl-smi">context</span>.<span class="pl-smi">params</span>.<span
+                        class="pl-smi">sequelize</span>);
+<span class="pl-smi">YourModel</span>.<span class="pl-en">findAndCount</span>(options);
+                </code></pre>
+        </div>
+        <p>For more information, follow up up in the <a
+                    href="http://docs.sequelizejs.com/manual/tutorial/associations.html" rel="nofollow">Sequelize
+                documentation for associations</a>and <a
+                    href="https://github.com/feathersjs-ecosystem/feathers-sequelize/issues/20">this issue</a>.</p>
+        <h2><a id="user-content-querying" class="anchor" aria-hidden="true" href="#querying">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Querying
+        </h2>
+        <p>Additionally to the <a href="https://docs.feathersjs.com/api/databases/querying.html" rel="nofollow">common
+                querying mechanism</a> this adapter also supports all <a
+                    href="http://docs.sequelizejs.com/manual/tutorial/querying.html" rel="nofollow">Sequelize query
+                operators</a>.</p>
+        <blockquote>
+            <p><strong>Note</strong>: This adapter supports an additional <code>$returning</code> parameter for patch
+                and remove queries. By setting <code>params.$returning = false</code> it will disable feathers and
+                sequelize from returning what was changed, so mass updates can be done without overwhelming node and/or
+                clients.</p>
+        </blockquote>
+        <h2><a id="user-content-working-with-sequelize-model-instances" class="anchor" aria-hidden="true"
+               href="#working-with-sequelize-model-instances">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Working with Sequelize Model instances
+        </h2>
+        <p>It is highly recommended to use <code>raw</code> queries, which is the default. However, there are times when
+            you will want to take advantage of <a href="http://docs.sequelizejs.com/en/latest/api/instance/"
+                                                  rel="nofollow">Sequelize Instance</a> methods. There are two ways to
+            tell feathers to return Sequelize instances:</p>
+        <ol>
+            <li>
+                <p>Set <code>{ raw: false }</code> in a "before" hook:</p>
+                <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">function</span> <span class="pl-en">rawFalse</span>(<span
+                                class="pl-smi">context</span>) {
+    <span class="pl-k">if</span> (<span class="pl-k">!</span><span class="pl-smi">context</span>.<span class="pl-smi">params</span>.<span
+                                class="pl-smi">sequelize</span>) <span class="pl-smi">context</span>.<span
+                                class="pl-smi">params</span>.<span class="pl-smi">sequelize</span> <span
+                                class="pl-k">=</span> {};
+    <span class="pl-c1">Object</span>.<span class="pl-en">assign</span>(<span class="pl-smi">context</span>.<span
+                                class="pl-smi">params</span>.<span class="pl-smi">sequelize</span>, { raw<span
+                                class="pl-k">:</span> <span class="pl-c1">false</span> });
+    <span class="pl-k">return</span> context;
+}
+<span class="pl-smi">hooks</span>.<span class="pl-smi">before</span>.<span class="pl-smi">find</span> <span
+                                    class="pl-k">=</span> [rawFalse];</code></pre>
+                </div>
+            </li>
+            <li>
+                <p>Use the new <code>hydrate</code> hook in the "after" phase:</p>
+                <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span class="pl-c1">hydrate</span> <span
+                                class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span
+                                    class="pl-pds">'</span>feathers-sequelize/hooks/hydrate<span class="pl-pds">'</span></span>);
+<span class="pl-smi">hooks</span>.<span class="pl-smi">after</span>.<span class="pl-smi">find</span> <span class="pl-k">=</span> [<span
+                                class="pl-en">hydrate</span>()];
+
+<span class="pl-c"><span class="pl-c">//</span> Or, if you need to include associated models, you can do the following:</span>
+ <span class="pl-k">function</span> <span class="pl-en">includeAssociated</span> (<span class="pl-smi">context</span>) {
+     <span class="pl-k">return</span> <span class="pl-en">hydrate</span>({
+        include<span class="pl-k">:</span> [{ model<span class="pl-k">:</span> <span class="pl-smi">context</span>.<span
+                                class="pl-smi">app</span>.<span class="pl-smi">services</span>.<span class="pl-smi">fooservice</span>.<span
+                                class="pl-smi">Model</span> }]
+     }).<span class="pl-c1">call</span>(<span class="pl-c1">this</span>, context);
+ }
+ <span class="pl-smi">hooks</span>.<span class="pl-smi">after</span>.<span class="pl-smi">find</span> <span
+                                    class="pl-k">=</span> [includeAssociated];</code></pre>
+                </div>
+            </li>
+        </ol>
+        <p>For a more complete example see this <a
+                    href="https://gist.github.com/sicruse/bfaa17008990bab2fd1d76a670c3923f">gist</a>.</p>
+        <blockquote>
+            <p><strong>Important:</strong> When working with Sequelize Instances, most of the feathers-hooks-common will
+                no longer work. If you need to use a common hook or other 3rd party hooks, you should use the
+                "dehydrate" hook to convert data back to a plain object:</p>
+            <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                            class="pl-c1">hydrate</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                            class="pl-s"><span class="pl-pds">'</span>feathers-sequelize/hooks/hydrate<span
+                                class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">dehydrate</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                            class="pl-s"><span class="pl-pds">'</span>feathers-sequelize/hooks/dehydrate<span
+                                class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> { <span class="pl-c1">populate</span> } <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                            class="pl-s"><span class="pl-pds">'</span>feathers-hooks-common<span class="pl-pds">'</span></span>);
+
+<span class="pl-smi">hooks</span>.<span class="pl-smi">after</span>.<span class="pl-smi">find</span> <span class="pl-k">=</span> [<span
+                            class="pl-en">hydrate</span>(), <span class="pl-en">doSomethingCustom</span>(), <span
+                                class="pl-en">dehydrate</span>(), <span class="pl-en">populate</span>()];</code></pre>
+            </div>
+        </blockquote>
+        <h2><a id="user-content-validation" class="anchor" aria-hidden="true" href="#validation">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Validation
+        </h2>
+        <p>Sequelize by default gives you the ability to <a
+                    href="http://docs.sequelizejs.com/en/latest/docs/models-definition/#validations" rel="nofollow">add
+                validations at the model level</a>. Using an error handler like the one that <a
+                    href="https://github.com/feathersjs/feathers-errors/blob/master/src/error-handler.js">comes with
+                Feathers</a> your validation errors will be formatted nicely right out of the box!</p>
+        <h2><a id="user-content-migrations" class="anchor" aria-hidden="true" href="#migrations">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Migrations
+        </h2>
+        <p>Migrations with feathers and sequelize are quite simple. This guide will walk you through creating the
+            recommended file structure, but you are free to rearrange things as you see fit. The following assumes you
+            have a <code>migrations</code> folder in the root of your app.</p>
+        <h3><a id="user-content-initial-setup-one-time-tasks" class="anchor" aria-hidden="true"
+               href="#initial-setup-one-time-tasks">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Initial Setup: one-time tasks
+        </h3>
+        <ul>
+            <li>Install the <a href="https://github.com/sequelize/cli">sequelize CLI</a>:</li>
+        </ul>
+        <pre><code class="hljs">npm install sequelize-cli --save -g
+</code></pre>
+        <ul>
+            <li>Create a <code>.sequelizerc</code> file in your project root with the following content:</li>
+        </ul>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span class="pl-c1">path</span> <span
+                        class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>path<span class="pl-pds">'</span></span>);
+
+<span class="pl-c1">module</span>.<span class="pl-smi">exports</span> <span class="pl-k">=</span> {
+  <span class="pl-s"><span class="pl-pds">'</span>config<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span
+                        class="pl-smi">path</span>.<span class="pl-en">resolve</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>migrations/config/config.js<span class="pl-pds">'</span></span>),
+  <span class="pl-s"><span class="pl-pds">'</span>migrations-path<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span
+                        class="pl-smi">path</span>.<span class="pl-en">resolve</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>migrations<span class="pl-pds">'</span></span>),
+  <span class="pl-s"><span class="pl-pds">'</span>seeders-path<span class="pl-pds">'</span></span><span
+                        class="pl-k">:</span> <span class="pl-smi">path</span>.<span class="pl-en">resolve</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>migrations/seeders<span class="pl-pds">'</span></span>),
+  <span class="pl-s"><span class="pl-pds">'</span>models-path<span class="pl-pds">'</span></span><span
+                        class="pl-k">:</span> <span class="pl-smi">path</span>.<span class="pl-en">resolve</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>migrations/models<span class="pl-pds">'</span></span>)
+};
+                </code></pre>
+        </div>
+        <ul>
+            <li>Create the migrations config in <code>migrations/config/config.js</code>:</li>
+        </ul>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">app</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>../../src/app<span class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">env</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">process</span>.<span class="pl-smi">env</span>.<span class="pl-c1">NODE_ENV</span> <span
+                        class="pl-k">||</span> <span class="pl-s"><span class="pl-pds">'</span>development<span
+                            class="pl-pds">'</span></span>;
+<span class="pl-k">const</span> <span class="pl-c1">dialect</span> <span class="pl-k">=</span> <span class="pl-s"><span
+                            class="pl-pds">'</span>mysql<span class="pl-pds">'</span></span><span
+                        class="pl-k">|</span><span class="pl-s"><span class="pl-pds">'</span>sqlite<span class="pl-pds">'</span></span><span
+                        class="pl-k">|</span><span class="pl-s"><span class="pl-pds">'</span>postgres<span
+                            class="pl-pds">'</span></span><span class="pl-k">|</span><span class="pl-s"><span
+                            class="pl-pds">'</span>mssql<span class="pl-pds">'</span></span>;
+
+<span class="pl-c1">module</span>.<span class="pl-smi">exports</span> <span class="pl-k">=</span> {
+  [env]<span class="pl-k">:</span> {
+    dialect,
+    url<span class="pl-k">:</span> <span class="pl-smi">app</span>.<span class="pl-c1">get</span>(dialect),
+    migrationStorageTableName<span class="pl-k">:</span> <span class="pl-s"><span
+                            class="pl-pds">'</span>_migrations<span class="pl-pds">'</span></span>
+  }
+};
+                </code></pre>
+        </div>
+        <ul>
+            <li>Define your models config in <code>migrations/models/index.js</code>:</li>
+        </ul>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">Sequelize</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>sequelize<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">app</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>../../src/app<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">sequelize</span> <span class="pl-k">=</span> <span class="pl-smi">app</span>.<span
+                        class="pl-c1">get</span>(<span class="pl-s"><span class="pl-pds">'</span>sequelizeClient<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">models</span> <span class="pl-k">=</span> <span class="pl-smi">sequelize</span>.<span
+                        class="pl-smi">models</span>;
+
+<span class="pl-c"><span
+            class="pl-c">//</span> The export object must be a dictionary of model names -&gt; models</span>
+<span class="pl-c"><span class="pl-c">//</span> It must also include sequelize (instance) and Sequelize (constructor) properties</span>
+<span class="pl-c1">module</span>.<span class="pl-smi">exports</span> <span class="pl-k">=</span> <span class="pl-c1">Object</span>.<span
+                        class="pl-en">assign</span>({
+  Sequelize,
+  sequelize
+}, models);
+                </code></pre>
+        </div>
+        <h3><a id="user-content-migrations-workflow" class="anchor" aria-hidden="true" href="#migrations-workflow">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Migrations workflow
+        </h3>
+        <p>The migration commands will load your application and it is therefore required that you define the same
+            environment variables as when running you application. For example, many applications will define the
+            database connection string in the startup command:</p>
+        <pre><code>DATABASE_URL=postgres://user:pass@host:port/dbname npm start
+</code></pre>
+        <p>All of the following commands assume that you have defined the same environment variables used by your
+            application.</p>
+        <blockquote>
+            <p><strong>ProTip:</strong> To save typing, you can export environment variables for your current
+                bash/terminal session:</p>
+        </blockquote>
+        <pre><code class="hljs">export DATABASE_URL=postgres://user:pass@host:port/db
+</code></pre>
+        <h3><a id="user-content-create-a-new-migration" class="anchor" aria-hidden="true"
+               href="#create-a-new-migration">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Create a new migration
+        </h3>
+        <p>To create a new migration file, run the following command and provide a meaningful name:</p>
+        <pre><code class="hljs">sequelize migration:create --name="meaningful-name"
+</code></pre>
+        <p>This will create a new file in the migrations folder. All migration file names will be prefixed with a
+            sortable data/time string: <code>20160421135254-meaninful-name.js</code>. This prefix is crucial for making
+            sure your migrations are executed in the proper order.</p>
+        <blockquote>
+            <p><strong>NOTE:</strong> The order of your migrations is determined by the alphabetical order of the
+                migration scripts in the file system. The file names generated by the CLI tools will always ensure that
+                the most recent migration comes last.</p>
+        </blockquote>
+        <h4><a id="user-content-add-the-updown-scripts" class="anchor" aria-hidden="true"
+               href="#add-the-updown-scripts">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Add the up/down scripts:
+        </h4>
+        <p>Open the newly created migration file and write the code to both apply and undo the migration. Please refer
+            to the <a href="http://docs.sequelizejs.com/en/latest/docs/migrations/#functions" rel="nofollow">sequelize
+                migration functions</a> for available operations. <strong>Do not be lazy - write the down script too and
+                test!</strong> Here is an example of converting a <code>NOT NULL</code> column accept null values:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-s"><span class="pl-pds">'</span>use strict<span
+                            class="pl-pds">'</span></span>;
+
+<span class="pl-c1">module</span>.<span class="pl-smi">exports</span> <span class="pl-k">=</span> {
+  <span class="pl-en">up</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">queryInterface</span>, <span
+                        class="pl-smi">Sequelize</span>) {
+    <span class="pl-k">return</span> <span class="pl-smi">queryInterface</span>.<span class="pl-en">changeColumn</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>tableName<span class="pl-pds">'</span></span>, <span
+                        class="pl-s"><span class="pl-pds">'</span>columnName<span class="pl-pds">'</span></span>, {
+      type<span class="pl-k">:</span> <span class="pl-smi">Sequelize</span>.<span class="pl-c1">STRING</span>,
+      allowNull<span class="pl-k">:</span> <span class="pl-c1">true</span>
+    });
+  },
+
+  <span class="pl-en">down</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">queryInterface</span>, <span
+                        class="pl-smi">Sequelize</span>) {
+    <span class="pl-k">return</span> <span class="pl-smi">queryInterface</span>.<span class="pl-en">changeColumn</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>tableName<span class="pl-pds">'</span></span>, <span
+                        class="pl-s"><span class="pl-pds">'</span>columnName<span class="pl-pds">'</span></span>, {
+      type<span class="pl-k">:</span> <span class="pl-smi">Sequelize</span>.<span class="pl-c1">STRING</span>,
+      allowNull<span class="pl-k">:</span> <span class="pl-c1">false</span>
+    });
+  }
+};
+                </code></pre>
+        </div>
+        <blockquote>
+            <p><strong>ProTip:</strong> As of this writing, if you use the <code>changeColumn</code> method you must
+                <strong>always</strong> specify the <code>type</code>, even if the type is not changing.</p>
+        </blockquote>
+        <blockquote>
+            <p><strong>ProTip:</strong> Down scripts are typically easy to create and should be nearly identical to the
+                up script except with inverted logic and inverse method calls.</p>
+        </blockquote>
+        <h4><a id="user-content-keeping-your-app-code-in-sync-with-migrations" class="anchor" aria-hidden="true"
+               href="#keeping-your-app-code-in-sync-with-migrations">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Keeping your app code in sync with migrations
+        </h4>
+        <p>The application code should always be up to date with the migrations. This allows the app to be freshly
+            installed with everything up-to-date without running the migration scripts. Your migrations should also
+            never break a freshly installed app. This often times requires that you perform any necessary checks before
+            executing a task. For example, if you update a model to include a new field, your migration should first
+            check to make sure that new field does not exist:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-s"><span class="pl-pds">'</span>use strict<span
+                            class="pl-pds">'</span></span>;
+
+<span class="pl-c1">module</span>.<span class="pl-smi">exports</span> <span class="pl-k">=</span> {
+  <span class="pl-en">up</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">queryInterface</span>, <span
+                        class="pl-smi">Sequelize</span>) {
+    <span class="pl-k">return</span> <span class="pl-smi">queryInterface</span>.<span class="pl-en">describeTable</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>tableName<span class="pl-pds">'</span></span>).<span
+                        class="pl-en">then</span>(<span class="pl-smi">attributes</span> <span class="pl-k">=&gt;</span> {
+      <span class="pl-k">if</span> ( <span class="pl-k">!</span><span class="pl-smi">attributes</span>.<span
+                        class="pl-smi">columnName</span> ) {
+        <span class="pl-k">return</span> <span class="pl-smi">queryInterface</span>.<span class="pl-en">addColumn</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>tableName<span class="pl-pds">'</span></span>, <span
+                        class="pl-s"><span class="pl-pds">'</span>columnName<span class="pl-pds">'</span></span>, {
+          type<span class="pl-k">:</span> <span class="pl-smi">Sequelize</span>.<span class="pl-c1">INTEGER</span>,
+          defaultValue<span class="pl-k">:</span> <span class="pl-c1">0</span>
+        });
+      }
+    })
+  },
+
+  <span class="pl-en">down</span><span class="pl-k">:</span> <span class="pl-k">function</span> (<span class="pl-smi">queryInterface</span>, <span
+                        class="pl-smi">Sequelize</span>) {
+    <span class="pl-k">return</span> <span class="pl-smi">queryInterface</span>.<span class="pl-en">describeTable</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>tableName<span class="pl-pds">'</span></span>).<span
+                        class="pl-en">then</span>(<span class="pl-smi">attributes</span> <span class="pl-k">=&gt;</span> {
+      <span class="pl-k">if</span> ( <span class="pl-smi">attributes</span>.<span class="pl-smi">columnName</span> ) {
+        <span class="pl-k">return</span> <span class="pl-smi">queryInterface</span>.<span
+                        class="pl-en">removeColumn</span>(<span class="pl-s"><span class="pl-pds">'</span>tableName<span
+                            class="pl-pds">'</span></span>, <span class="pl-s"><span
+                            class="pl-pds">'</span>columnName<span class="pl-pds">'</span></span>);
+      }
+    });
+  }
+};
+                </code></pre>
+        </div>
+        <h3><a id="user-content-apply-a-migration" class="anchor" aria-hidden="true" href="#apply-a-migration">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Apply a migration
+        </h3>
+        <p>The CLI tools will always run your migrations in the correct order and will keep track of which migrations
+            have been applied and which have not. This data is stored in the database under the <code>_migrations</code>
+            table. To ensure you are up to date, simply run the following:</p>
+        <pre><code class="hljs">sequelize db:migrate
+</code></pre>
+        <blockquote>
+            <p><strong>ProTip:</strong> You can add the migrations script to your application startup command to ensure
+                that all migrations have run every time your app is started. Try updating your package.json <code>scripts</code>
+                attribute and run <code>npm start</code>:</p>
+        </blockquote>
+        <pre><code class="hljs">scripts: {
+    start: "sequelize db:migrate &amp;&amp; node src/"
+}
+</code></pre>
+        <h3><a id="user-content-undo-the-previous-migration" class="anchor" aria-hidden="true"
+               href="#undo-the-previous-migration">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Undo the previous migration
+        </h3>
+        <p>To undo the last migration, run the following command:</p>
+        <pre><code class="hljs">sequelize db:migrate:undo
+</code></pre>
+        <p>Continue running the command to undo each migration one at a time - the migrations will be undone in the
+            proper order.</p>
+        <blockquote>
+            <p><strong>Note:</strong> - You shouldn't really have to undo a migration unless you are the one developing
+                a new migration and you want to test that it works. Applications rarely have to revert to a previous
+                state, but when they do you will be glad you took the time to write and test your <code>down</code>
+                scripts!</p>
+        </blockquote>
+        <h3><a id="user-content-reverting-your-app-to-a-previous-state" class="anchor" aria-hidden="true"
+               href="#reverting-your-app-to-a-previous-state">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Reverting your app to a previous state
+        </h3>
+        <p>In the unfortunate case where you must revert your app to a previous state, it is important to take your time
+            and plan your method of attack. Every application is different and there is no one-size-fits-all strategy
+            for rewinding an application. However, most applications should be able to follow these steps (order is
+            important):</p>
+        <ol>
+            <li>Stop your application (kill the process)</li>
+            <li>Find the last stable version of your app</li>
+            <li>Count the number of migrations which have been added since that version</li>
+            <li>Undo your migrations one at a time until the db is in the correct state</li>
+            <li>Revert your code back to the previous state</li>
+            <li>Start your app</li>
+        </ol>
+        <h2><a id="user-content-license" class="anchor" aria-hidden="true" href="#license">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
+                     aria-hidden="true">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>License
+        </h2>
+        <p>Copyright (c) 2017</p>
+        <p>Licensed under the <a href="https://github.com/feathersjs-ecosystem/feathers-sequelize/blob/master/LICENSE">MIT license</a>.
+        </p>
+    </article>
+{% endblock %}

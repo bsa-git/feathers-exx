@@ -22,7 +22,7 @@ class Base {
         if (this.req.app.get('httpServer')) {
             await this.req.app.get('httpServer').close();
             if (this.config.debug) {
-                console.log(`Feathers REST API closed at http://localhost:${this.config.app.exxPort}`);
+                console.log(`Feathers REST API closed at ${this.config.api.base_url}:${this.config.api.exxPort}`);
             }
             this.createServer(app);
         } else {
@@ -38,10 +38,10 @@ class Base {
         const self = this;
         const http = require('http');
         const httpServer = http.createServer(app);
-        httpServer.listen(this.config.app.exxPort);
+        httpServer.listen(this.config.api.exxPort);
         httpServer.on('listening', () => {
             self.req.app.set('httpServer', httpServer);
-            console.log(`Feathers REST API started at http://localhost:${self.config.app.exxPort}`);
+            console.log(`Feathers REST API started at ${this.config.api.base_url}:${self.config.api.exxPort}`);
         });
     }
 

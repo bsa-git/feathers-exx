@@ -6,19 +6,16 @@
             [
             {% for message_1 in messages_1 %}
                 <li>
-                    <p>{ id: {{ message_1.id }}, counter: {{ message_1.counter }}, message: '{{ message_1.message }}' }{% if not loop.last %},{% endif %}</p>
+                    <p>{ id: {{ message_1.id }}, counter: {{ message_1.counter }}, message: '{{ message_1.message }}'}{% if not loop.last %},{% endif %}</p>
                 </li>
             {% endfor %}
             ...
             {% for message_2 in messages_2 %}
                 <li>
-                    <p>{ id: {{ message_2.id }}, counter: {{ message_2.counter }}, message: '{{ message_2.message }}' }{% if not loop.last %},{% endif %}</p>
+                    <p>{ id: {{ message_2.id }}, counter: {{ message_2.counter }}, message: '{{ message_2.message }}'}{% if not loop.last %},{% endif %}</p>
                 </li>
             {% endfor %}
             ]
-            <li>
-                <p><strong>SUM Counter:  {{ counters }}</strong></p>
-            </li>
         </ul>
     </div>
     <div class="client-body">

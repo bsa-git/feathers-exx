@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+var merge = require('lodash/merge');
 
 const global = require('./global');
 const development = require('./development');
@@ -19,10 +20,7 @@ try {
     env = require(filePath);
 }
 
-// console.log('filePathEnv: ',filePath);
-
-// env.node_env = process.env.NODE_ENV;
-
+env.node_env = process.env.NODE_ENV;
 const appEnv = env.app_env ? env.app_env : 'development';
 
 const config = {
@@ -31,8 +29,8 @@ const config = {
     testing: testing
 }
 
-const envConfig = Object.assign(config[appEnv], env[appEnv]);
-const globalConfig = Object.assign(global, env['global']);
-const appConfig = Object.assign(globalConfig, envConfig);
+const envConfig = merge(config[appEnv], env[appEnv]);
+const globalConfig = merge(global, env['global']);
+const appConfig = merge(globalConfig, envConfig);
 
 module.exports = appConfig

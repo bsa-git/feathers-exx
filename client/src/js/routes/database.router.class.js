@@ -48,6 +48,15 @@ class DatabaseRouter {
         await this.database.feathersKnex();
         return 'ok';
     }
+
+    /**
+     * Route database feathers-sequelize
+     * @return Promise
+     */
+    async routeFeathersSequelize() {
+        await this.database.featherSequelize();
+        return 'ok';
+    }
 }
 
 export default DatabaseRouter

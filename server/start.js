@@ -13,7 +13,9 @@ require('./plugins/unhandled-rejection');
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || config.app.appPort);
+// console.log('config.api: ', config.api);
+
+const port = normalizePort(process.env.PORT || config.api.appPort);
 app.set('port', port);
 
 /**

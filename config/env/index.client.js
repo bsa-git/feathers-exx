@@ -1,6 +1,6 @@
 "use strict";
 
-
+var merge = require('lodash/merge');
 const global = require('./global');
 const development = require('./development');
 const production = require('./production');
@@ -18,8 +18,8 @@ const config = {
     testing: testing
 }
 
-const envConfig = Object.assign(config[appEnv], env[appEnv]);
-const globalConfig = Object.assign(global, env['global']);
-const appConfig = Object.assign(globalConfig, envConfig);
+const envConfig = merge(config[appEnv], env[appEnv]);
+const globalConfig = merge(global, env['global']);
+const appConfig = merge(globalConfig, envConfig);
 
 module.exports = appConfig

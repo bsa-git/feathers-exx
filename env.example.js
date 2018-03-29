@@ -39,14 +39,14 @@ module.exports = {
             }
         }
     },
-    production: {
-        api: {
-            base_url: 'http://real-production.com/api'
-        }
-    },
     development: {
         api: {
             base_url: 'http://real-development.com/api'
+        }
+    },
+    production: {
+        api: {
+            base_url: 'http://real-production.com/api'
         }
     },
     testing: {

@@ -1,7 +1,5 @@
 "use strict";
 
-const _ = require('lodash');
-
 /**
  * Get result convertation
  * @param type String  //{'int': 'toInteger', 'float': 'toNumber'}
@@ -10,9 +8,9 @@ const _ = require('lodash');
  */
 const getResult = (type, value)=>{
     if(type === 'int') {
-        return _.toInteger(value);
+        return parseInt(value);
     } else if(type === 'float') {
-        return _.toNumber(value);
+        return parseFloat(value);
     }
 };
 
@@ -50,9 +48,10 @@ const correctQuery = (query, key, type)=>{
 module.exports = (props) => {
     return context => {
         const { query = {} } = context.params;
-        _.forEach(props, function(value, key) {
+        Object.keys(props).forEach(function(key) {
+            const value = props[key];
             if(query.$or){
-                _.forEach(query.$or, function(orQuery) {
+                query.$or.forEach(function(orQuery) {
                     correctQuery(orQuery, key, value);
                 });
             }else {

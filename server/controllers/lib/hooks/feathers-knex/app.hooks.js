@@ -4,7 +4,6 @@
 const { hooks } = require('feathers-knex');
 const correctTypeQuery = require('../correct-type-query');
 
-
 const { transaction } = hooks;
 
 module.exports = {

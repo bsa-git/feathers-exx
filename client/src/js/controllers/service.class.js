@@ -47,7 +47,7 @@ class Service extends Base {
      */
     restApis() {
         const self = this;
-        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}/messages`;
+        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}/messages`;
         //---------------------------------
         // Render twig template
         const _twigRender = (data) => {
@@ -173,8 +173,8 @@ class Service extends Base {
      */
     restClient() {
         const self = this;
-        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}/messages`;
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
+        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}/messages`;
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
         const feathers = require('@feathersjs/client');
         const axios = require('axios');
         //---------------------------------
@@ -315,8 +315,8 @@ class Service extends Base {
      */
     realTime() {
         const self = this;
-        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}/messages`;
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.app.exxPort}`;
+        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}/messages`;
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
         const feathers = require('@feathersjs/client');
         const axios = require('axios');
         //---------------------------------
