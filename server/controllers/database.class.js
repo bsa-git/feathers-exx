@@ -69,7 +69,8 @@ class Database extends Base {
      * @return Promise
      */
     async feathersNeDB() {
-        const correctTypeQuery = require('./hooks/correct-type-query');
+        const correctTypeQueryHook = require('./hooks/correct-type-query');
+        const countMessagesHook = require('./hooks/feathers-nedb/count-rows.hook');
         const service = require('feathers-nedb');
         const model = require('./models/nedb.model');
         //------------------------------------------------
@@ -82,11 +83,21 @@ class Database extends Base {
                 default: 5,
                 max: 10
             }
+        }));// count-rows.hook.js
+        // Register 'count-rows' service
+        app.use('count-rows', service({
+            Model: model
         }));
-        // Add "correctTypeQuery" hooks for find methods
+        // Add "correctTypeQueryHook" for find method
         app.service('messages').hooks({
             before: {
-                find: [correctTypeQuery({_id: 'int', counter: 'int'})]
+                find: [correctTypeQueryHook({_id: 'int', counter: 'int'})]
+            }
+        });
+        // Add "countMessagesHook" for find method
+        app.service('count-rows').hooks({
+            before: {
+                find: [countMessagesHook]
             }
         });
         // Restart the server
@@ -96,6 +107,7 @@ class Database extends Base {
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
             const messages = app.service('messages');
+            const countMessages = app.service('count-rows');
             // If there are messages, then we do not create new ones
             const _msessages = await messages.find();
             if (parseInt(_msessages.total) === 0) {
@@ -121,7 +133,8 @@ class Database extends Base {
 
             });
 
-            return {messages_1: messages_1.data, messages_2: messages_2.data};
+            const numberMessages = await countMessages.find();
+            return {messages_1: messages_1.data, messages_2: messages_2.data, numberMessages};
         }
 
         return processMessages(app);
