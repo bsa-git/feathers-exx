@@ -13,10 +13,9 @@ class Service extends Base {
      * @return Promise
      */
     startServer(name) {
-
         const feathers = require('@feathersjs/feathers');
+        //-----------------------------------------------
         const app = feathers();
-
         // Register a simple todos service that return the name and a text
         app.use('todos', {
             async get(name) {
@@ -27,7 +26,6 @@ class Service extends Base {
                 };
             }
         });
-
         // A function that gets and logs a todos from the service
         async function getTodo(name) {
             // Get the service we registered above
@@ -36,7 +34,6 @@ class Service extends Base {
             const todo = await service.get(name);
             return todo;
         }
-
         return getTodo(name);
     }
 
@@ -46,14 +43,12 @@ class Service extends Base {
      */
     methods() {
         const feathers = require('@feathersjs/feathers');
-        const Messages = require('./lib/services/messages.class');
-
+        const Messages = require('./models/messages.model.class');
+        //-------------------------------------------------------
         const app = feathers();
-
         // Initialize the messages service by creating
         // a new instance of our class
         app.use('messages', new Messages());
-
         async function processMessages() {
             await app.service('messages').create({
                 text: 'First message'
@@ -64,7 +59,6 @@ class Service extends Base {
             const messages = await app.service('messages').find();
             return messages;
         }
-
         return processMessages();
     }
 
@@ -74,45 +68,33 @@ class Service extends Base {
      */
     events() {
         const feathers = require('@feathersjs/feathers');
-        const Messages = require('./lib/services/messages.class');
-
+        const Messages = require('./models/messages.model.class');
+        //----------------------------------------------------
         const app = feathers();
-
         // Initialize the messages service by creating
         // a new instance of our class
         app.use('messages', new Messages());
-
         async function processMessages() {
-
             let events = [];
-
             app.service('messages').on('created', message => {
                 events.push(`Created a new message: { id: ${message.id}, text: '${message.text}' }`);
             });
-
             app.service('messages').on('removed', message => {
                 events.push(`Deleted message: { id: ${message.id}, text: '${message.text}' }`);
             });
-
             await app.service('messages').create({
                 text: 'First message'
             });
-
             const lastMessage = await app.service('messages').create({
                 text: 'Second message'
             });
-
             // Remove the message we just created
             await app.service('messages').remove(lastMessage.id);
-
             // Find available messages
             const messages = await app.service('messages').find();
-
             events.push(`Available messages: [ { id: ${messages[0].id}, text: '${messages[0].text}' } ]`);
-
             return events;
         }
-
         return processMessages();
     }
 
@@ -122,14 +104,12 @@ class Service extends Base {
      */
     hooks() {
         const feathers = require('@feathersjs/feathers');
-        const Messages = require('./lib/services/messages.class');
-        const validate = require('./lib/hooks/validate-messages');
-        const setTimestamp = require('./lib/hooks/set-timestamp.js');
+        const Messages = require('./models/messages.model.class');
+        const validate = require('./hooks/validate-messages');
+        const setTimestamp = require('./hooks/set-timestamp.js');
         const self = this;
         //--------------------------------------------
-
         const app = feathers();
-
         // Add aplication hooks
         app.hooks({
             before: async context => {
@@ -147,11 +127,9 @@ class Service extends Base {
                 console.error(errMessage);
             }
         });
-
         // Initialize the messages service by creating
         // a new instance of our class
         app.use('messages', new Messages());
-
         // Add "validate" and "setTimestamp" hooks for create, update, patch methods
         app.service('messages').hooks({
             before: {
@@ -160,7 +138,6 @@ class Service extends Base {
                 patch: [validate, setTimestamp({name: 'updatedAt'})]
             }
         });
-
         async function processMessages() {
             let text = '';
 
@@ -181,7 +158,6 @@ class Service extends Base {
             const messages = await app.service('messages').find();
             return messages;
         }
-
         return processMessages();
     }
 
@@ -190,35 +166,15 @@ class Service extends Base {
      * @return Promise
      */
     async restApis() {
-        const self = this;
-        const feathers = require('@feathersjs/feathers');
-        const express = require('@feathersjs/express');
-        const Messages = require('./lib/services/messages.class');
+        const Messages = require('./models/messages.model.class');
         //------------------------------------------------
-
-        // This creates an app that is both, an Express and Feathers app
-        const app = express(feathers());
-
-        // CORS Middleware
-        this.corsMiddleware(app);
-
-        // Turn on JSON body parsing for REST services
-        app.use(express.json());
-        // Turn on URL-encoded body parsing for REST services
-        app.use(express.urlencoded({extended: true}));
-        // Set up REST transport using Express
-        app.configure(express.rest());
-
+        // Set rest transport
+        const app = this.setRestTransport();
         // Initialize the messages service by creating
         // a new instance of our class with CORS
         app.use('messages', new Messages());
-
-        // Set up an error handler that gives us nicer errors
-        app.use(express.errorHandler());
-
-        // Restart the server on port 3030
+        // Restart the server
         await this.restartServer(app);
-
         // Process messages service
         async function processMessages() {
             // Use the service to create a new message on the server
@@ -239,7 +195,6 @@ class Service extends Base {
             const messages = await app.service('messages').find();
             return messages;
         }
-
         return processMessages();
     }
 
@@ -248,35 +203,15 @@ class Service extends Base {
      * @return Promise
      */
     async restClient() {
-        const self = this;
-        const feathers = require('@feathersjs/feathers');
-        const express = require('@feathersjs/express');
-        const Messages = require('./lib/services/messages.class');
+        const Messages = require('./models/messages.model.class');
         //------------------------------------------------
-
-        // This creates an app that is both, an Express and Feathers app
-        const app = express(feathers());
-
-        // CORS Middleware
-        this.corsMiddleware(app);
-
-        // Turn on JSON body parsing for REST services
-        app.use(express.json());
-        // Turn on URL-encoded body parsing for REST services
-        app.use(express.urlencoded({extended: true}));
-        // Set up REST transport using Express
-        app.configure(express.rest());
-
+        // Set rest transport
+        const app = this.setRestTransport();
         // Initialize the messages service by creating
         // a new instance of our class with CORS
         app.use('messages', new Messages());
-
-        // Set up an error handler that gives us nicer errors
-        app.use(express.errorHandler());
-
-        // Restart the server on port 3030
+        // Restart the server
         await this.restartServer(app);
-
         // Process messages service
         async function processMessages() {
             // Use the service to create a new message on the server
@@ -293,11 +228,9 @@ class Service extends Base {
             await app.service('messages').update(3, {
                 text: 'Update Second message'
             });
-
             const messages = await app.service('messages').find();
             return messages;
         }
-
         return processMessages();
     }
 
@@ -306,44 +239,19 @@ class Service extends Base {
      * @return Promise
      */
     async realTime() {
-        const self = this;
-        const feathers = require('@feathersjs/feathers');
-        const express = require('@feathersjs/express');
-        const socketio = require('@feathersjs/socketio');
-        const Messages = require('./lib/services/messages.class');
+        const Messages = require('./models/messages.model.class');
         //------------------------------------------------
-
-
-
-        // This creates an app that is both, an Express and Feathers app
-        const app = express(feathers());
-
-        // CORS Middleware
-        this.corsMiddleware(app);
-
-        // Turn on JSON body parsing for REST services
-        app.use(express.json());
-        // Turn on URL-encoded body parsing for REST services
-        app.use(express.urlencoded({extended: true}));
-        // Set up REST transport using Express
-        app.configure(express.rest());
-        // Configure the Socket.io transport
-        app.configure(socketio());
-        // On any real-time connection, add it to the 'everybody' channel
-        app.on('connection', connection => app.channel('everybody').join(connection));
-        // Publish all events to the 'everybody' channel
-        app.publish(() => app.channel('everybody'));
-
+        // Set rest transports
+        const app = this.setRestTransport();
+        // Set socketio transports
+        this.setSocketioTransport(app);
+        // Set real time events
+        this.setRealTimeEvents(app);
         // Initialize the messages service by creating
         // a new instance of our class with CORS
         app.use('messages', new Messages());
-
-        // Set up an error handler that gives us nicer errors
-        app.use(express.errorHandler());
-
-        // Restart the server on port 3030
+        // Restart the server
         await this.restartServer(app);
-
         // Process messages service
         async function processMessages() {
             // Use the service to create a new message on the server
@@ -360,11 +268,9 @@ class Service extends Base {
             await app.service('messages').update(3, {
                 text: 'Update Second message'
             });
-
             const messages = await app.service('messages').find();
             return messages;
         }
-
         return processMessages();
     }
 }

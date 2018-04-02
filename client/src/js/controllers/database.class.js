@@ -12,20 +12,8 @@ class Database extends Base {
      * @return Promise
      */
     async feathersMemory() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
-        const feathers = require('@feathersjs/client');
-        const axios = require('axios');
-        //---------------------------------
-
-        const app = feathers();
-
-        // Connect to a different URL
-        const restClient = feathers.rest(restURL);
-
-        // Configure an AJAX library (see below) with that client
-        // app.configure(restClient.axios(axios));
-        app.configure(restClient.axios(axios));
-
+        // Set rest transport
+        const app = this.setRestTransport();
         // Service messages find
         return this._serviceMessagesFind(app, 'memory');
     }
@@ -35,20 +23,8 @@ class Database extends Base {
      * @return Promise
      */
     async feathersNeDB() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
-        const feathers = require('@feathersjs/client');
-        const axios = require('axios');
-        //---------------------------------
-
-        const app = feathers();
-
-        // Connect to a different URL
-        const restClient = feathers.rest(restURL);
-
-        // Configure an AJAX library (see below) with that client
-        // app.configure(restClient.axios(axios));
-        app.configure(restClient.axios(axios));
-
+        // Set rest transport
+        const app = this.setRestTransport();
         // Service messages find
         return this._serviceMessagesFind(app, 'nedb');
     }
@@ -58,7 +34,6 @@ class Database extends Base {
      * @return Promise
      */
     async feathersLocalStorage() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
         const feathers = require('@feathersjs/client');
         const service = require('feathers-localstorage');
         //---------------------------------
@@ -115,20 +90,8 @@ class Database extends Base {
      * @return Promise
      */
     async feathersKnex() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
-        const feathers = require('@feathersjs/client');
-        const axios = require('axios');
-        //---------------------------------
-
-        const app = feathers();
-
-        // Connect to a different URL
-        const restClient = feathers.rest(restURL);
-
-        // Configure an AJAX library (see below) with that client
-        // app.configure(restClient.axios(axios));
-        app.configure(restClient.axios(axios));
-
+        // Set rest transport
+        const app = this.setRestTransport();
         // Service messages find
         return this._serviceMessagesFind(app, 'knex');
     }
@@ -138,20 +101,8 @@ class Database extends Base {
      * @return Promise
      */
     async featherSequelize() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
-        const feathers = require('@feathersjs/client');
-        const axios = require('axios');
-        //---------------------------------
-
-        const app = feathers();
-
-        // Connect to a different URL
-        const restClient = feathers.rest(restURL);
-
-        // Configure an AJAX library (see below) with that client
-        // app.configure(restClient.axios(axios));
-        app.configure(restClient.axios(axios));
-
+        // Set rest transport
+        const app = this.setRestTransport();
         // Service messages find
         return this._serviceMessagesFind(app, 'sequelize');
     }
@@ -166,10 +117,8 @@ class Database extends Base {
     async _serviceMessagesFind(app, tmpl) {
         const self = this;
         //------------------------
-
-        // Connect to the `http://localhost:3030/messages` service
+        // Connect to the service
         const serviceMessages = app.service('messages');
-
         // Render twig template
         let template;
         const _twigRender = (data) => {

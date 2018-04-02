@@ -9,7 +9,7 @@ const { transaction } = hooks;
 module.exports = {
     before: {
         all: [ transaction.start() ],
-        find: [correctTypeQuery({id: 'int', counter: 'int'})],
+        find: [],
         get: [],
         create: [],
         update: [],

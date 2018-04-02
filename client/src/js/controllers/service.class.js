@@ -5,6 +5,7 @@ import Base from './base.class'
 class Service extends Base {
     constructor(client) {
         super(client);
+        this.urlService = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}/messages`;
     }
 
     /**
@@ -47,43 +48,16 @@ class Service extends Base {
      */
     restApis() {
         const self = this;
-        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}/messages`;
         //---------------------------------
-        // Render twig template
-        const _twigRender = (data) => {
-            const template = require('../tmpls/service/rest-apis/messages.html.twig');
-            const html = template(data);
-            self.bulma.addMessage(html);
-        };
-
-        // Show messages
-        const _showMessages = async (serviceMethod, httpMethod, id) => {
-            // Find messages
-            let messages = await self.req.get(url);
-            const _url = id ? `${url}/${id}` : url;
-            // Render twig template
-            _twigRender({messages, url: _url, serviceMethod, httpMethod});
-        };
-
-        // Show message
-        const _showMessage = async (serviceMethod, httpMethod, id) => {
-            // Find messages
-            const message = await self.req.get(`${url}/${id}`);
-            const _url = `${url}/${id}`;
-            const messages = [message];
-            // Render twig template
-            _twigRender({messages, url: _url, serviceMethod, httpMethod});
-        };
-
         const MethodList = {
             create: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(url);
+                    const messages = await self.req.get(self.urlService);
                     // Create message
-                    const message = await self.req.post(url, {text: `Client create message-${messages.length + 1}`});
+                    const message = await self.req.post(self.urlService, {text: `Client create message-${messages.length + 1}`});
                     console.log(`HttpBox.post message: `, message);
-                    _showMessages('create()', 'POST');
+                    await self._showMessages('create()', 'POST');
                 } catch (ex) {
                     self.bulma.showError({error: ex});
                 }
@@ -91,15 +65,15 @@ class Service extends Base {
             get: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(url);
+                    const messages = await self.req.get(self.urlService);
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
-                        const message = await self.req.get(`${url}/${lastMessageId}`);
+                        const message = await self.req.get(`${self.urlService}/${lastMessageId}`);
                         console.log(`HttpBox.get message: `, message);
-                        _showMessage('get()', 'GET', lastMessageId);
+                        await self._showMessage('get()', 'GET', lastMessageId);
                     } else {
                         console.log(`HttpBox.get message: `, '[]');
-                        _showMessages('get()', 'GET', 1);
+                        await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -107,7 +81,7 @@ class Service extends Base {
             },
             find: async () => {
                 try {
-                    _showMessages('find()', 'GET');
+                    await self._showMessages('find()', 'GET');
                 } catch (ex) {
                     self.bulma.showError({error: ex});
                 }
@@ -115,15 +89,15 @@ class Service extends Base {
             patch: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(url);
+                    const messages = await self.req.get(self.urlService);
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
-                        const message = await this.req.patch(`${url}/${lastMessageId}`, {text: `Client patch last message-${lastMessageId}`});
+                        const message = await this.req.patch(`${self.urlService}/${lastMessageId}`, {text: `Client patch last message-${lastMessageId}`});
                         console.log(`HttpBox.patch message: `, message);
-                        _showMessages('patch()', 'PATCH', lastMessageId);
+                        await self._showMessages('patch()', 'PATCH', lastMessageId);
                     } else {
                         console.log(`HttpBox.patch messages: `, '[]');
-                        _showMessages('patch()', 'PATCH', 1);
+                        await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -132,15 +106,15 @@ class Service extends Base {
             update: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(url);
+                    const messages = await self.req.get(self.urlService);
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
-                        const message = await this.req.put(`${url}/${lastMessageId}`, {text: `Client put last message-${lastMessageId}`});
+                        const message = await this.req.put(`${self.urlService}/${lastMessageId}`, {text: `Client put last message-${lastMessageId}`});
                         console.log(`HttpBox.put message: `, message);
-                        _showMessages('.update()', 'PUT', lastMessageId);
+                        await self._showMessages('.update()', 'PUT', lastMessageId);
                     } else {
                         console.log(`HttpBox.put messages: `, '[]');
-                        _showMessages('update()', 'PUT', 1);
+                        await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -149,15 +123,15 @@ class Service extends Base {
             delete: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(url);
+                    const messages = await self.req.get(self.urlService);
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
-                        const message = await this.req.delete(`${url}/${lastMessageId}`, {text: `Client delete last message-${lastMessageId}`});
+                        const message = await this.req.delete(`${self.urlService}/${lastMessageId}`, {text: `Client delete last message-${lastMessageId}`});
                         console.log(`HttpBox.delete message: `, message);
-                        _showMessages('remove()', 'DELETE', lastMessageId);
+                        await self._showMessages('remove()', 'DELETE', lastMessageId);
                     } else {
                         console.log(`HttpBox.delete messages: `, '[]');
-                        _showMessages('remove()', 'DELETE', 1);
+                        await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -173,50 +147,11 @@ class Service extends Base {
      */
     restClient() {
         const self = this;
-        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}/messages`;
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
-        const feathers = require('@feathersjs/client');
-        const axios = require('axios');
         //---------------------------------
-
-        const app = feathers();
-
-        // Connect to a different URL
-        const restClient = feathers.rest(restURL);
-
-        // Configure an AJAX library (see below) with that client
-        // app.configure(restClient.axios(axios));
-        app.configure(restClient.axios(axios));
-
+        // Set rest transport
+        const app = this.setRestTransport();
         // Connect to the `http://localhost:3030/messages` service
         const serviceMessages = app.service('messages');
-
-        // Render twig template
-        const _twigRender = (data) => {
-            const template = require('../tmpls/service/rest-apis/messages.html.twig');
-            const html = template(data);
-            self.bulma.addMessage(html);
-        };
-
-        // Show messages
-        const _showMessages = async (serviceMethod, httpMethod, id) => {
-            // Find messages
-            let messages = await  serviceMessages.find();
-            const _url = id ? `${url}/${id}` : url;
-            // Render twig template
-            _twigRender({messages, url: _url, serviceMethod, httpMethod});
-        };
-
-        // Show message
-        const _showMessage = async (serviceMethod, httpMethod, id) => {
-            // Find messages
-            const message = await serviceMessages.get(id);
-            const _url = `${url}/${id}`;
-            const messages = [message];
-            // Render twig template
-            _twigRender({messages, url: _url, serviceMethod, httpMethod});
-        };
-
         const MethodList = {
             create: async () => {
                 try {
@@ -224,7 +159,7 @@ class Service extends Base {
                     const messages = await serviceMessages.find();
                     const message = await serviceMessages.create({text: `Client create message-${messages.length + 1}`});
                     console.log(`HttpBox.post message: `, message);
-                    _showMessages('create()', 'POST');
+                    await self._showMessages('create()', 'POST');
                 } catch (ex) {
                     self.bulma.showError({error: ex});
                 }
@@ -237,10 +172,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.get(lastMessageId);
                         console.log(`HttpBox.get message: `, message);
-                        _showMessage('get()', 'GET', lastMessageId);
+                        await self._showMessage('get()', 'GET', lastMessageId);
                     } else {
                         console.log(`HttpBox.get message: `, '[]');
-                        _showMessages('get()', 'GET', 1);
+                        await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -248,7 +183,7 @@ class Service extends Base {
             },
             find: async () => {
                 try {
-                    _showMessages('find()', 'GET');
+                    await self._showMessages('find()', 'GET');
                 } catch (ex) {
                     self.bulma.showError({error: ex});
                 }
@@ -261,10 +196,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.patch(lastMessageId, {text: `Client patch last message-${lastMessageId}`});
                         console.log(`HttpBox.patch message: `, message);
-                        _showMessages('patch()', 'PATCH', lastMessageId);
+                        await self._showMessages('patch()', 'PATCH', lastMessageId);
                     } else {
                         console.log(`HttpBox.patch messages: `, '[]');
-                        _showMessages('patch()', 'PATCH', 1);
+                        await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -278,10 +213,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.update(lastMessageId, {text: `Client put last message-${lastMessageId}`});
                         console.log(`HttpBox.put message: `, message);
-                        _showMessages('.update()', 'PUT', lastMessageId);
+                        await self._showMessages('.update()', 'PUT', lastMessageId);
                     } else {
                         console.log(`HttpBox.put messages: `, '[]');
-                        _showMessages('update()', 'PUT', 1);
+                        await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -295,10 +230,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.remove(lastMessageId, {text: `Client delete last message-${lastMessageId}`});
                         console.log(`HttpBox.delete message: `, message);
-                        _showMessages('remove()', 'DELETE', lastMessageId);
+                        await self._showMessages('remove()', 'DELETE', lastMessageId);
                     } else {
                         console.log(`HttpBox.delete messages: `, '[]');
-                        _showMessages('remove()', 'DELETE', 1);
+                        await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -315,75 +250,36 @@ class Service extends Base {
      */
     realTime() {
         const self = this;
-        const url = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}/messages`;
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
-        const feathers = require('@feathersjs/client');
-        const axios = require('axios');
         //---------------------------------
-
-        const app = feathers();
-
-        // Connect to a different URL
-        const restClient = feathers.rest(restURL);
-
-        // Configure an AJAX library (see below) with that client
-        // app.configure(restClient.axios(axios));
-        app.configure(restClient.axios(axios));
+        // Set rest transport
+        const app = this.setRestTransport();
 
         // Connect to the `http://localhost:3030/messages` service
         const serviceMessages = app.service('messages');
 
         // Subscribe to the event 'created'
-        app.service('messages').on('created', message => {
+        app.service('messages').on('created', async message => {
             console.log('Created a new message', message);
-            _showMessages('create()', 'POST', message.id);
+            await self._showMessages('create()', 'POST', message.id);
         });
 
         // Subscribe to the event 'updated'
-        app.service('messages').on('updated', message => {
+        app.service('messages').on('updated', async message => {
             console.log('Updated message', message);
-            _showMessages('.update()', 'PUT', message.id);
+            await self._showMessages('.update()', 'PUT', message.id);
         });
 
         // Subscribe to the event 'patched'
-        app.service('messages').on('patched', message => {
+        app.service('messages').on('patched', async message => {
             console.log('Patched message', message);
-            _showMessages('patch()', 'PATCH', message.id);
+            await self._showMessages('patch()', 'PATCH', message.id);
         });
 
         // Subscribe to the event 'removed'
-        app.service('messages').on('removed', message => {
+        app.service('messages').on('removed', async message => {
             console.log('Deleted message', message);
-            _showMessages('remove()', 'DELETE', message.id);
+            await self._showMessages('remove()', 'DELETE', message.id);
         });
-
-
-        // Render twig template
-        const _twigRender = (data) => {
-            const template = require('../tmpls/service/rest-apis/messages.html.twig');
-            const html = template(data);
-            self.bulma.addMessage(html);
-        };
-
-        // Show messages
-        const _showMessages = async (serviceMethod, httpMethod, id) => {
-            // Find messages
-            let messages = await  serviceMessages.find();
-            const _url = id ? `${url}/${id}` : url;
-            // Render twig template
-            _twigRender({messages, url: _url, serviceMethod, httpMethod});
-        };
-
-        // Show message
-        const _showMessage = async (serviceMethod, httpMethod, id) => {
-            // Find messages
-            const message = await serviceMessages.get(id);
-            const _url = `${url}/${id}`;
-            const messages = [message];
-            // Render twig template
-            _twigRender({messages, url: _url, serviceMethod, httpMethod});
-        };
-
         const MethodList = {
             create: async () => {
                 try {
@@ -402,10 +298,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.get(lastMessageId);
                         console.log(`HttpBox.get message: `, message);
-                        _showMessage('get()', 'GET', lastMessageId);
+                        await self._showMessage('get()', 'GET', lastMessageId);
                     } else {
                         console.log(`HttpBox.get message: `, '[]');
-                        _showMessages('get()', 'GET', 1);
+                        await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -413,7 +309,7 @@ class Service extends Base {
             },
             find: async () => {
                 try {
-                    _showMessages('find()', 'GET');
+                    await self._showMessages('find()', 'GET');
                 } catch (ex) {
                     self.bulma.showError({error: ex});
                 }
@@ -427,7 +323,7 @@ class Service extends Base {
                         await serviceMessages.patch(lastMessageId, {text: `Client patch last message-${lastMessageId}`});
                     } else {
                         console.log(`HttpBox.patch messages: `, '[]');
-                        _showMessages('patch()', 'PATCH', 1);
+                        await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -442,7 +338,7 @@ class Service extends Base {
                         await serviceMessages.update(lastMessageId, {text: `Client put last message-${lastMessageId}`});
                     } else {
                         console.log(`HttpBox.put messages: `, '[]');
-                        _showMessages('update()', 'PUT', 1);
+                        await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
@@ -457,16 +353,46 @@ class Service extends Base {
                         await serviceMessages.remove(lastMessageId, {text: `Client delete last message-${lastMessageId}`});
                     } else {
                         console.log(`HttpBox.delete messages: `, '[]');
-                        _showMessages('remove()', 'DELETE', 1);
+                        await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError({error: ex});
                 }
             }
         };
-        // return Promise.resolve(MethodList);
         return Promise.resolve(MethodList);
     }
+
+    // Render twig template
+    /**
+     * Twig render
+     * @param data Object
+     * @private
+     */
+    _twigRender(data){
+        const template = require('../tmpls/service/rest-apis/messages.html.twig');
+        const html = template(data);
+        this.bulma.addMessage(html);
+    };
+
+    // Show messages
+    async _showMessages(serviceMethod, httpMethod, id){
+        // Find messages
+        let messages = await this.req.get(this.urlService);
+        const _url = id ? `${this.urlService}/${id}` : this.urlService;
+        // Render twig template
+        this._twigRender({messages, url: _url, serviceMethod, httpMethod});
+    };
+
+    // Show message
+    async _showMessage(serviceMethod, httpMethod, id){
+        // Find messages
+        const message = await this.req.get(`${this.urlService}/${id}`);
+        const _url = `${this.urlService}/${id}`;
+        const messages = [message];
+        // Render twig template
+        this._twigRender({messages, url: _url, serviceMethod, httpMethod});
+    };
 }
 
 export default Service

@@ -9,6 +9,25 @@ class Base {
     }
 
     /**
+     * Set rest transport
+     * @return {*}
+     */
+    setRestTransport() {
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
+        const feathers = require('@feathersjs/client');
+        const axios = require('axios');
+        //---------------------------------
+        // Create app
+        const app = feathers();
+        // Connect to a different URL
+        const restClient = feathers.rest(restURL);
+        // Configure an AJAX library (see below) with that client
+        // app.configure(restClient.axios(axios));
+        app.configure(restClient.axios(axios));
+        return app
+    }
+
+    /**
      * Strip slashes
      * @param name String
      * @return {XML|string|*|void}

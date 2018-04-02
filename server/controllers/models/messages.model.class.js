@@ -1,6 +1,6 @@
 "use strict";
 
-const config = require('../../../../config/env');
+const config = require('../../../config/env');
 
 class Messages {
     constructor() {
