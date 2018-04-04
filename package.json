@@ -5,13 +5,17 @@
   "scripts": {
     "start": "node ./server/start.js",
     "dev": "nodemon ./server/start.js",
-    "css-build": "node-sass client/src/sass/themes/ -o client/public/css/themes/",
+    "css-mixins": "node-sass client/src/sass/mixins.scss -o client/public/css/",
+    "css-themes": "node-sass client/src/sass/themes/ -o client/public/css/themes/",
+    "css-build": "npm run css-mixins && npm run css-themes",
     "css-deploy": "npm run css-build",
     "css-watch": "node-sass -w client/src/sass/ -o client/public/css/",
-    "deploy-client": "npm run css-deploy && npm run js-build",
     "js-build": "webpack",
     "js-watch": "webpack --watch",
-    "start-client": "npm run css-watch | npm run js-watch"
+    "deploy-client": "npm run css-deploy && npm run js-build",
+    "build-client": "npm run css-build && npm run js-build",
+    "watch-client": "npm run css-watch | npm run js-watch",
+    "start-mongod": "mongod -f mongod.config.yml"
   },
   "dependencies": {
     "@feathersjs/client": "^3.4.2",
@@ -28,6 +32,7 @@
     "feathers-knex": "^3.0.4",
     "feathers-localstorage": "^2.0.1",
     "feathers-memory": "^2.1.1",
+    "feathers-mongoose": "^6.1.0",
     "feathers-nedb": "^3.0.0",
     "feathers-sequelize": "^3.1.0",
     "fetch-polyfill": "^0.8.2",
@@ -37,6 +42,7 @@
     "location-helper": "^1.0.3",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
+    "mongoose": "^5.0.12",
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
     "mysql2": "^1.5.3",

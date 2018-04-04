@@ -157,4 +157,33 @@ router.get('/feathers-sequelize', async function (req, res, next) {
     }
 });
 
+router.get('/feathers-mongoose', async function (req, res, next) {
+    try {
+        const context = {
+            title: 'Feathers Mongoose DataBase',
+            req: req
+        };
+        if (config.debug) {
+            console.log('Router.get: ', req.originalUrl);
+        }
+        // Create controller
+        const db = new Database(context);
+        // Perform the action "service.startServer"
+        const messages = await db.feathersMongoose();
+
+        // Render twig template
+        const html = await Base.twigRender('messages.html.twig', req, messages);
+        // Set view params
+        res.locals.msgBox = {type: 'info', text: html};
+        // View render
+        res.render('tmpls/database/feathers-mongoose/index.html.twig', context);
+        if (config.debug) {
+            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+        }
+    } catch
+        (ex) {
+        Base.showError(ex, req, res);
+    }
+});
+
 module.exports = router;

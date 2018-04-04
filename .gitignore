@@ -29,6 +29,10 @@ node_modules
 # Client bundles
 client/public/js/*
 
+# data
+server/data/log/*
+server/data/db/mongodb/*
+
 # Configuration file
 .idea
 env.js

@@ -42,7 +42,8 @@ module.exports = {
                 {'name':'feathers-memory', 'url': '/database/feathers-memory', 'value': 'Feathers Memory'},
                 {'name':'feathers-nedb', 'url': '/database/feathers-nedb', 'value': 'Feathers NeDB'},
                 {'name':'feathers-knex', 'url': '/database/feathers-knex', 'value': 'Feathers Knex'},
-                {'name':'feathers-sequelize', 'url': '/database/feathers-sequelize', 'value': 'Feathers Sequelize'}
+                {'name':'feathers-sequelize', 'url': '/database/feathers-sequelize', 'value': 'Feathers Sequelize'},
+                {'name':'feathers-mongoose', 'url': '/database/feathers-mongoose', 'value': 'Feathers Mongoose'}
             ]
         }
     },
@@ -55,6 +56,9 @@ module.exports = {
             nedb: {
                 filename: path.join(__dirname, '../../server/data/db/nedb/messages.db'),
                 autoload: true
+            },
+            mongoose: {
+                connection_string: 'mongodb://localhost:27017/messages'
             },
             knex:{
                 sqlite: {

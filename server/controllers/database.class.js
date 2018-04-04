@@ -117,6 +117,9 @@ class Database extends Base {
                         message: `Message number ${counter}`
                     });
                 }
+                // Create an index
+                await model.ensureIndex({ fieldName: 'counter' });
+                console.log('Created an index for \'counter\' field name.');
             }
             const messages_1 = await messages.find({
                 query: {
@@ -288,6 +291,85 @@ class Database extends Base {
             });
             const counters = await sumCounter.find();
             return {messages_1: messages_1.data, messages_2: messages_2.data, counters: counters[0].sum_counter};
+        }
+
+        return processMessages(app);
+    }
+
+    /**
+     * Feathers Mongoose database
+     * @return Promise
+     */
+    async feathersMongoose() {
+        const correctTypeQueryHook = require('./hooks/correct-type-query');
+        const countMessagesHook = require('./hooks/feathers-nedb/count-rows.hook');
+        const service = require('feathers-nedb');
+        const model = require('./models/nedb.model');
+        //------------------------------------------------
+        // Set rest transport
+        const app = this.setRestTransport();
+        // Connect to the db, create and register a Feathers service.
+        app.use('/messages', service({
+            Model: model,
+            paginate: {
+                default: 5,
+                max: 10
+            }
+        }));// count-rows.hook.js
+        // Register 'count-rows' service
+        app.use('count-rows', service({
+            Model: model
+        }));
+        // Add "correctTypeQueryHook" for find method
+        app.service('messages').hooks({
+            before: {
+                find: [correctTypeQueryHook({_id: 'int', counter: 'int'})]
+            }
+        });
+        // Add "countMessagesHook" for find method
+        app.service('count-rows').hooks({
+            before: {
+                find: [countMessagesHook]
+            }
+        });
+        // Restart the server
+        await this.restartServer(app);
+
+        // Process messages service
+        async function processMessages(app) {
+            // Stores a reference to the messages service so we don't have to call it all the time
+            const messages = app.service('messages');
+            const countMessages = app.service('count-rows');
+            // If there are messages, then we do not create new ones
+            const _msessages = await messages.find();
+            if (parseInt(_msessages.total) === 0) {
+                for (let counter = 1; counter <= 10; counter++) {
+                    await messages.create({
+                        counter,
+                        message: `Message number ${counter}`
+                    });
+                }
+                // Create an index
+                await model.ensureIndex({ fieldName: 'counter' });
+                console.log('Created an index for \'counter\' field name.');
+            }
+            const messages_1 = await messages.find({
+                query: {
+                    $limit: 3,
+                    $sort: {counter: 1}
+                }
+            });
+
+            const messages_2 = await messages.find({
+                query: {
+                    $limit: 1,
+                    $sort: {counter: -1}
+                }
+
+            });
+
+            const numberMessages = await countMessages.find();
+            return {messages_1: messages_1.data, messages_2: messages_2.data, numberMessages};
         }
 
         return processMessages(app);
