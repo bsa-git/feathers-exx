@@ -36,6 +36,9 @@ export default async function (client) {
         case 'database/feathers-sequelize':
             return await databaseRouter.routeFeathersSequelize();
             break;
+        case 'database/feathers-mongoose':
+            return await databaseRouter.routeFeathersMongoose();
+            break;
         default:
             return `Does not match controller/action:  '${client.req.controller}/${client.req.action}'`
     }

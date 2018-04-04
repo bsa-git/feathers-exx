@@ -8,11 +8,9 @@
     "css-mixins": "node-sass client/src/sass/mixins.scss -o client/public/css/",
     "css-themes": "node-sass client/src/sass/themes/ -o client/public/css/themes/",
     "css-build": "npm run css-mixins && npm run css-themes",
-    "css-deploy": "npm run css-build",
     "css-watch": "node-sass -w client/src/sass/ -o client/public/css/",
     "js-build": "webpack",
     "js-watch": "webpack --watch",
-    "deploy-client": "npm run css-deploy && npm run js-build",
     "build-client": "npm run css-build && npm run js-build",
     "watch-client": "npm run css-watch | npm run js-watch",
     "start-mongod": "mongod -f mongod.config.yml"

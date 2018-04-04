@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const MessageSchema = new Schema({
-    counter: {type: Integer, required: true},
+    counter: {type: Number, required: true},
     message: {type: String, required: true}
 });
 const Model = mongoose.model('Message', MessageSchema);

@@ -2,70 +2,80 @@
 
 {% block sidebar_content %}
     <article class="markdown-body entry-content" itemprop="text">
-        <h1><a id="user-content-feathers-nedb" class="anchor" aria-hidden="true" href="#feathers-nedb">
-                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
-                     aria-hidden="true">
+        <h1><a href="#feathers-mongoose" aria-hidden="true" class="anchor" id="user-content-feathers-mongoose">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
                     <path fill-rule="evenodd"
                           d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
                 </svg>
-            </a>feathers-nedb
+            </a>feathers-mongoose
         </h1>
-        <p><a href="https://github.com/feathersjs-ecosystem/feathers-nedb/">feathers-nedb</a> is a database service
-            adapter for <a href="https://github.com/louischatriot/nedb">NeDB</a>, an embedded datastore with a <a
-                    href="https://www.mongodb.org/" rel="nofollow">MongoDB</a> like API. NeDB can store data in-memory
-            or on the filesystem which makes it useful as a persistent storage without a separate database server.</p>
+        <p>A <a href="https://feathersjs.com" rel="nofollow">Feathers</a> database adapter for <a
+                    href="http://mongoosejs.com/" rel="nofollow">Mongoose</a>, an object modeling tool for <a
+                    href="https://www.mongodb.org/" rel="nofollow">MongoDB</a>.</p>
         <div class="highlight highlight-source-shell">
-            <pre><code class="hljs">$ npm install --save nedb feathers-nedb</code></pre>
+            <pre><code class="hljs">$ npm install --save mongoose feathers-mongoose</code></pre>
         </div>
         <blockquote>
-            <p><strong>Important:</strong> <code>feathers-nedb</code> implements the <a
+            <p><strong>Important:</strong> <code>feathers-mongoose</code> implements the <a
                         href="https://docs.feathersjs.com/api/databases/common.html" rel="nofollow">Feathers Common
                     database adapter API</a> and <a href="https://docs.feathersjs.com/api/databases/querying.html"
                                                     rel="nofollow">querying syntax</a>.</p>
         </blockquote>
-        <h2><a id="user-content-api" class="anchor" aria-hidden="true" href="#api">
-                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
-                     aria-hidden="true">
+        <blockquote>
+            <p>This adapter also requires a <a href="https://docs.mongodb.com/getting-started/shell/#" rel="nofollow">running
+                    MongoDB</a> database server.</p>
+        </blockquote>
+        <h2><a href="#api" aria-hidden="true" class="anchor" id="user-content-api">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
                     <path fill-rule="evenodd"
                           d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
                 </svg>
             </a>API
         </h2>
-        <h3><a id="user-content-serviceoptions" class="anchor" aria-hidden="true" href="#serviceoptions">
-                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
-                     aria-hidden="true">
+        <h3><a href="#serviceoptions" aria-hidden="true" class="anchor" id="user-content-serviceoptions">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
                     <path fill-rule="evenodd"
                           d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
                 </svg>
             </a><code>service(options)</code></h3>
-        <p>Returns a new service instance initialized with the given options. <code>Model</code> has to be an NeDB
-            database instance.</p>
-        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span class="pl-c1">NeDB</span> <span
-                        class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span
-                            class="pl-pds">'</span>nedb<span class="pl-pds">'</span></span>);
+        <p>Returns a new service instance initialized with the given options. <code>Model</code> has to be a Mongoose
+            model. See the <a href="http://mongoosejs.com/docs/guide.html" rel="nofollow">Mongoose Guide</a> for more
+            information on defining your model.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">mongoose</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>mongoose<span
+                            class="pl-pds">'</span></span>);
 <span class="pl-k">const</span> <span class="pl-c1">service</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
-                        class="pl-s"><span class="pl-pds">'</span>feathers-nedb<span class="pl-pds">'</span></span>);
+                        class="pl-s"><span class="pl-pds">'</span>feathers-mongoose<span class="pl-pds">'</span></span>);
 
-<span class="pl-c"><span class="pl-c">//</span> Create a NeDB instance</span>
+<span class="pl-c"><span class="pl-c">//</span> A module that exports your Mongoose model</span>
 <span class="pl-k">const</span> <span class="pl-c1">Model</span> <span class="pl-k">=</span> <span
-                        class="pl-k">new</span> <span class="pl-en">NeDB</span>({
-  filename<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>./data/messages.db<span
-                            class="pl-pds">'</span></span>,
-  autoload<span class="pl-k">:</span> <span class="pl-c1">true</span>
-});
+                        class="pl-c1">require</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>./models/message<span class="pl-pds">'</span></span>);
+
+<span class="pl-c"><span class="pl-c">//</span> Make Mongoose use the ES6 promise</span>
+<span class="pl-smi">mongoose</span>.<span class="pl-smi">Promise</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">global</span>.<span class="pl-smi">Promise</span>;
+
+<span class="pl-c"><span class="pl-c">//</span> Connect to a local database called `feathers`</span>
+<span class="pl-smi">mongoose</span>.<span class="pl-en">connect</span>(<span class="pl-s"><span class="pl-pds">'</span>mongodb://localhost:27017/feathers<span
+                            class="pl-pds">'</span></span>);
 
 <span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
                             class="pl-pds">'</span></span>, <span class="pl-en">service</span>({ Model }));
 <span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
-                                class="pl-pds">'</span></span>, <span class="pl-en">service</span>({ Model, id, events, paginate }));</code></pre>
+                                class="pl-pds">'</span></span>, <span class="pl-en">service</span>({ Model, lean, id, events, paginate }));</code></pre>
         </div>
         <p><strong>Options:</strong></p>
         <ul>
-            <li><code>Model</code> (<strong>required</strong>) - The NeDB database instance. See the <a
-                        href="https://github.com/louischatriot/nedb#api">NeDB API</a> for more information.
+            <li><code>Model</code> (<strong>required</strong>) - The Mongoose model definition</li>
+            <li><code>lean</code> (<em>optional</em>, default: <code>true</code>) - Runs queries faster by returning
+                plain objects instead of Mongoose models.
             </li>
-            <li><code>id</code> (<em>optional</em>, default: <code>'_id'</code>) - The name of the id field property. By
-                design, NeDB will always add an <code>_id</code> property.
+            <li><code>id</code> (<em>optional</em>, default: <code>'_id'</code>) - The name of the id field property.
             </li>
             <li><code>events</code> (<em>optional</em>) - A list of <a
                         href="https://docs.feathersjs.com/api/events.html#custom-events" rel="nofollow">custom service
@@ -75,42 +85,107 @@
                         href="https://docs.feathersjs.com/api/databases/common.html#pagination" rel="nofollow">pagination
                     object</a> containing a <code>default</code> and <code>max</code> page size
             </li>
+            <li><code>discriminators</code> (<em>optional</em>) - A list of mongoose models that inherit from <code>Model</code>.
+            </li>
         </ul>
-        <h3><a id="user-content-paramsnedb" class="anchor" aria-hidden="true" href="#paramsnedb">
-                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
-                     aria-hidden="true">
+        <blockquote>
+            <p><strong>Important:</strong> To avoid odd error handling behaviour, always set <code>mongoose.Promise =
+                    global.Promise</code>. If not available already, Feathers comes with a polyfill for native Promises.
+            </p>
+        </blockquote>
+
+        <blockquote>
+            <p><strong>Important:</strong> When setting <code>lean</code> to <code>false</code>, Mongoose models will be
+                returned which can not be modified unless they are converted to a regular JavaScript object via <code>toObject</code>.
+            </p>
+        </blockquote>
+
+        <blockquote>
+            <p><strong>Note:</strong> You can get access to the Mongoose model via <code>this.Model</code> inside a <a
+                        href="https://docs.feathersjs.com/api/hooks.html" rel="nofollow">hook</a> and use it as usual.
+                See the <a href="http://mongoosejs.com/docs/guide.html" rel="nofollow">Mongoose Guide</a> for more
+                information on defining your model.</p>
+        </blockquote>
+        <h3><a href="#paramsmongoose" aria-hidden="true" class="anchor" id="user-content-paramsmongoose">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
                     <path fill-rule="evenodd"
                           d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
                 </svg>
-            </a>params.nedb
+            </a>params.mongoose
         </h3>
         <p>When making a <a href="https://docs.feathersjs.com/api/services.html" rel="nofollow">service method</a> call,
-            <code>params</code> can contain an <code>nedb</code> property which allows to pass additional <a
-                    href="https://github.com/louischatriot/nedb#updating-documents">NeDB options</a>, for example to
-            allow <code>upsert</code>:</p>
+            <code>params</code> can contain a <code>mongoose</code> property which allows you to modify the options used
+            to run the Mongoose query. Normally, this will be set in a before <a
+                    href="https://docs.feathersjs.com/api/hooks.html" rel="nofollow">hook</a>:</p>
         <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-smi">app</span>.<span
                         class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
-                            class="pl-pds">'</span></span>).<span class="pl-en">update</span>(<span class="pl-s"><span
-                            class="pl-pds">'</span>someid<span class="pl-pds">'</span></span>, {
-  text<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>This message will be either created or updated<span
-                            class="pl-pds">'</span></span>
-}, {
-  nedb<span class="pl-k">:</span> { upsert<span class="pl-k">:</span> <span class="pl-c1">true</span> }
-                    });</code></pre>
+                            class="pl-pds">'</span></span>).<span class="pl-en">hooks</span>({
+  before<span class="pl-k">:</span> {
+    <span class="pl-en">patch</span>(<span class="pl-smi">context</span>) {
+      <span class="pl-c"><span class="pl-c">//</span> Set some additional Mongoose options</span>
+      <span class="pl-c"><span class="pl-c">//</span> The adapter tries to use sane defaults</span>
+      <span class="pl-c"><span class="pl-c">//</span> but they can always be changed here</span>
+      <span class="pl-smi">context</span>.<span class="pl-smi">params</span>.<span class="pl-smi">mongoose</span> <span
+                        class="pl-k">=</span> {
+        runValidators<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+        setDefaultsOnInsert<span class="pl-k">:</span> <span class="pl-c1">true</span>
+      }
+    }
+  }
+});</code></pre>
         </div>
-        <h2><a id="user-content-example" class="anchor" aria-hidden="true" href="#example">
-                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
-                     aria-hidden="true">
+        <p>The <code>mongoose</code> property is also useful for performing upserts on a <code>patch</code> request.
+            "Upserts" do an update if a matching record is found, or insert a record if there's no existing match. The
+            following example will create a document that matches the <code>data</code>, or if there's already a record
+            that matches the <code>params.query</code>, that record will be updated.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span class="pl-c1">data</span> <span
+                        class="pl-k">=</span> { address<span class="pl-k">:</span> <span class="pl-s"><span
+                            class="pl-pds">'</span>123<span class="pl-pds">'</span></span>, identifier<span
+                        class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>my-identifier<span
+                            class="pl-pds">'</span></span> }
+<span class="pl-k">const</span> <span class="pl-c1">params</span> <span class="pl-k">=</span> {
+  query<span class="pl-k">:</span> { address<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>123<span
+                            class="pl-pds">'</span></span> },
+  mongoose<span class="pl-k">:</span> { upsert<span class="pl-k">:</span> <span class="pl-c1">true</span> }
+}
+<span class="pl-smi">app</span>.<span class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>address-meta<span
+                            class="pl-pds">'</span></span>).<span class="pl-en">patch</span>(<span
+                            class="pl-c1">null</span>, data, params)</code></pre>
+        </div>
+        <h2><a href="#example" aria-hidden="true" class="anchor" id="user-content-example">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
                     <path fill-rule="evenodd"
                           d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
                 </svg>
             </a>Example
         </h2>
-        <p>Here is an example of a Feathers server with a <code>messages</code> NeDB service that supports pagination
-            and persists to <code>db-data/messages</code>:</p>
-        <pre><code>$ npm install @feathersjs/feathers @feathersjs/errors @feathersjs/express @feathersjs/socketio feathers-nedb nedb
+        <p>Here's a complete example of a Feathers server with a <code>messages</code> Mongoose service.</p>
+        <pre><code>$ npm install @feathersjs/feathers @feathersjs/errors @feathersjs/express mongoose feathers-mongoose
 </code></pre>
-        <p>In <code>app.js</code>:</p>
+        <p>In <code>message-model.js</code>:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">mongoose</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>mongoose<span
+                            class="pl-pds">'</span></span>);
+
+<span class="pl-k">const</span> <span class="pl-c1">Schema</span> <span class="pl-k">=</span> <span class="pl-smi">mongoose</span>.<span
+                        class="pl-smi">Schema</span>;
+<span class="pl-k">const</span> <span class="pl-c1">MessageSchema</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span
+                        class="pl-en">Schema</span>({
+  text<span class="pl-k">:</span> {
+    type<span class="pl-k">:</span> <span class="pl-c1">String</span>,
+    required<span class="pl-k">:</span> <span class="pl-c1">true</span>
+  }
+});
+<span class="pl-k">const</span> <span class="pl-c1">Model</span> <span class="pl-k">=</span> <span class="pl-smi">mongoose</span>.<span
+                        class="pl-en">model</span>(<span class="pl-s"><span class="pl-pds">'</span>Message<span
+                            class="pl-pds">'</span></span>, MessageSchema);
+
+                    <span class="pl-c1">module</span>.<span class="pl-smi">exports</span> <span class="pl-k">=</span> Model;</code></pre>
+        </div>
+        <p>Then in <code>app.js</code>:</p>
         <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
                         class="pl-c1">feathers</span> <span class="pl-k">=</span> <span
                         class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>@feathersjs/feathers<span
@@ -122,22 +197,28 @@
                         class="pl-s"><span class="pl-pds">'</span>@feathersjs/socketio<span
                             class="pl-pds">'</span></span>);
 
-<span class="pl-k">const</span> <span class="pl-c1">NeDB</span> <span class="pl-k">=</span> <span
-                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>nedb<span
-                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">mongoose</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>mongoose<span class="pl-pds">'</span></span>);
 <span class="pl-k">const</span> <span class="pl-c1">service</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
-                        class="pl-s"><span class="pl-pds">'</span>feathers-nedb<span class="pl-pds">'</span></span>);
+                        class="pl-s"><span class="pl-pds">'</span>feathers-mongoose<span class="pl-pds">'</span></span>);
 
-<span class="pl-k">const</span> <span class="pl-c1">db</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span
-                        class="pl-en">NeDB</span>({
-  filename<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>./db-data/messages<span
-                            class="pl-pds">'</span></span>,
-  autoload<span class="pl-k">:</span> <span class="pl-c1">true</span>
+<span class="pl-k">const</span> <span class="pl-c1">Model</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>./message-model<span class="pl-pds">'</span></span>);
+
+<span class="pl-smi">mongoose</span>.<span class="pl-smi">Promise</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">global</span>.<span class="pl-smi">Promise</span>;
+
+<span class="pl-c"><span class="pl-c">//</span> Connect to your MongoDB instance(s)</span>
+<span class="pl-smi">mongoose</span>.<span class="pl-en">connect</span>(<span class="pl-s"><span class="pl-pds">'</span>mongodb://localhost:27017/feathers<span
+                            class="pl-pds">'</span></span>, {
+  useMongoClient<span class="pl-k">:</span> <span class="pl-c1">true</span>
 });
 
 <span class="pl-c"><span class="pl-c">//</span> Create an Express compatible Feathers application instance.</span>
 <span class="pl-k">const</span> <span class="pl-c1">app</span> <span class="pl-k">=</span> <span
                         class="pl-en">express</span>(<span class="pl-en">feathers</span>());
+
 <span class="pl-c"><span class="pl-c">//</span> Turn on JSON parser for REST services</span>
 <span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">json</span>());
 <span class="pl-c"><span class="pl-c">//</span> Turn on URL-encoded parser for REST services</span>
@@ -151,13 +232,13 @@
 <span class="pl-c"><span class="pl-c">//</span> Connect to the db, create and register a Feathers service.</span>
 <span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
                             class="pl-pds">'</span></span>, <span class="pl-en">service</span>({
-  Model<span class="pl-k">:</span> db,
+  Model,
+  lean<span class="pl-k">:</span> <span class="pl-c1">true</span>, <span class="pl-c"><span class="pl-c">//</span> set to false if you want Mongoose documents returned</span>
   paginate<span class="pl-k">:</span> {
     default<span class="pl-k">:</span> <span class="pl-c1">2</span>,
     max<span class="pl-k">:</span> <span class="pl-c1">4</span>
   }
 }));
-<span class="pl-c"><span class="pl-c">//</span> Set up default error handler</span>
 <span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">errorHandler</span>());
 
 <span class="pl-c"><span class="pl-c">//</span> Create a dummy Message</span>
@@ -165,31 +246,147 @@
                             class="pl-pds">'</span></span>).<span class="pl-en">create</span>({
   text<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Message created on server<span
                             class="pl-pds">'</span></span>
-}).<span class="pl-en">then</span>(<span class="pl-smi">message</span> <span class="pl-k">=&gt;</span> <span
-                        class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span
-                            class="pl-pds">'</span>Created message<span class="pl-pds">'</span></span>, message));
+}).<span class="pl-en">then</span>(<span class="pl-k">function</span>(<span class="pl-smi">message</span>) {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">'</span>Created message<span
+                            class="pl-pds">'</span></span>, message);
+});
 
 <span class="pl-c"><span class="pl-c">//</span> Start the server.</span>
 <span class="pl-k">const</span> <span class="pl-c1">port</span> <span class="pl-k">=</span> <span
                         class="pl-c1">3030</span>;
-
 <span class="pl-smi">app</span>.<span class="pl-en">listen</span>(port, () <span class="pl-k">=&gt;</span> {
-  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">`</span>Feathers server listening on port <span
+    <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">`</span>Feathers server listening on port <span
                             class="pl-s1"><span class="pl-pse">${</span>port<span class="pl-pse">}</span></span><span
                             class="pl-pds">`</span></span>);
-                    });</code></pre>
+});</code></pre>
         </div>
-        <p>Run the example with <code>node app</code> and go to <a href="http://localhost:3030/messages" rel="nofollow">localhost:3030/messages</a>.
+        <p>You can run this example by using <code>node app</code> and go to <a href="http://localhost:3030/messages"
+                                                                                rel="nofollow">localhost:3030/messages</a>.
         </p>
-        <h2><a id="user-content-license" class="anchor" aria-hidden="true" href="#license">
-                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16"
-                     aria-hidden="true">
+        <h2><a href="#querying-validation" aria-hidden="true" class="anchor" id="user-content-querying-validation">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Querying, Validation
+        </h2>
+        <p>Mongoose by default gives you the ability to add <a href="http://mongoosejs.com/docs/validation.html"
+                                                               rel="nofollow">validations at the model level</a>. Using
+            an error handler like the one that <a
+                    href="https://github.com/feathersjs/feathers-errors/blob/master/src/error-handler.js">comes with
+                Feathers</a> your validation errors will be formatted nicely right out of the box!</p>
+        <p>For more information on querying and validation refer to the <a href="http://mongoosejs.com/docs/guide.html"
+                                                                           rel="nofollow">Mongoose documentation</a>.
+        </p>
+        <h2><a href="#populate" aria-hidden="true" class="anchor" id="user-content-populate">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>$populate
+        </h2>
+        <p>For Mongoose, the special <code>$populate</code> query parameter can be used to allow <a
+                    href="http://mongoosejs.com/docs/populate.html" rel="nofollow">Mongoose query population</a>.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-smi">app</span>.<span
+                        class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>posts<span
+                            class="pl-pds">'</span></span>).<span class="pl-c1">find</span>({
+  query<span class="pl-k">:</span> { $populate<span class="pl-k">:</span> <span class="pl-s"><span
+                            class="pl-pds">'</span>user<span class="pl-pds">'</span></span> }
+});</code></pre>
+        </div>
+        <h2><a href="#discriminators-inheritance" aria-hidden="true" class="anchor"
+               id="user-content-discriminators-inheritance">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Discriminators (Inheritance)
+        </h2>
+        <p>Instead of strict inheritance, Mongoose uses <a href="http://mongoosejs.com/docs/discriminators.html"
+                                                           rel="nofollow">discriminators</a> as their schema inheritance
+            model.
+            To use them, pass in a <code>discriminatorKey</code> option to your schema object and use <code>Model.discriminator('modelName',
+                schema)</code> instead of <code>mongoose.model()</code></p>
+        <p>Feathers comes with full support for mongoose discriminators, allowing for automatic fetching of inherited
+            types. A typical use case might look like:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">var</span> mongoose <span
+                        class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>mongoose<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> Schema <span class="pl-k">=</span> <span class="pl-smi">mongoose</span>.<span
+                        class="pl-smi">Schema</span>;
+<span class="pl-k">var</span> Post <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>./post<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> feathers <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>@feathersjs/feathers<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> app <span class="pl-k">=</span> <span class="pl-en">feathers</span>();
+<span class="pl-k">var</span> service <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>feathers-mongoose<span class="pl-pds">'</span></span>);
+
+<span class="pl-c"><span
+            class="pl-c">//</span> Discriminator key, we'll use this later to refer to all text posts</span>
+<span class="pl-k">var</span> options <span class="pl-k">=</span> {
+  discriminatorKey<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>_type<span class="pl-pds">'</span></span>
+};
+
+<span class="pl-k">var</span> TextPostSchema <span class="pl-k">=</span> <span class="pl-k">new</span> <span
+                        class="pl-en">Schema</span>({
+  text<span class="pl-k">:</span> { type<span class="pl-k">:</span> <span class="pl-c1">String</span>, default<span
+                        class="pl-k">:</span> <span class="pl-c1">null</span> }
+}, options);
+
+<span class="pl-smi">TextPostSchema</span>.<span class="pl-c1">index</span>({<span class="pl-s"><span
+                            class="pl-pds">'</span>updatedAt<span class="pl-pds">'</span></span><span
+                        class="pl-k">:</span> <span class="pl-k">-</span><span class="pl-c1">1</span>, background<span
+                        class="pl-k">:</span> <span class="pl-c1">true</span>});
+
+<span class="pl-c"><span class="pl-c">//</span> Note the use of `Post.discriminator` rather than `mongoose.discriminator`.</span>
+<span class="pl-k">var</span> TextPost <span class="pl-k">=</span> <span class="pl-smi">Post</span>.<span class="pl-en">discriminator</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>text<span class="pl-pds">'</span></span>, TextPostSchema);
+
+<span class="pl-c"><span class="pl-c">//</span> Using the discriminators option, let feathers know about any inherited models you may have</span>
+<span class="pl-c"><span class="pl-c">//</span> for that service</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>/posts<span class="pl-pds">'</span></span>, <span class="pl-en">service</span>({
+  Model<span class="pl-k">:</span> Post,
+  discriminators<span class="pl-k">:</span> [TextPost]
+}))
+                </code></pre>
+        </div>
+        <p>Without support for discriminators, when you perform a <code>.get</code> on the posts service, you'd only get
+            back <code>Post</code> models, not <code>TextPost</code> models.
+            Now in your query, you can specify a value for your discriminatorKey:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs">{
+  _type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>text<span
+                            class="pl-pds">'</span></span>
+}
+                </code></pre>
+        </div>
+        <p>and Feathers will automatically swap in the correct model and execute the query it instead of its parent
+            model.</p>
+        <h2><a href="#license" aria-hidden="true" class="anchor" id="user-content-license">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
                     <path fill-rule="evenodd"
                           d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
                 </svg>
             </a>License
         </h2>
-        <p>Copyright (c) 2016</p>
-        <p>Licensed under the <a href="/feathersjs-ecosystem/feathers-nedb/blob/master/LICENSE">MIT license</a>.</p>
+        <p><a href="https://github.com/feathersjs-ecosystem/feathers-mongoose/blob/master/LICENSE">MIT</a></p>
+        <h2><a href="#authors" aria-hidden="true" class="anchor" id="user-content-authors">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Authors
+        </h2>
+        <ul>
+            <li><a href="https://github.com/feathersjs-ecosystem/feathers-mongoose/graphs/contributors">Feathers
+                    contributors</a></li>
+        </ul>
     </article>
 {% endblock %}

@@ -13,7 +13,13 @@
     "env.js",
     "config/",
     "client/public/",
-    "server/"
+    "server/controllers/",
+    "server/middleware/",
+    "server/plugins/",
+    "server/routes/",
+    "server/views/",
+    "server/app.server.js",
+    "server/start.js"
   ],
   "env": {
     "NODE_ENV": "development"

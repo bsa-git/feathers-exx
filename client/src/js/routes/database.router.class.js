@@ -57,6 +57,15 @@ class DatabaseRouter {
         await this.database.featherSequelize();
         return 'ok';
     }
+
+    /**
+     * Route database feathers-mongoose
+     * @return Promise
+     */
+    async routeFeathersMongoose() {
+        await this.database.featherMongoose();
+        return 'ok';
+    }
 }
 
 export default DatabaseRouter

@@ -1,5 +1,5 @@
 systemLog:
     destination: file
-    path: ./server/data/log/mongod/mongod.log
+    path: ./server/data/log/mongod/server.log
 storage:
     dbPath: ./server/data/db/mongodb

@@ -28,13 +28,13 @@ See the sample file "/env.example.js".
 
 5. Start your app
 
-Let's start building packages on the client side on a separate command line
+Let's start building packages on the client side
 
   ```bash
-  npm run start-client
+  npm run build-client
   ```
 
-On the other command line, start the local server, so that you can see the application running
+Start the local server, so that you can see the application running
 
   ```bash
   npm run dev
