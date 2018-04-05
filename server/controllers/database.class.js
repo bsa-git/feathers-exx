@@ -70,7 +70,7 @@ class Database extends Base {
      */
     async feathersNeDB() {
         const correctTypeQueryHook = require('./hooks/correct-type-query');
-        const countMessageHook = require('./hooks/feathers-nedb/count-message.hook');
+        const countMessagesHook = require('./hooks/feathers-nedb/count-messages.hook');
         const service = require('feathers-nedb');
         const model = require('./models/nedb.model');
         //------------------------------------------------
@@ -90,14 +90,14 @@ class Database extends Base {
                 find: [correctTypeQueryHook({_id: 'int', counter: 'int'})]
             }
         });
-        // Register 'count-message' service
-        app.use('count-message', service({
+        // Register 'count-messages' service
+        app.use('count-messages', service({
             Model: model
         }));
         // Add "countMessagesHook" for find method
-        app.service('count-message').hooks({
+        app.service('count-messages').hooks({
             before: {
-                find: [countMessageHook]
+                find: [countMessagesHook]
             }
         });
         // Restart the server
@@ -107,7 +107,7 @@ class Database extends Base {
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
             const messages = app.service('messages');
-            const countMessage = app.service('count-message');
+            const countMessages = app.service('count-messages');
             // If there are messages, then we do not create new ones
             const _msessages = await messages.find();
             if (parseInt(_msessages.total) === 0) {
@@ -136,7 +136,7 @@ class Database extends Base {
 
             });
 
-            const numberMessages = await countMessage.find();
+            const numberMessages = await countMessages.find();
             return {messages_1: messages_1.data, messages_2: messages_2.data, numberMessages};
         }
 
@@ -302,7 +302,7 @@ class Database extends Base {
      */
     async feathersMongoose() {
         const serviceHooks = require('./hooks/feathers-mongoose/service.hooks');
-        const countMessageHook = require('./hooks/feathers-mongoose/count-message.hook');
+        const countMessagesHook = require('./hooks/feathers-mongoose/count-messages.hook');
         const mongoose = require('mongoose');
         const service = require('feathers-mongoose');
         const Model = require('./models/mongoose.model');
@@ -329,14 +329,14 @@ class Database extends Base {
         app.service('messages').hooks(serviceHooks);
 
         // Register 'count-message' service
-        app.use('count-message', service({
+        app.use('count-messages', service({
             Model
         }));
 
         // Add "countMessagesHook" for find method
-        app.service('count-message').hooks({
+        app.service('count-messages').hooks({
             before: {
-                find: [countMessageHook]
+                find: [countMessagesHook]
             }
         });
 
@@ -347,7 +347,7 @@ class Database extends Base {
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
             const messages = app.service('messages');
-            const countMessage = app.service('count-message');
+            const countMessages = app.service('count-messages');
 
             // If there are messages, then we do not create new ones
             const _msessages = await messages.find();
@@ -374,7 +374,7 @@ class Database extends Base {
 
             });
 
-            const numberMessages = await countMessage.find();
+            const numberMessages = await countMessages.find();
             return {messages_1: messages_1.data, messages_2: messages_2.data, numberMessages};
         }
 
