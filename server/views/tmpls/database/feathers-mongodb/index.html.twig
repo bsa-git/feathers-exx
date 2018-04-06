@@ -1,0 +1,323 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <article class="markdown-body entry-content" itemprop="text">
+        <h1><a href="#feathers-mongodb" aria-hidden="true" class="anchor" id="user-content-feathers-mongodb">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>feathers-mongodb
+        </h1>
+        <p>A <a href="https://feathersjs.com" rel="nofollow">Feathers</a> database adapter for <a
+                    href="https://www.mongodb.org/" rel="nofollow">MongoDB</a> using <a
+                    href="https://www.npmjs.com/package/mongodb" rel="nofollow">official NodeJS driver for MongoDB</a>.
+        </p>
+        <div class="highlight highlight-source-shell">
+            <pre><code class="hljs">$ npm install --save mongodb feathers-mongodb</code></pre>
+        </div>
+        <blockquote>
+            <p><strong>Important:</strong> <code>feathers-mongodb</code> implements the <a
+                        href="https://docs.feathersjs.com/api/databases/common.html" rel="nofollow">Feathers Common
+                    database adapter API</a> and <a href="https://docs.feathersjs.com/api/databases/querying.html"
+                                                    rel="nofollow">querying syntax</a>.</p>
+        </blockquote>
+        <blockquote>
+            <p>This adapter also requires a <a href="https://docs.mongodb.com/getting-started/shell/#" rel="nofollow">running
+                    MongoDB</a> database server.</p>
+        </blockquote>
+        <h2><a href="#api" aria-hidden="true" class="anchor" id="user-content-api">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>API
+        </h2>
+        <h3><a href="#serviceoptions" aria-hidden="true" class="anchor" id="user-content-serviceoptions">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a><code>service(options)</code></h3>
+        <p>Returns a new service instance initialized with the given options. <code>Model</code> has to be a MongoDB
+            collection.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">MongoClient</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>mongodb<span class="pl-pds">'</span></span>).<span
+                        class="pl-smi">MongoClient</span>;
+<span class="pl-k">const</span> <span class="pl-c1">service</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>feathers-mongodb<span class="pl-pds">'</span></span>);
+
+<span class="pl-smi">MongoClient</span>.<span class="pl-en">connect</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>mongodb://localhost:27017/feathers<span
+                            class="pl-pds">'</span></span>).<span class="pl-en">then</span>(<span
+                        class="pl-smi">client</span> <span class="pl-k">=&gt;</span> {
+  <span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">service</span>({
+    Model<span class="pl-k">:</span> <span class="pl-smi">client</span>.<span class="pl-en">db</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>feathers<span class="pl-pds">'</span></span>).<span
+                        class="pl-en">collection</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
+                            class="pl-pds">'</span></span>)
+  }));
+  <span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">service</span>({ Model, id, events, paginate }));
+});
+                </code>></pre>
+        </div>
+        <p><strong>Options:</strong></p>
+        <ul>
+            <li><code>Model</code> (<strong>required</strong>) - The MongoDB collection instance</li>
+            <li><code>id</code> (<em>optional</em>, default: <code>'_id'</code>) - The name of the id field property. By
+                design, MongoDB will always add an <code>_id</code> property.
+            </li>
+            <li><code>events</code> (<em>optional</em>) - A list of <a
+                        href="https://docs.feathersjs.com/api/events.html#custom-events" rel="nofollow">custom service
+                    events</a> sent by this service
+            </li>
+            <li><code>paginate</code> (<em>optional</em>) - A <a
+                        href="https://docs.feathersjs.com/api/databases/common.html#pagination" rel="nofollow">pagination
+                    object</a> containing a <code>default</code> and <code>max</code> page size
+            </li>
+        </ul>
+        <h3><a href="#paramsmongodb" aria-hidden="true" class="anchor" id="user-content-paramsmongodb">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>params.mongodb
+        </h3>
+        <p>When making a <a href="https://docs.feathersjs.com/api/services.html" rel="nofollow">service method</a> call,
+            <code>params</code> can contain an <code>mongodb</code> property (for exmaple, <code>{upsert: true}</code>)
+            which allows to modify the options used to run the MongoDB query.</p>
+        <h2><a href="#example" aria-hidden="true" class="anchor" id="user-content-example">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Example
+        </h2>
+        <p>Here is an example of a Feathers server with a <code>messages</code> endpoint that writes to the <code>feathers</code>
+            database and the <code>messages</code> collection.</p>
+        <pre><code>$ npm install @feathersjs/feathers @feathersjs/errors @feathersjs/express @feathersjs/socketio feathers-mongodb mongodb
+</code></pre>
+        <p>In <code>app.js</code>:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">feathers</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>@feathersjs/feathers<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">express</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>@feathersjs/express<span
+                            class="pl-pds">'</span></span>);
+<span class="pl-k">const</span> <span class="pl-c1">socketio</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>@feathersjs/socketio<span
+                            class="pl-pds">'</span></span>);
+
+<span class="pl-k">const</span> <span class="pl-c1">MongoClient</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>mongodb<span class="pl-pds">'</span></span>).<span
+                        class="pl-smi">MongoClient</span>;
+<span class="pl-k">const</span> <span class="pl-c1">service</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>feathers-mongodb<span class="pl-pds">'</span></span>);
+
+<span class="pl-c"><span class="pl-c">//</span> Create an Express compatible Feathers application instance.</span>
+<span class="pl-k">const</span> <span class="pl-c1">app</span> <span class="pl-k">=</span> <span
+                        class="pl-en">express</span>(<span class="pl-en">feathers</span>());
+<span class="pl-c"><span class="pl-c">//</span> Turn on JSON parser for REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">json</span>());
+<span class="pl-c"><span class="pl-c">//</span> Turn on URL-encoded parser for REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">urlencoded</span>({extended<span
+                        class="pl-k">:</span> <span class="pl-c1">true</span>}));
+<span class="pl-c"><span class="pl-c">//</span> Enable REST services</span>
+<span class="pl-smi">app</span>.<span class="pl-en">configure</span>(<span class="pl-smi">express</span>.<span
+                        class="pl-en">rest</span>());
+<span class="pl-c"><span class="pl-c">//</span> Enable Socket.io</span>
+<span class="pl-smi">app</span>.<span class="pl-en">configure</span>(<span class="pl-en">socketio</span>());
+
+<span class="pl-c"><span class="pl-c">//</span> Connect to the db, create and register a Feathers service.</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-s"><span class="pl-pds">'</span>/messages<span
+                            class="pl-pds">'</span></span>, <span class="pl-en">service</span>({
+  paginate<span class="pl-k">:</span> {
+    default<span class="pl-k">:</span> <span class="pl-c1">2</span>,
+    max<span class="pl-k">:</span> <span class="pl-c1">4</span>
+  }
+}));
+
+<span class="pl-c"><span class="pl-c">//</span> A basic error handler, just like Express</span>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-smi">express</span>.<span class="pl-en">errorHandler</span>());
+
+<span class="pl-c"><span class="pl-c">//</span> Connect to your MongoDB instance(s)</span>
+<span class="pl-smi">MongoClient</span>.<span class="pl-en">connect</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>mongodb://localhost:27017/feathers<span
+                            class="pl-pds">'</span></span>)
+  .<span class="pl-en">then</span>(<span class="pl-k">function</span>(<span class="pl-smi">client</span>){
+    <span class="pl-c"><span class="pl-c">//</span> Set the model now that we are connected</span>
+    <span class="pl-smi">app</span>.<span class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
+                            class="pl-pds">'</span></span>).<span class="pl-smi">Model</span> <span
+                        class="pl-k">=</span> <span class="pl-smi">client</span>.<span class="pl-en">db</span>(<span
+                        class="pl-s"><span class="pl-pds">'</span>feathers<span class="pl-pds">'</span></span>).<span
+                        class="pl-en">collection</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
+                            class="pl-pds">'</span></span>);
+
+    <span class="pl-c"><span class="pl-c">//</span> Now that we are connected, create a dummy Message</span>
+    <span class="pl-smi">app</span>.<span class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>messages<span
+                            class="pl-pds">'</span></span>).<span class="pl-en">create</span>({
+      text<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Message created on server<span
+                            class="pl-pds">'</span></span>
+    }).<span class="pl-en">then</span>(<span class="pl-smi">message</span> <span class="pl-k">=&gt;</span> <span
+                        class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span
+                            class="pl-pds">'</span>Created message<span class="pl-pds">'</span></span>, message));
+  }).<span class="pl-en">catch</span>(<span class="pl-smi">error</span> <span class="pl-k">=&gt;</span> <span
+                        class="pl-en">console</span>.<span class="pl-c1">error</span>(error));
+
+<span class="pl-c"><span class="pl-c">//</span> Start the server.</span>
+<span class="pl-k">const</span> <span class="pl-c1">port</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">3030</span>;
+
+<span class="pl-smi">app</span>.<span class="pl-en">listen</span>(port, () <span class="pl-k">=&gt;</span> {
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">`</span>Feathers server listening on port <span
+                            class="pl-s1"><span class="pl-pse">${</span>port<span class="pl-pse">}</span></span><span
+                            class="pl-pds">`</span></span>);
+});
+                </code>></pre>
+        </div>
+        <p>Run the example with <code>node app</code> and go to <a href="http://localhost:3030/messages" rel="nofollow">localhost:3030/messages</a>.
+        </p>
+        <h2><a href="#querying" aria-hidden="true" class="anchor" id="user-content-querying">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Querying
+        </h2>
+        <p>Additionally to the <a href="https://docs.feathersjs.com/api/databases/querying.html" rel="nofollow">common
+                querying mechanism</a> this adapter also supports <a
+                    href="https://docs.mongodb.com/v3.2/tutorial/query-documents/" rel="nofollow">MongoDB's query
+                syntax</a> and the <code>update</code> method also supports MongoDB <a
+                    href="https://docs.mongodb.com/v3.2/reference/operator/update/" rel="nofollow">update operators</a>.
+        </p>
+        <blockquote>
+            <p><strong>Important:</strong> External query values through HTTP URLs may have to be converted to the same
+                type stored in MongoDB in a before <a href="https://docs.feathersjs.com/api/hooks.html" rel="nofollow">hook</a>
+                otherwise no matches will be found. This includes querying for <code>_id</code> which is a MongoID, e.g.
+                with <code>$in</code>. See <a href="https://github.com/feathersjs/feathers/issues/757">feathersjs/feathers/issues/757</a>.
+                Websocket requests will maintain the correct format.</p>
+        </blockquote>
+        <p>For example, a <code>find</code> call for <code>_id</code> (which is a MongoDB object id) and
+            <code>age</code> (which is a number) a hook like this can be used:</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span
+                        class="pl-c1">ObjectID</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>mongodb<span
+                            class="pl-pds">'</span></span>).<span class="pl-smi">ObjectID</span>;
+
+<span class="pl-smi">app</span>.<span class="pl-en">service</span>(<span class="pl-s"><span class="pl-pds">'</span>users<span
+                            class="pl-pds">'</span></span>).<span class="pl-en">hooks</span>({
+  before<span class="pl-k">:</span> {
+    <span class="pl-en">find</span>(<span class="pl-smi">context</span>) {
+      <span class="pl-k">const</span> { <span class="pl-c1">query</span> <span class="pl-k">=</span> {} } <span
+                        class="pl-k">=</span> <span class="pl-smi">context</span>.<span class="pl-smi">params</span>;
+
+      <span class="pl-k">if</span>(<span class="pl-smi">query</span>.<span class="pl-smi">_id</span>) {
+        <span class="pl-smi">query</span>.<span class="pl-smi">_id</span>  <span class="pl-k">=</span> <span
+                        class="pl-k">new</span> <span class="pl-en">ObjectID</span>(<span
+                        class="pl-smi">query</span>.<span class="pl-smi">_id</span>);
+      }
+
+      <span class="pl-k">if</span>(<span class="pl-smi">query</span>.<span class="pl-smi">age</span> <span class="pl-k">!==</span> <span
+                        class="pl-c1">undefined</span>) {
+        <span class="pl-smi">query</span>.<span class="pl-smi">age</span> <span class="pl-k">=</span> <span
+                        class="pl-c1">parseInt</span>(<span class="pl-smi">query</span>.<span class="pl-smi">age</span>, <span
+                        class="pl-c1">10</span>);
+      }
+
+      <span class="pl-smi">context</span>.<span class="pl-smi">params</span>.<span class="pl-smi">query</span> <span
+                        class="pl-k">=</span> query;
+
+      <span class="pl-k">return</span> <span class="pl-c1">Promise</span>.<span class="pl-en">resolve</span>(context);
+    }
+  }
+});
+                </code></pre>
+        </div>
+        <p>Which will allows queries like <code>/users?_id=507f1f77bcf86cd799439011&amp;age=25</code>.</p>
+        <h2><a href="#collation-support" aria-hidden="true" class="anchor" id="user-content-collation-support">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Collation Support
+        </h2>
+        <p>This adapter includes support for <a
+                    href="https://docs.mongodb.com/manual/release-notes/3.4/#collation-and-case-insensitive-indexes"
+                    rel="nofollow">collation and case insensitive indexes available in MongoDB v3.4</a>. Collation
+            parameters may be passed using the special <code>collation</code> parameter to the <code>find()</code>,
+            <code>remove()</code> and <code>patch()</code> methods.</p>
+        <h3><a href="#example-patch-records-with-case-insensitive-alphabetical-ordering" aria-hidden="true"
+               class="anchor" id="user-content-example-patch-records-with-case-insensitive-alphabetical-ordering">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Example: Patch records with case-insensitive alphabetical ordering
+        </h3>
+        <p>The example below would patch all student records with grades of <code>'c'</code> or <code>'C'</code> and
+            above (a natural language ordering). Without collations this would not be as simple, since the comparison
+            <code>{ $gt: 'c' }</code> would not include uppercase grades of <code>'C'</code> because the code point of
+            <code>'C'</code> is less than that of <code>'c'</code>.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span class="pl-c1">patch</span> <span
+                        class="pl-k">=</span> { shouldStudyMore<span class="pl-k">:</span> <span
+                        class="pl-c1">true</span> };
+<span class="pl-k">const</span> <span class="pl-c1">query</span> <span class="pl-k">=</span> { grade<span
+                        class="pl-k">:</span> { $gte<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>c<span
+                            class="pl-pds">'</span></span> } };
+<span class="pl-k">const</span> <span class="pl-c1">collation</span> <span class="pl-k">=</span> { locale<span
+                        class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>en<span
+                            class="pl-pds">'</span></span>, strength<span class="pl-k">:</span> <span
+                        class="pl-c1">1</span> };
+<span class="pl-smi">students</span>.<span class="pl-en">patch</span>(<span class="pl-c1">null</span>, patch, { query, collation }).<span
+                        class="pl-en">then</span>( <span class="pl-k">...</span> );
+                </code></pre>
+        </div>
+        <h3><a href="#example-find-records-with-a-case-insensitive-search" aria-hidden="true" class="anchor"
+               id="user-content-example-find-records-with-a-case-insensitive-search">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>Example: Find records with a case-insensitive search
+        </h3>
+        <p>Similar to the above example, this would find students with a grade of <code>'c'</code> or greater, in a
+            case-insensitive manner.</p>
+        <div class="highlight highlight-source-js"><pre><code class="hljs"><span class="pl-k">const</span> <span class="pl-c1">query</span> <span
+                        class="pl-k">=</span> { grade<span class="pl-k">:</span> { $gte<span class="pl-k">:</span> <span
+                        class="pl-s"><span class="pl-pds">'</span>c<span class="pl-pds">'</span></span> } };
+<span class="pl-k">const</span> <span class="pl-c1">collation</span> <span class="pl-k">=</span> { locale<span
+                        class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>en<span
+                            class="pl-pds">'</span></span>, strength<span class="pl-k">:</span> <span
+                        class="pl-c1">1</span> };
+<span class="pl-smi">students</span>.<span class="pl-c1">find</span>({ query, collation }).<span
+                        class="pl-en">then</span>( <span class="pl-k">...</span> );
+                </code></pre>
+        </div>
+        <p>For more information on MongoDB's collation feature, visit the <a
+                    href="https://docs.mongodb.com/manual/reference/collation/" rel="nofollow">collation reference
+                page</a>.</p>
+        <h2><a href="#license" aria-hidden="true" class="anchor" id="user-content-license">
+                <svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewBox="0 0 16 16"
+                     width="16">
+                    <path fill-rule="evenodd"
+                          d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+                </svg>
+            </a>License
+        </h2>
+        <p>Copyright (c) 2016</p>
+        <p>Licensed under the <a href="/https://github.com/feathersjs-ecosystem/feathers-mongodb/blob/master/LICENSE">MIT license</a>.</p>
+    </article>
+{% endblock %}

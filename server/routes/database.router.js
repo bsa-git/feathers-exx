@@ -186,4 +186,62 @@ router.get('/feathers-mongoose', async function (req, res, next) {
     }
 });
 
+router.get('/feathers-mongodb', async function (req, res, next) {
+    try {
+        const context = {
+            title: 'Feathers MongoDB DataBase',
+            req: req
+        };
+        if (config.debug) {
+            console.log('Router.get: ', req.originalUrl);
+        }
+        // Create controller
+        const db = new Database(context);
+        // Perform the action "service.startServer"
+        const messages = await db.feathersMongoDB();
+
+        // Render twig template
+        const html = await Base.twigRender('messages.html.twig', req, messages);
+        // Set view params
+        res.locals.msgBox = {type: 'info', text: html};
+        // View render
+        res.render('tmpls/database/feathers-mongodb/index.html.twig', context);
+        if (config.debug) {
+            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+        }
+    } catch
+        (ex) {
+        Base.showError(ex, req, res);
+    }
+});
+
+router.get('/feathers-elasticsearch', async function (req, res, next) {
+    try {
+        const context = {
+            title: 'Feathers ElasticSearch DataBase',
+            req: req
+        };
+        if (config.debug) {
+            console.log('Router.get: ', req.originalUrl);
+        }
+        // Create controller
+        const db = new Database(context);
+        // Perform the action "service.startServer"
+        const messages = await db.feathersElasticSearch();
+
+        // Render twig template
+        const html = await Base.twigRender('messages.html.twig', req, messages);
+        // Set view params
+        res.locals.msgBox = {type: 'info', text: html};
+        // View render
+        res.render('tmpls/database/feathers-elasticsearch/index.html.twig', context);
+        if (config.debug) {
+            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+        }
+    } catch
+        (ex) {
+        Base.showError(ex, req, res);
+    }
+});
+
 module.exports = router;

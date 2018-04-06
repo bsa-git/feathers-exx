@@ -1,5 +1,7 @@
 "use strict";
 
+const path = require('path');
+
 // Global values for application"
 module.exports = {
     debug: false,
@@ -41,8 +43,98 @@ module.exports = {
                 {'name':'feathers-nedb', 'url': '/database/feathers-nedb', 'value': 'Feathers NeDB'},
                 {'name':'feathers-knex', 'url': '/database/feathers-knex', 'value': 'Feathers Knex'},
                 {'name':'feathers-sequelize', 'url': '/database/feathers-sequelize', 'value': 'Feathers Sequelize'},
-                {'name':'feathers-mongoose', 'url': '/database/feathers-mongoose', 'value': 'Feathers Mongoose'}
+                {'name':'feathers-mongoose', 'url': '/database/feathers-mongoose', 'value': 'Feathers Mongoose'},
+                {'name':'feathers-mongodb', 'url': '/database/feathers-mongodb', 'value': 'Feathers MongoDB'},
+                {'name':'feathers-elasticsearch', 'url': '/database/feathers-elasticsearch', 'value': 'Feathers ElasticSearch'}
             ]
+        }
+    },
+    api: {
+        appPort: 3000,
+        exxPort: 3030,
+        base_url: 'http://localhost',
+        database: {
+            current: 'sqlite',// 'sqlite', 'mysql', 'postgres', 'mssql'
+            nedb: {
+                filename: path.join(__dirname, '../../server/data/db/nedb/messages.db'),
+                autoload: true
+            },
+            mongoose: {
+                connection_string: 'mongodb://localhost:27017/dbFeathersExx'
+            },
+            mongodb: {
+                connection_string: 'mongodb://localhost:27017/dbFeathersExx'
+                // mongodb://localhost:27017/dbFeathersExx
+                // mongodb+srv://bsa-lab:BSA2657Lab@cluster0-0mwiq.mongodb.net/test
+                // mongodb+srv://bsa-lab:BSA2657Lab@cluster0-0mwiq.mongodb.net/admin
+            },
+            elasticsearch: {
+                connection_string: 'http://localhost:9200'
+            },
+            knex:{
+                sqlite: {
+                    client: 'sqlite3',
+                    connection: {
+                        filename: path.join(__dirname, '../../server/data/db/sqlite3/messages.db'),
+                    },
+                    useNullAsDefault: true
+                },
+                mysql:{
+                    client: 'mysql',
+                    connection: {
+                        host : 'localhost',
+                        user : 'root',
+                        password : '',
+                        database : 'dbFeathersExx'
+                    }
+                },
+                postgres:{
+                    client: 'pg',
+                    version: '7.2',
+                    connection: {
+                        host : 'localhost',
+                        user : 'your_database_user',
+                        password : 'your_database_password',
+                        database : 'myapp_test'
+                    }
+                }
+            },
+            sequelize: {
+                sqlite: {
+                    database: 'messages',
+                    username: '',
+                    password: '',
+                    connection_string: `sqlite:${path.join(__dirname, '../../server/data/db/sqlite3/messages.db')}`,
+                    options:{
+                        dialect: 'sqlite',
+                        storage: path.join(__dirname, '../../server/data/db/sqlite3/messages.db'),
+                        logging: false
+                    }
+                },
+                mysql:{
+                    database: 'dbFeathersExx',
+                    username: 'root',
+                    password: '',
+                    connection_string: 'mysql://root@localhost:3306/dbFeathersExx',// mysql://user:pass@example.com:9821/db_name
+                    options:{
+                        dialect: 'mysql',
+                        host: 'localhost',
+                        port: 3306,
+                        logging: false
+                    }
+                },
+                postgres:{
+                    database: 'myapp_test',
+                    username: 'your_database_user',
+                    password: 'your_database_password',
+                    connection_string: 'postgres://user:pass@example.com:5432/dbname',
+                    options:{
+                        dialect: 'postgres',
+                        host: 'localhost',
+                        logging: false
+                    }
+                }
+            }
         }
     },
     personal_data: {

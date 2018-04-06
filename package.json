@@ -13,7 +13,9 @@
     "js-watch": "webpack --watch",
     "build-client": "npm run css-build && npm run js-build",
     "watch-client": "npm run css-watch | npm run js-watch",
-    "start-mongod": "mongod -f mongod.config.yml"
+    "start-mongod": "mongod -f mongod.config.yml",
+    "start-elasticsearch": "elasticsearch"
+
   },
   "dependencies": {
     "@feathersjs/client": "^3.4.2",
@@ -26,10 +28,13 @@
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "elasticsearch": "^14.2.2",
     "express": "~4.15.5",
+    "feathers-elasticsearch": "^1.1.0",
     "feathers-knex": "^3.0.4",
     "feathers-localstorage": "^2.0.1",
     "feathers-memory": "^2.1.1",
+    "feathers-mongodb": "^3.0.1",
     "feathers-mongoose": "^6.1.0",
     "feathers-nedb": "^3.0.0",
     "feathers-sequelize": "^3.1.0",
@@ -40,6 +45,7 @@
     "location-helper": "^1.0.3",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
+    "mongodb": "^3.0.5",
     "mongoose": "^5.0.12",
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",

@@ -1,7 +1,7 @@
 "use strict";
 
 const mongooseOptions = context => {
-    // Set sequelize property which allows to pass additional Sequelize options
+    // Set mongoose property which allows to pass additional mongoose options
     if (!context.params.mongoose) {
         context.params.mongoose = {};
     }

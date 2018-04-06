@@ -1,5 +1,7 @@
 "use strict";
 
+const ObjectID = require('mongodb').ObjectID;
+
 /**
  * Get result convertation
  * @param type String  //{'int': 'toInteger', 'float': 'toNumber'}
@@ -11,6 +13,8 @@ const getResult = (type, value)=>{
         return parseInt(value);
     } else if(type === 'float') {
         return parseFloat(value);
+    } else if(type === 'ObjectID') {
+        return new ObjectID(value);
     }
 };
 

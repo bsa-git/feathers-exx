@@ -119,6 +119,17 @@ class Database extends Base {
     }
 
     /**
+     * Action database feathers-mongodb
+     * @return Promise
+     */
+    async featherMongoDB() {
+        // Set rest transport
+        const app = this.setRestTransport();
+        // Service messages find
+        return this._serviceMessagesFind(app, 'mongodb');
+    }
+
+    /**
      * Process messages find
      * @param app
      * @param tmpl
@@ -145,6 +156,8 @@ class Database extends Base {
                 template = require('../tmpls/database/feathers-sequelize/messages.html.twig');
             } else if (tmpl === 'mongoose') {
                 template = require('../tmpls/database/feathers-mongoose/messages.html.twig');
+            } else if (tmpl === 'mongodb') {
+                template = require('../tmpls/database/feathers-mongodb/messages.html.twig');
             } else {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
             }
