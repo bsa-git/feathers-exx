@@ -3,14 +3,15 @@
 const config = require('../../../config/env');
 const elasticsearch = require('elasticsearch');
 
+const es_config = config.api.database.elasticsearch;
 const Model = new elasticsearch.Client({
-    host: config.api.database.elasticsearch.connection_string,
+    host: es_config.connection_string,
     apiVersion: '6.2'
 });
 
 module.exports = {
     Model, elasticsearch: {
-        index: 'db_feathers_exx',
-        type: 'messages'
+        index: es_config.index,
+        type: es_config.type
     }
 };

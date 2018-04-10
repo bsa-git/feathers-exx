@@ -69,7 +69,9 @@ module.exports = {
                 // mongodb+srv://bsa-lab:BSA2657Lab@cluster0-0mwiq.mongodb.net/admin
             },
             elasticsearch: {
-                connection_string: 'http://localhost:9200'
+                connection_string: 'http://localhost:9200',
+                index: 'db_feathers_exx',
+                type: 'messages'
             },
             knex:{
                 sqlite: {

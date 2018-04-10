@@ -32,6 +32,8 @@ client/public/js/*
 # data
 server/data/log/*
 server/data/db/mongodb/*
+server/data/db/elasticsearch/*
+# ${ES_TMPDIR}
 
 # Configuration file
 .idea
