@@ -22,4 +22,4 @@ const envConfig = merge(config[appEnv], env[appEnv]);
 const globalConfig = merge(global, env['global']);
 const appConfig = merge(globalConfig, envConfig);
 
-module.exports = appConfig
+module.exports = appConfig;

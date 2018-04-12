@@ -12,6 +12,7 @@
   "watch": [
     "env.js",
     "config/",
+    "plugins/",
     "client/public/",
     "server/controllers/",
     "server/middleware/",

@@ -5,10 +5,10 @@
     </div>
     <div class="message-body content">
         <div class="has-text-centered">
-            <h1><strong>{{ error.message }}</strong></h1>
-            <h2>{% if error.code %}Code: {{ error.code }}; {% endif %}{% if error.type %}Type: {{ error.type }}; {% endif %}</h2>
+            <div class="is-size-3"><strong>{{ error.message }}</strong></div>
+            <div class="is-size-4">{% if error.code %}Code: {{ error.code }}; {% endif %}{% if error.type %}Type: {{ error.type }}; {% endif %}</div>
         </div>
-        <pre>{{ error.stack }}</pre>
+        <div class="is-size-6">{% if error.stack %}Stack: <pre>{{ error.stack }}</pre> {% endif %}</div>
     </div>
 </article>
 

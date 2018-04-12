@@ -476,22 +476,15 @@ class Database extends Base {
         const correctTypeQueryHook = require('./hooks/correct-type-query');
         const mongodbOptions = require('./hooks/feathers-mongodb/mongodb-options.hook');
         const countMessagesHook = require('./hooks/feathers-mongodb/count-messages.hook');
+        const Utils = require('../../plugins/utils.class');
         const service = require('feathers-elasticsearch');
-        const {Model, elasticsearch} = require('./models/elasticsearch.model');
+        const getModel = require('./models/elasticsearch.model');
         //------------------------------------------------
         // Set rest transport
         const app = this.setRestTransport();
 
-        // const messageService = service({
-        //     Model,
-        //     elasticsearch,
-        //     paginate: {
-        //         default: 5,
-        //         max: 10
-        //     }
-        // });
-
-        // Initialize your feathers plugin
+        // Connect to the db, create and register a Feathers service.
+        const {Model, elasticsearch} = await getModel(this);
         app.use('/messages', service({
             Model,
             elasticsearch,
@@ -500,28 +493,6 @@ class Database extends Base {
                 max: 10
             }
         }));
-
-        // // Add "serviceHooks" for service
-        // app.service('messages').hooks({
-        //     before: {
-        //         find: [correctTypeQueryHook({_id: 'ObjectID', counter: 'int'})],
-        //         create: [mongodbOptions],
-        //         update: [mongodbOptions],
-        //         patch: [mongodbOptions]
-        //     }
-        // });
-        //
-        // // Register 'count-message' service
-        // app.use('count-messages', service({
-        //     Model
-        // }));
-        //
-        // // Add "countMessagesHook" for find method
-        // app.service('count-messages').hooks({
-        //     before: {
-        //         find: [countMessagesHook]
-        //     }
-        // });
 
         // Restart the server
         await this.restartServer(app);
@@ -542,6 +513,8 @@ class Database extends Base {
                         message: `Message number ${counter}`
                     });
                 }
+                // Delay time 1 sec
+                await Utils.delayTime(1);
             }
             const messages_1 = await messages.find({
                 query: {

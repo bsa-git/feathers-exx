@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const Http = require('../plugins/http.class');
+const HttpBox = require('../plugins/http.server.class');
 const config = require('../../config/env');
 
 class Base {
@@ -11,6 +11,7 @@ class Base {
         this.req = this.context.req ? this.context.req : {};
         this.res = this.context.res ? this.context.res : {};
         this.config = config;
+        this.http = new HttpBox(this.req);
     }
 
     /**
@@ -77,7 +78,7 @@ class Base {
         app.configure(express.rest());
         // Set up an error handler that gives us nicer errors
         app.use(express.errorHandler());
-        if(isCors){
+        if (isCors) {
             this.corsMiddleware(app);
         }
         return app;
@@ -141,11 +142,13 @@ class Base {
      * @param res Response
      */
     static showError(err, req, res) {
-        console.error('showError: ', err);
+        // console.error('showError: ', err);
         // set locals, only providing error in development
-        err.code = err.code || 500;
-        err.type = err.type ? err.type : Http.httpCodes()[err.code];
+        err.code = err.code || err.status || 500;
+        err.type = err.type || err.statusText || HttpBox.httpCodes()[err.code];
         err.stack = req.app.get('env') === 'development' ? err.stack : '';
+        err.request_info = err.request_info ? err.request_info : '';
+        err.response_data = err.response_data ? err.response_data : '';
         res.locals.error = err;
         // render the error page
         res.status(err.code);

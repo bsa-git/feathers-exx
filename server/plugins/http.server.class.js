@@ -1,5 +1,8 @@
 "use strict";
 
+const axios = require('axios');
+const lang = require('lodash/lang');
+
 /**
  * HttpBox - http functions
  *
@@ -198,6 +201,147 @@ class HttpBox {
 
         return `${protocol}://${host}${port}/${exports.stripSlashes(path)}`;
     };
+
+    /**
+     * Get method for axios
+     * @param url String
+     * @param config Object
+     * @return {Promise.<void>}
+     */
+    async get(url, config) {
+        try {
+            const configDefault = {
+                // headers: {'X-Requested-With': 'XMLHttpRequest'}
+            };
+            const _config = Object.assign(configDefault, config);
+            const response = await axios.get(url, _config);
+            if (response.statusText !== 'OK') {
+                throw new Error(`HttpBox.get Error: Network response was not OK; url: '${url}'; config: `, _config);
+            }
+            return response.data;
+        } catch (ex) {
+            this.axiosError(ex);
+        }
+    }
+
+    /**
+     * Post method for axios
+     * @param url String
+     * @param data
+     * @param config Object
+     * @return {Promise.<void>}
+     */
+    async post(url, data, config) {
+        try {
+            const configDefault = {};
+            const _config = Object.assign(configDefault, config);
+            const response = await axios.post(url, data, _config);
+            if (response.statusText !== 'Created') {
+                throw new Error(`HttpBox.post Error: Network response was not OK; url: '${url}'; config: `, _config);
+            }
+            return response.data;
+        } catch (ex) {
+            this.axiosError(ex);
+        }
+    }
+
+    /**
+     * Put method for axios
+     * @param url String
+     * @param data
+     * @param config Object
+     * @return {Promise.<void>}
+     */
+    async put(url, data, config) {
+        try {
+            const configDefault = {};
+            const _config = Object.assign(configDefault, config);
+            const response = await axios.put(url, data, _config);
+            if (response.statusText !== 'OK') {
+                throw new Error(`HttpBox.put Error: Network response was not OK; url: '${url}'; config: `, _config);
+            }
+            return response.data;
+        } catch (ex) {
+            this.axiosError(ex);
+        }
+    }
+
+    /**
+     * Patch method for axios
+     * @param url String
+     * @param data
+     * @param config Object
+     * @return {Promise.<void>}
+     */
+    async patch(url, data, config) {
+        try {
+            const configDefault = {};
+            const _config = Object.assign(configDefault, config);
+            const response = await axios.patch(url, data, _config);
+            if (response.statusText !== 'OK') {
+                throw new Error(`HttpBox.patch Error: Network response was not OK; url: '${url}'; config: `, _config);
+            }
+            return response.data;
+        } catch (ex) {
+            this.axiosError(ex);
+        }
+    }
+
+    /**
+     * Delete method for axios
+     * @param url String
+     * @param data
+     * @param config Object
+     * @return {Promise.<void>}
+     */
+    async delete(url, config) {
+        try {
+            const configDefault = {};
+            const _config = Object.assign(configDefault, config);
+            const response = await axios.delete(url, _config);
+            if (response.statusText !== 'OK') {
+                throw new Error(`HttpBox.delete Error: Network response was not OK; url: '${url}'; config: `, _config);
+            }
+            return response.data;
+        } catch (ex) {
+            this.axiosError(ex);
+        }
+    }
+
+    axiosError(error) {
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const contentType = error.response.headers["content-type"];
+            if (contentType && contentType.includes("application/json")) {
+                error.response_data = error.response.data ? JSON.stringify(error.response.data, "", 2) : '';
+            } else {
+                error.response_data = error.response.data ? error.response.data : '';
+            }
+            error.headers = JSON.stringify(error.response.headers, "", 2);
+            error.status = error.response.status;
+            error.statusText = error.response.statusText;
+            error.request_info = JSON.stringify({
+                url: error.response.config.url,
+                method: error.response.config.method
+            }, "", 2);
+            console.log('Error.request.info: ', error.request_info);
+            console.log('Error.response.status: ', error.response.status);
+            console.log('Error.response.statusText: ', error.response.statusText);
+            console.log('Error.response.headers: ', error.response.headers);
+            console.log('Error.response.data: ', error.response.data);
+        } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log('Error.request: ', error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error.message', error.message);
+        }
+        // console.log('Error.config: ', error.config);
+        throw error;
+    }
 
     getMethod() {
         return this.request.method

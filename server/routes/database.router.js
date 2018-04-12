@@ -45,8 +45,7 @@ router.get('/feathers-memory', async function (req, res, next) {
         if (config.debug) {
             console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
         }
-    } catch
-        (ex) {
+    } catch (ex) {
         Base.showError(ex, req, res);
     }
 });
@@ -74,8 +73,7 @@ router.get('/feathers-nedb', async function (req, res, next) {
         if (config.debug) {
             console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
         }
-    } catch
-        (ex) {
+    } catch (ex) {
         Base.showError(ex, req, res);
     }
 });
@@ -122,8 +120,7 @@ router.get('/feathers-knex', async function (req, res, next) {
         if (config.debug) {
             console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
         }
-    } catch
-        (ex) {
+    } catch (ex) {
         Base.showError(ex, req, res);
     }
 });
@@ -151,8 +148,7 @@ router.get('/feathers-sequelize', async function (req, res, next) {
         if (config.debug) {
             console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
         }
-    } catch
-        (ex) {
+    } catch (ex) {
         Base.showError(ex, req, res);
     }
 });
@@ -180,8 +176,7 @@ router.get('/feathers-mongoose', async function (req, res, next) {
         if (config.debug) {
             console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
         }
-    } catch
-        (ex) {
+    } catch (ex) {
         Base.showError(ex, req, res);
     }
 });
@@ -209,8 +204,7 @@ router.get('/feathers-mongodb', async function (req, res, next) {
         if (config.debug) {
             console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
         }
-    } catch
-        (ex) {
+    } catch (ex) {
         Base.showError(ex, req, res);
     }
 });
@@ -238,8 +232,7 @@ router.get('/feathers-elasticsearch', async function (req, res, next) {
         if (config.debug) {
             console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
         }
-    } catch
-        (ex) {
+    } catch (ex) {
         Base.showError(ex, req, res);
     }
 });

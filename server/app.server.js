@@ -6,7 +6,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const Http = require('./plugins/http.class');
+const HttpBox = require('./plugins/http.server.class');
 
 // Require routers
 const index = require('./routes/index.router');
@@ -48,9 +48,11 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
-    err.code = err.code || 500;
-    err.type = err.type ? err.type : Http.httpCodes()[err.code];
+    err.code = err.code || err.status || 500;
+    err.type = err.type || err.statusText || HttpBox.httpCodes()[err.code];
     err.stack = req.app.get('env') === 'development' ? err.stack : '';
+    err.request_info = err.request_info ? err.request_info : '';
+    err.response_data = err.response_data ? err.response_data : '';
     res.locals.error = err;
 
     // render the error page

@@ -14,7 +14,7 @@
     "build-client": "npm run css-build && npm run js-build",
     "watch-client": "npm run css-watch | npm run js-watch",
     "start-mongod": "mongod -f mongod.config.yml",
-    "start-elasticsearch": "elasticsearch  -Ecluster.name=feathers_exx -Epath.data=\"C:\\NodeServer\\feathers-exx\\server\\data\\db\\elasticsearch\" -Epath.logs=\"C:\\NodeServer\\feathers-exx\\server\\data\\log\\elasticsearch\""
+    "start-elasticsearch": "elasticsearch"
 
   },
   "dependencies": {
