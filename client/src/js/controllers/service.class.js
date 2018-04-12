@@ -59,7 +59,7 @@ class Service extends Base {
                     console.log(`HttpBox.post message: `, message);
                     await self._showMessages('create()', 'POST');
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             get: async () => {
@@ -76,14 +76,14 @@ class Service extends Base {
                         await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             find: async () => {
                 try {
                     await self._showMessages('find()', 'GET');
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             patch: async () => {
@@ -100,7 +100,7 @@ class Service extends Base {
                         await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             update: async () => {
@@ -117,7 +117,7 @@ class Service extends Base {
                         await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             delete: async () => {
@@ -134,7 +134,7 @@ class Service extends Base {
                         await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             }
         };
@@ -161,7 +161,7 @@ class Service extends Base {
                     console.log(`HttpBox.post message: `, message);
                     await self._showMessages('create()', 'POST');
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             get: async () => {
@@ -178,14 +178,14 @@ class Service extends Base {
                         await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             find: async () => {
                 try {
                     await self._showMessages('find()', 'GET');
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             patch: async () => {
@@ -202,7 +202,7 @@ class Service extends Base {
                         await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             update: async () => {
@@ -219,7 +219,7 @@ class Service extends Base {
                         await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             delete: async () => {
@@ -236,7 +236,7 @@ class Service extends Base {
                         await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             }
         };
@@ -287,7 +287,7 @@ class Service extends Base {
                     const messages = await serviceMessages.find();
                     await serviceMessages.create({text: `Client create message-${messages.length + 1}`});
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             get: async () => {
@@ -304,14 +304,14 @@ class Service extends Base {
                         await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             find: async () => {
                 try {
                     await self._showMessages('find()', 'GET');
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             patch: async () => {
@@ -326,7 +326,7 @@ class Service extends Base {
                         await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             update: async () => {
@@ -341,7 +341,7 @@ class Service extends Base {
                         await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             },
             delete: async () => {
@@ -356,7 +356,7 @@ class Service extends Base {
                         await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
-                    self.bulma.showError({error: ex});
+                    self.bulma.showError(ex);
                 }
             }
         };

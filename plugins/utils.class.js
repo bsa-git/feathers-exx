@@ -50,6 +50,15 @@ class Utils {
             setTimeout(() => resolve("done!"), sec * 1000);
         });
     }
+
+    /**
+     * Strip slashes
+     * @param name String
+     * @return {XML|string|*|void}
+     */
+    static stripSlashes(name) {
+        return name.replace(/^(\/*)|(\/*)$/g, '');
+    }
 }
 
 module.exports = Utils;

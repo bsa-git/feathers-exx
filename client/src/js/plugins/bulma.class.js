@@ -1,6 +1,7 @@
 "use strict";
 
-import Highlight from '../highlight/highlight.class'
+import Highlight from './highlight.class'
+import config from '../../../../config/env/index.client'
 
 class Bulma {
     constructor(options) {
@@ -78,7 +79,7 @@ class Bulma {
         const $msg = document.getElementById(this.opts.idMsgBox);
         if($msg){
             // Render twig template
-            const template = require('../../tmpls/layouts/message.html.twig');
+            const template = require('../tmpls/layouts/message.html.twig');
             const html = template(data);
             $msg.innerHTML = html;
             if(this.isClass(`#${this.opts.idMsgBox}`, 'is-hidden')){
@@ -88,12 +89,20 @@ class Bulma {
         }
     }
 
-    showError(data){
+    showError(err){
         const $msg = document.getElementById(this.opts.idMsgBox);
         if($msg){
+            // Set error values
+            err.code = err.code || err.status || 500;
+            err.type = err.type || err.statusText || 'Request Error';
+            console.log('Error.stack: ', config)
+            err.stack = config.app_env === 'development' ? err.stack : '';
+            err.request_info = err.request_info ? err.request_info : '';
+            err.response_data = err.response_data ? err.response_data : '';
+
             // Render twig template
-            const template = require('../../tmpls/layouts/error.html.twig');
-            const html = template(data);
+            const template = require('../tmpls/layouts/error.html.twig');
+            const html = template({error: err});
             $msg.innerHTML = html;
             if(this.isClass(`#${this.opts.idMsgBox}`, 'is-hidden')){
                 $msg.classList.toggle('is-hidden');

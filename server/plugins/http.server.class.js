@@ -1,7 +1,7 @@
 "use strict";
 
 const axios = require('axios');
-const lang = require('lodash/lang');
+const Utils = require('../../plugins/utils.class');
 
 /**
  * HttpBox - http functions
@@ -199,7 +199,7 @@ class HttpBox {
 
         path = path || '';
 
-        return `${protocol}://${host}${port}/${exports.stripSlashes(path)}`;
+        return `${protocol}://${host}${port}/${Utils.stripSlashes(path)}`;
     };
 
     /**

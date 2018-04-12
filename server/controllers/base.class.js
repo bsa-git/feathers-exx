@@ -106,16 +106,6 @@ class Base {
         app.publish(() => app.channel('everybody'));
     }
 
-
-    /**
-     * Strip slashes
-     * @param name String
-     * @return {XML|string|*|void}
-     */
-    static stripSlashes(name) {
-        return name.replace(/^(\/*)|(\/*)$/g, '');
-    }
-
     /**
      * Render Twig template
      * @param fileName String

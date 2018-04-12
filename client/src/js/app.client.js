@@ -1,8 +1,8 @@
 "use strict";
 
 // Add regenerator-runtime for babel-loader
-import './plugins/webpack/runtime'
-import Bulma from './plugins/bulma/bulma.class'
+import './plugins/runtime'
+import Bulma from './plugins/bulma.class'
 import Client from './client.class'
 import indexRouter from './routes/index.router'
 
@@ -29,7 +29,7 @@ const bootstrap = async () => {
     } catch (ex) {
         new Bulma()
             .init()
-            .showError({error: ex})
+            .showError(ex)
     }
 };
 

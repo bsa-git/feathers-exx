@@ -8,6 +8,8 @@
             <div class="is-size-3"><strong>{{ error.message }}</strong></div>
             <div class="is-size-4">{% if error.code %}Code: {{ error.code }}; {% endif %}{% if error.type %}Type: {{ error.type }}; {% endif %}</div>
         </div>
+        <div class="is-size-6">{% if error.request_info %}Request Info: <pre><code>{{ error.request_info }}</code></pre> {% endif %}</div>
+        <div class="is-size-6">{% if error.response_data %}Response Data: <pre><code>{{ error.response_data }}</code></pre> {% endif %}</div>
         <div class="is-size-6">{% if error.stack %}Stack: <pre>{{ error.stack }}</pre> {% endif %}</div>
     </div>
 </article>

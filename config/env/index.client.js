@@ -20,6 +20,6 @@ const config = {
 
 const envConfig = merge(config[appEnv], env[appEnv]);
 const globalConfig = merge(global, env['global']);
-const appConfig = merge(globalConfig, envConfig);
+const appConfig = merge(globalConfig, envConfig, {app_env: appEnv});
 
 module.exports = appConfig;

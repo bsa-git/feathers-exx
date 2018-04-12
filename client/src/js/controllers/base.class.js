@@ -28,15 +28,6 @@ class Base {
     }
 
     /**
-     * Strip slashes
-     * @param name String
-     * @return {XML|string|*|void}
-     */
-    static stripSlashes(name) {
-        return name.replace(/^(\/*)|(\/*)$/g, '');
-    }
-
-    /**
      * Load script
      * @param url String
      * @param callback Function

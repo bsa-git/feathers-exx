@@ -1,9 +1,9 @@
 "use strict";
 
 import 'jstorage'
-import Bulma from './plugins/bulma/bulma.class'
+import Bulma from './plugins/bulma.class'
 import config from '../../../config/env/index.client'
-import HttpBox from './plugins/http/http.client.class'
+import HttpBox from './plugins/http.client.class'
 
 /**
  * Class of Client
