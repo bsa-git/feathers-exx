@@ -13,7 +13,7 @@
     "js-watch": "webpack --watch",
     "build-client": "npm run css-build && npm run js-build",
     "watch-client": "npm run css-watch | npm run js-watch",
-    "start-mongod": "mongod -f mongod.config.yml",
+    "start-mongod": "mongod -f config/mongod.config.yml",
     "start-elasticsearch": "elasticsearch"
 
   },
