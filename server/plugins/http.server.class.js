@@ -15,7 +15,7 @@ const Utils = require('../../plugins/utils.class');
  */
 class HttpBox {
     constructor(req) {
-        this.request = req;
+        this.request = req ? req : {};
     }
 
     static httpConst() {
@@ -236,7 +236,7 @@ class HttpBox {
             const configDefault = {};
             const _config = Object.assign(configDefault, config);
             const response = await axios.post(url, data, _config);
-            if (response.statusText !== 'Created') {
+            if (response.statusText !== 'OK') {
                 throw new Error(`HttpBox.post Error: Network response was not OK; url: '${url}'; config: `, _config);
             }
             return response.data;

@@ -1,5 +1,7 @@
 "use strict";
 
 module.exports = {
-    api: {}
+    api: {
+        base_url: 'http://real-production.com/api'
+    }
 };

@@ -1,0 +1,36 @@
+<section>
+    <br>
+    <h5><strong>{{ name }}</strong></h5>
+    <p><i>{{ description }}</i></p>
+    {% if queryResult %}
+        <p>app.service('messages-query').find({ {{ strQuery }} })</p>
+    {% else %}
+        <p>app.service('messages').find({ {{ strQuery }} })</p>
+    {% endif %}
+    <ul style="list-style: none;">
+        [
+        {% for message in messages %}
+            <li>
+                {% if name == '$select' %}
+                    <p>{ message: '{{ message.message }}' }</p>
+                {% else %}
+                    <p>{ _id: {{ message._id }}, counter: {{ message.counter }}, message: '{{ message.message }}' }</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+        ]
+        {% if queryResult %}
+            <li>
+                <p><strong>Number Messages:  {{ queryResult.count }}</strong></p>
+            </li>
+            <li>
+                <p><strong>Sum Counters:  {{ queryResult.sum }}</strong></p>
+            </li>
+        {% endif %}
+    </ul>
+    {% if queryResult %}
+        <p>GET /messages-query?{{ urlQuery }}</p>
+    {% else %}
+        <p>GET /messages?{{ urlQuery }}</p>
+    {% endif %}
+</section>

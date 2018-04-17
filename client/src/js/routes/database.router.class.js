@@ -75,6 +75,15 @@ class DatabaseRouter {
         await this.database.featherMongoDB();
         return 'ok';
     }
+
+    /**
+     * Route database feathers-elasticsearch
+     * @return Promise
+     */
+    async routeFeathersElasticSearch() {
+        await this.database.featherElasticSearch();
+        return 'ok';
+    }
 }
 
 export default DatabaseRouter

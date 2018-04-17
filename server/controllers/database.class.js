@@ -473,18 +473,16 @@ class Database extends Base {
      * @return Promise
      */
     async feathersElasticSearch() {
-        const correctTypeQueryHook = require('./hooks/correct-type-query');
-        const mongodbOptions = require('./hooks/feathers-mongodb/mongodb-options.hook');
-        const countMessagesHook = require('./hooks/feathers-mongodb/count-messages.hook');
         const Utils = require('../../plugins/utils.class');
         const service = require('feathers-elasticsearch');
-        const getModel = require('./models/elasticsearch.model');
+        const Messages = require('./models/elasticsearch.model');
         //------------------------------------------------
         // Set rest transport
         const app = this.setRestTransport();
 
         // Connect to the db, create and register a Feathers service.
-        const {Model, elasticsearch} = await getModel(this);
+        const messages = new Messages();
+        const {Model, elasticsearch} = await messages.getModel();
         app.use('/messages', service({
             Model,
             elasticsearch,
@@ -494,6 +492,9 @@ class Database extends Base {
             }
         }));
 
+        // Connect to the db, create and register a Feathers service.
+        app.use('/messages-query', messages);
+
         // Restart the server
         await this.restartServer(app);
 
@@ -501,7 +502,7 @@ class Database extends Base {
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
             const messages = app.service('messages');
-            // const countMessages = app.service('count-messages');
+            const queryMessages = app.service('messages-query');
 
             // If there are messages, then we do not create new ones
             const _messages = await messages.find();
@@ -530,9 +531,11 @@ class Database extends Base {
                 }
 
             });
-
-            const numberMessages = 10; // await countMessages.find();
-            return {messages_1: messages_1.data, messages_2: messages_2.data, numberMessages};
+            const queryResult = await queryMessages.find({type:'aggs-count-sum'});
+            // const _queryResult = await queryMessages.find();
+            // console.log('_queryResult', _queryResult);
+            // const queryResult = {count: 10, sum: 55};
+            return {messages_1: messages_1.data, messages_2: messages_2.data, queryResult};
         }
 
         return processMessages(app);

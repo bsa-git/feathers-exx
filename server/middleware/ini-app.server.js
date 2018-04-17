@@ -21,6 +21,7 @@ module.exports = function (req, res, next) {
     res.locals.actions = config.app.actions;
     res.locals.color_theme = config.ui.color_theme;
     res.locals.logo_img = config.personal_data.logo_img;
+    res.locals.contact_website = config.personal_data.contact.website;
     res.locals.copyright = config.personal_data.copyright;
 
     // Check env.js

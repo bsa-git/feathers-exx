@@ -17,7 +17,10 @@
             {% endfor %}
             ]
             <li>
-                <p><strong>Number Messages:  {{ numberMessages }}</strong></p>
+                <p><strong>Number Messages:  {{ queryResult.count }}</strong></p>
+            </li>
+            <li>
+                <p><strong>Sum Counters:  {{ queryResult.sum }}</strong></p>
             </li>
         </ul>
     </div>

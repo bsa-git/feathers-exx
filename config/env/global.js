@@ -140,29 +140,32 @@ module.exports = {
         }
     },
     personal_data: {
-        app_title: 'Feathers examples',
-        logo_title: 'BSA Lab.',
+        app_title: 'Global App Title',
+        logo_title: 'Global Logo Title',
         logo_icon: 'fa-address-card',
-        logo_img: '/images/bsa-logo/4_bsa-logo_229x75.png',
-        copyright: '© 2017 BSA Lab.',
-        designed_with: 'BSA Lab.',
-        designed_with_url: 'http://bsa-git.github.io/',
+        logo_img: '/img/system/user.jpg',
+        copyright: '© 2017 "Global developer" - All Rights Reserved',
+        designed_with: '"Global designer" Studio',
+        designed_with_url: 'https://www.global.com/iamgurdeeposahan',
         contact: {
-            fullName: 'Sergey Beskorovainny',
-            givenName: 'Sergey',
-            familyName: 'Beskorovainny',
-            emailPersonal: 'bsa2657@yandex.ru',
-            emailWork: 'm5-asutp@azot.ck.ua',
-            website: 'http://bsa-git.github.io/'
+            fullName: 'Global full name',
+            givenName: 'Global given name',
+            familyName: 'Global family name',
+            emailPersonal: 'personal@global.ru',
+            emailWork: 'work@global.ua',
+            website: 'http://www.global.com',
         },
-        twitter: {url: 'https://twitter.com/bsa2657', tag: '@bsa2657'},
+        twitter: {url: 'https://twitter.com/global', tag: '@Real'},
         socials: {
-            facebook: {url: 'https://www.facebook.com/profile.php?id=100010324420196', icon: 'fa-facebook'},
-            twitter: {url: 'https://twitter.com/bsa2657', icon: 'fa-twitter'},
-            google: {url: 'https://plus.google.com/110341449488589699610?rel=author', icon: 'fa-google-plus'}
+            facebook: {url: 'https://facebook.com/global', icon: 'fa-facebook'},
+            twitter: {url: 'https://twitter.com/global', icon: 'fa-twitter'},
+            google: {url: 'https://google.com/global', icon: 'fa-google-plus'},
+            linkdin: {url: 'https://linkdin.com/global', icon: 'fa-linkedin'},
+            flickr: {url: 'https://flickr.com/global', icon: 'fa-flickr'},
+            skype: {url: 'https://skype.com/global', icon: 'fa-skype'}
         }
     },
     pagination:{
         total: 6
     }
-}
+};

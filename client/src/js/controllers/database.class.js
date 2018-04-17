@@ -130,6 +130,17 @@ class Database extends Base {
     }
 
     /**
+     * Action database feathers-elasticsearch
+     * @return Promise
+     */
+    async featherElasticSearch() {
+        // Set rest transport
+        const app = this.setRestTransport();
+        // Service messages find
+        return this._serviceMessagesFind(app, 'elasticsearch');
+    }
+
+    /**
      * Process messages find
      * @param app
      * @param tmpl
@@ -143,7 +154,7 @@ class Database extends Base {
         const serviceMessages = app.service('messages');
         // Render twig template
         let template;
-        const _twigRender = (data) => {
+        const twigRender = (data) => {
             if (tmpl === 'memory') {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
             } else if (tmpl === 'nedb') {
@@ -158,6 +169,8 @@ class Database extends Base {
                 template = require('../tmpls/database/feathers-mongoose/messages.html.twig');
             } else if (tmpl === 'mongodb') {
                 template = require('../tmpls/database/feathers-mongodb/messages.html.twig');
+            } else if (tmpl === 'elasticsearch') {
+                template = require('../tmpls/database/feathers-elasticsearch/messages.html.twig');
             } else {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
             }
@@ -180,7 +193,7 @@ class Database extends Base {
         const serviceMessagesFind = async (context) => {
             // Find messages
             const messages = await serviceMessages.find({query: context.query});
-            _twigRender({
+            twigRender({
                 messages: messages.data,
                 name: context.name,
                 description: context.description,
@@ -205,10 +218,11 @@ class Database extends Base {
         // '$limit'
         context = {
             query: {
+                $sort: {counter: 1},
                 $limit: 2
             },
-            strQuery: 'query: {$limit: 2}',
-            urlQuery: '$limit=2',
+            strQuery: 'query: {$sort: {counter: 1}, limit: 2}',
+            urlQuery: '$sort[counter]=1&$limit=2',
             name: '$limit',
             description: 'Will return only the number of results you specify.'
         };
@@ -217,11 +231,12 @@ class Database extends Base {
         // '$skip'
         context = {
             query: {
+                $sort: {counter: 1},
                 $limit: 2,
                 $skip: 2
             },
-            strQuery: 'query: {$limit: 2, $skip: 2}',
-            urlQuery: '$limit=2&$skip=2',
+            strQuery: 'query: {$sort: {counter: 1}, $limit: 2, $skip: 2}',
+            urlQuery: '$sort[counter]=1&$limit=2&$skip=2',
             name: '$skip',
             description: 'Will skip the specified number of results.'
         };
@@ -230,11 +245,11 @@ class Database extends Base {
         // '$sort'
         context = {
             query: {
-                $limit: 3,
-                $sort: {counter: -1}
+                $sort: {counter: -1},
+                $limit: 3
             },
-            strQuery: 'query: {$limit: 3, $sort: {counter: -1}}',
-            urlQuery: '$limit=3&sort[counter]=-1',
+            strQuery: 'query: {$sort: {counter: -1}, $limit: 3}',
+            urlQuery: '$sort[counter]=-1&$limit=3',
             name: '$sort',
             description: 'Will sort based on the object you provide. It can contain a list of properties by which to sort mapped to the order (1 ascending, -1 descending).'
         };
@@ -243,12 +258,12 @@ class Database extends Base {
         // '$select'
         context = {
             query: {
-                $limit: 3,
                 $sort: {counter: -1},
+                $limit: 3,
                 $select: ['message']
             },
-            strQuery: 'query: {$limit: 3, $sort: {counter: -1}, $select: [\'message\']}',
-            urlQuery: '$limit=3&sort[counter]=-1&$select[]=message',
+            strQuery: 'query: {$sort: {counter: -1}, $limit: 3, $select: [\'message\']}',
+            urlQuery: '$sort[counter]=-1&$limit=3&$select[]=message',
             name: '$select',
             description: 'Allows to pick which fields to include in the result. This will work for any service method.'
         };
@@ -257,10 +272,11 @@ class Database extends Base {
         // '$in'
         context = {
             query: {
+                $sort: {counter: 1},
                 counter: {$in: [2, 5]}
             },
-            strQuery: 'query: {counter: {$in: [2, 5]}}',
-            urlQuery: 'counter[$in]=2&counter[$in]=5',
+            strQuery: 'query: {$sort: {counter: 1}, counter: {$in: [2, 5]}}',
+            urlQuery: '$sort[counter]=1&counter[$in]=2&counter[$in]=5',
             name: '$in',
             description: 'Find all records where the property does ($in) or does not ($nin) match any of the given values.'
         };
@@ -269,12 +285,12 @@ class Database extends Base {
         // '$lt, $lte'
         context = {
             query: {
-                $limit: 3,
                 $sort: {counter: -1},
+                $limit: 3,
                 counter: {$lte: 5}
             },
-            strQuery: 'query: {$limit: 3, $sort: {counter: -1}, counter: {$lte: 5}}',
-            urlQuery: '$limit=3&sort[counter]=-1&counter[$lte]=5',
+            strQuery: 'query: {$sort: {counter: -1}, $limit: 3, counter: {$lte: 5}}',
+            urlQuery: '$sort[counter]=-1&$limit=3&counter[$lte]=5',
             name: '$lt, $lte',
             description: 'Find all records where the value is less ($lt) or less and equal ($lte) to a given value.'
         };
@@ -283,11 +299,12 @@ class Database extends Base {
         // '$gt, $gte'
         context = {
             query: {
+                $sort: {counter: 1},
                 $limit: 3,
                 counter: {$gte: 5}
             },
-            strQuery: 'query: {$limit: 3, counter: { $gte: 5}}',
-            urlQuery: '$limit=3&counter[$gte]=5',
+            strQuery: 'query: {$sort: {counter: 1}, $limit: 3, counter: { $gte: 5}}',
+            urlQuery: '$sort[counter]=1&$limit=3&counter[$gte]=5',
             name: '$gt, $gte',
             description: 'Find all records where the value is more ($gt) or more and equal ($gte) to a given value.'
         };
@@ -296,11 +313,12 @@ class Database extends Base {
         // '$ne'
         context = {
             query: {
+                $sort: {counter: 1},
                 $limit: 2,
                 counter: {$ne: 2}
             },
-            strQuery: 'query: {$limit: 2, counter: { $ne: 2}}',
-            urlQuery: '$limit=2&counter[$ne]=2',
+            strQuery: 'query: {$sort: {counter: 1}, $limit: 2, counter: { $ne: 2}}',
+            urlQuery: '$sort[counter]=1&$limit=2&counter[$ne]=2',
             name: '$ne',
             description: 'Find all records that do not equal the given property value.'
         };
@@ -309,11 +327,12 @@ class Database extends Base {
         // '$or'
         context = {
             query: {
+                $sort: {counter: 1},
                 $limit: 2,
                 $or: [{counter: 1}, {counter: 3}]
             },
-            strQuery: 'query: {$limit: 2, $or: [{counter: 1}, {counter: 3}]}',
-            urlQuery: '$limit=2&$or[0][counter]=1&$or[1][counter]=3',
+            strQuery: 'query: {$sort: {counter: 1}, $limit: 2, $or: [{counter: 1}, {counter: 3}]}',
+            urlQuery: '$sort[counter]=1&$limit=2&$or[0][counter]=1&$or[1][counter]=3',
             name: '$or',
             description: 'Find all records that match any of the given criteria.'
         };
@@ -323,16 +342,128 @@ class Database extends Base {
             // '$like'
             context = {
                 query: {
+                    $sort: {counter: 1},
                     message: {$like: 'Message number 1%'}
                 },
-                strQuery: 'query: {message: {$like: \'Message number 1%\'}}',
-                urlQuery: 'message[$like]=Message number 1%',
+                strQuery: 'query: {$sort: {counter: 1}, message: {$like: \'Message number 1%\'}}',
+                urlQuery: '$sort[counter]=1&message[$like]=Message number 1%',
                 name: '$like',
                 description: 'Find all records where the value matches the given string pattern.'
             };
             await serviceMessagesFind(context);
-        } else if (tmpl === 'nedb') {
+        } else if (tmpl === 'elasticsearch') {
+            // '$all'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    $all: true
+                },
+                strQuery: 'query: {$sort: {counter: 1}, $all: true}',
+                urlQuery: '$sort[counter]=1&$all=true',
+                name: '$all',
+                description: 'Find all documents.'
+            };
+            await serviceMessagesFind(context);
 
+            // '$prefix'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    message: {$prefix: 1}
+                },
+                strQuery: 'query: {$sort: {counter: 1}, message: {$prefix: 1}}',
+                urlQuery: '$sort[counter]=1&message[$prefix]=1',
+                name: '$prefix',
+                description: 'Find all documents which have given field containing terms with a specified prefix (not analyzed).'
+            };
+            await serviceMessagesFind(context);
+
+            // '$match'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    message: {$match: '1 3'}
+                },
+                strQuery: 'query: {$sort: {counter: 1}, message: {$match: \'1 3\'}}',
+                urlQuery: '$sort[counter]=1&message[$match]=1 3',
+                name: '$match',
+                description: 'Find all documents which have given given fields matching the specified value (analysed).'
+            };
+            await serviceMessagesFind(context);
+
+            // '$phrase'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    message: {$phrase: '3'}
+                },
+                strQuery: 'query: {$sort: {counter: 1}, message: {$match: \'3\'}}',
+                urlQuery: '$sort[counter]=1&message[$phrase]=3',
+                name: '$phrase',
+                description: 'Find all documents which have given given fields matching the specified phrase (analysed).'
+            };
+            await serviceMessagesFind(context);
+
+            // '$phrase_prefix'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    message: {$phrase_prefix: '1'}
+                },
+                strQuery: 'query: {$sort: {counter: 1}, message: {$phrase_prefix: \'1\'}}',
+                urlQuery: '$sort[counter]=1&message[$phrase_prefix]=1',
+                name: '$phrase_prefix',
+                description: 'Find all documents which have given given fields matching the specified phrase prefix (analysed).'
+            };
+            await serviceMessagesFind(context);
+
+            // '$and'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    $and: [{message: {$match: '3'}}, {counter: {$match: '3'}}]
+                },
+                strQuery: 'query: {$sort: {counter: 1}, $and: [{message: {$match: \'3\'}}, {counter: {$match: \'3\'}}]}',
+                urlQuery: '$sort[counter]=1&$and[0]=message[$match]=3&$and[1]=counter[$match]=3',
+                name: '$and',
+                description: 'Find all documents which match all of the given criteria.'
+            };
+            await serviceMessagesFind(context);
+
+            // '$sqs'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    $sqs: {$fields: ['counter', 'message'], $query: '+3 +3', $operator: 'and'}
+                },
+                strQuery: 'query: {$sort: {counter: 1}, $sqs: {$fields: [\'counter\', \'message\'], $query: \'+3 +3\', $operator: \'and\'}}',
+                urlQuery: '$sort[counter]=1&$sqs[$fields][]=counter&$sqs[$fields][]=message&$sqs[$query]=+3 +3&$sqs[$operator]=and',
+                name: '$sqs',
+                description: 'A query that uses the SimpleQueryParser to parse its context. Optional $operator which is set to or by default but can be set to and if required.'
+            };
+            await serviceMessagesFind(context);
+
+            // Custom query for messages service
+            context = {
+                query: {
+                    "size": 0,
+                    "aggs": {"group_by_sum": {"sum": {"field": "counter"}}}
+                },
+                strQuery: 'query: {"size": 0, "aggs": {"group_by_sum": {"sum": {"field": "counter"}}}}',
+                urlQuery: 'size=0&aggs[group_by_sum][sum][field]=counter',
+                name: '#Custom query for messages service#',
+                description: 'The REST API for search is accessible from the _search endpoint.'
+            };
+            // Connect to the service
+            const queryMessages = app.service('messages-query');
+            const queryResult = await queryMessages.find({query: context.query});
+            twigRender({
+                queryResult: {count: queryResult.hits.total, sum: queryResult.aggregations.group_by_sum.value},
+                name: context.name,
+                description: context.description,
+                strQuery: context.strQuery,
+                urlQuery: context.urlQuery
+            });
         }
 
         return 'ok';
