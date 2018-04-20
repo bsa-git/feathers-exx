@@ -45,6 +45,9 @@ export default async function (client) {
         case 'database/feathers-elasticsearch':
             return await databaseRouter.routeFeathersElasticSearch();
             break;
+        case 'database/feathers-rethinkdb':
+            return await databaseRouter.routeRethinkDB();
+            break;
         default:
             return `Does not match controller/action:  '${client.req.controller}/${client.req.action}'`
     }

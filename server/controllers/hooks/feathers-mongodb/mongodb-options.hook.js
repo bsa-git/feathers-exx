@@ -8,7 +8,7 @@ const mongodbOptions = context => {
     // Set some additional Mongodb options
     // The adapter tries to use sane defaults
     // but they can always be changed here
-    Object.assign(context.params.mongoose, {
+    Object.assign(context.params.mongodb, {
         // runValidators: true,
         // setDefaultsOnInsert: true
     });

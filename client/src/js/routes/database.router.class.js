@@ -84,6 +84,15 @@ class DatabaseRouter {
         await this.database.featherElasticSearch();
         return 'ok';
     }
+
+    /**
+     * Route database feathers-rethinkdb
+     * @return Promise
+     */
+    async routeRethinkDB() {
+        await this.database.featherRethinkDB();
+        return 'ok';
+    }
 }
 
 export default DatabaseRouter

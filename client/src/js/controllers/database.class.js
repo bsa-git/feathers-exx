@@ -141,6 +141,17 @@ class Database extends Base {
     }
 
     /**
+     * Action database feathers-rethinkdb
+     * @return Promise
+     */
+    async featherRethinkDB() {
+        // Set rest transport
+        const app = this.setRestTransport();
+        // Service messages find
+        return this._serviceMessagesFind(app, 'rethinkdb');
+    }
+
+    /**
      * Process messages find
      * @param app
      * @param tmpl
@@ -171,6 +182,8 @@ class Database extends Base {
                 template = require('../tmpls/database/feathers-mongodb/messages.html.twig');
             } else if (tmpl === 'elasticsearch') {
                 template = require('../tmpls/database/feathers-elasticsearch/messages.html.twig');
+            } else if (tmpl === 'rethinkdb') {
+                template = require('../tmpls/database/feathers-rethinkdb/messages.html.twig');
             } else {
                 template = require('../tmpls/database/feathers-memory/messages.html.twig');
             }
@@ -260,10 +273,10 @@ class Database extends Base {
             query: {
                 $sort: {counter: -1},
                 $limit: 3,
-                $select: ['message']
+                $select: ['counter', 'message']
             },
-            strQuery: 'query: {$sort: {counter: -1}, $limit: 3, $select: [\'message\']}',
-            urlQuery: '$sort[counter]=-1&$limit=3&$select[]=message',
+            strQuery: 'query: {$sort: {counter: -1}, $limit: 3, $select: [\'counter\', \'message\']}',
+            urlQuery: '$sort[counter]=-1&$limit=3&$select[]=counter&$select[]=message',
             name: '$select',
             description: 'Allows to pick which fields to include in the result. This will work for any service method.'
         };
@@ -464,6 +477,32 @@ class Database extends Base {
                 strQuery: context.strQuery,
                 urlQuery: context.urlQuery
             });
+        } else if (tmpl === 'rethinkdb') {
+            // '$search'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    message: {$search: '1'}
+                },
+                strQuery: 'query: {$sort: {counter: 1}, message: {$search: \'1\'}}',
+                urlQuery: '$sort[counter]=1&message[$search]=1',
+                name: '$search',
+                description: 'Return all matches for a property using the <a href="https://www.rethinkdb.com/api/javascript/match/" target="_blank">RethinkDB match syntax</a>.'
+            };
+            await serviceMessagesFind(context);
+
+            // '$contains'
+            context = {
+                query: {
+                    $sort: {counter: 1},
+                    tags: {$contains: '7'}
+                },
+                strQuery: 'query: {$sort: {counter: 1}, tags: {$contains: \'7\'}}',
+                urlQuery: '$sort[counter]=1&tags[$contains]=7',
+                name: '$contains',
+                description: 'Matches if the property is an array that contains the given entry.'
+            };
+            await serviceMessagesFind(context);
         }
 
         return 'ok';

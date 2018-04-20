@@ -45,7 +45,8 @@ module.exports = {
                 {'name':'feathers-sequelize', 'url': '/database/feathers-sequelize', 'value': 'Feathers Sequelize'},
                 {'name':'feathers-mongoose', 'url': '/database/feathers-mongoose', 'value': 'Feathers Mongoose'},
                 {'name':'feathers-mongodb', 'url': '/database/feathers-mongodb', 'value': 'Feathers MongoDB'},
-                {'name':'feathers-elasticsearch', 'url': '/database/feathers-elasticsearch', 'value': 'Feathers ElasticSearch'}
+                {'name':'feathers-elasticsearch', 'url': '/database/feathers-elasticsearch', 'value': 'Feathers ElasticSearch'},
+                {'name':'feathers-rethinkdb', 'url': '/database/feathers-rethinkdb', 'value': 'Feathers RethinkDB'}
             ]
         }
     },
@@ -72,6 +73,10 @@ module.exports = {
                 connection_string: 'http://localhost:9200',
                 index: 'db_feathers_exx',
                 type: 'messages'
+            },
+            rethinkdb: {
+                database: 'dbFeathersExx',
+                table: 'messages'
             },
             knex:{
                 sqlite: {

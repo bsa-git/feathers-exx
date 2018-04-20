@@ -21,7 +21,7 @@ class Messages {
      * @return {Promise.<void>}
      */
     async find(params) {
-        // console.log('find.params: ', params);
+        console.log('find.params: ', params);
         const query = params.query ? params.query : this._getQuery(params.type);
         const data = await this._httpPost(query);
         // console.log('extractData: ', data);

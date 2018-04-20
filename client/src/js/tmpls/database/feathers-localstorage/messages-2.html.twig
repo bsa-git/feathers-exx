@@ -8,9 +8,9 @@
         {% for message in messages %}
             <li>
                 {% if name == '$select' %}
-                    <p>{ message: '{{ message.message }}' }</p>
+                    <p>{ counter: {{ message.counter }}, message: '{{ message.message }}' }{% if not loop.last %},{% endif %}</p>
                 {% else %}
-                    <p>{ id: {{ message.id }}, counter: {{ message.counter }}, message: '{{ message.message }}' }</p>
+                    <p>{ id: {{ message.id }}, counter: {{ message.counter }}, message: '{{ message.message }}' }{% if not loop.last %},{% endif %}</p>
                 {% endif %}
             </li>
         {% endfor %}

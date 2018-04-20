@@ -531,13 +531,111 @@ class Database extends Base {
                 }
 
             });
-            const queryResult = await queryMessages.find({type:'aggs-count-sum'});
+            const queryResult = await queryMessages.find({type: 'aggs-count-sum'});
             // const _queryResult = await queryMessages.find();
             // console.log('_queryResult', _queryResult);
             // const queryResult = {count: 10, sum: 55};
             return {messages_1: messages_1.data, messages_2: messages_2.data, queryResult};
         }
 
+        return processMessages(app);
+    }
+
+    /**
+     * Feathers RethinkDB database
+     * @return Promise
+     */
+    async feathersRethinkDB() {
+        const correctTypeQueryHook = require('./hooks/correct-type-query');
+        const distanceBetweenTwoPointsHook = require('./hooks/feathers-rethinkdb/distance-between-two-points.hook');
+        const filterMessagesHook = require('./hooks/feathers-rethinkdb/filter-messages.hook');
+        const service = require('feathers-rethinkdb');
+        const {model, table} = require('./models/rethinkdb.model');
+        //------------------------------------------------
+        // Set rest transport
+        const app = this.setRestTransport();
+
+        // Register the service
+       const messages = service({
+           Model: model,
+           name: table,
+           paginate: {
+               default: 5,
+               max: 10
+           }
+       });
+        app.use('messages', messages);
+
+        // Add hook for service
+        app.service('messages').hooks({
+            before: {
+                find: [correctTypeQueryHook({counter: 'int'})],
+            }
+        });
+
+        // Connect to the db, create and register a Feathers service.
+        app.use('/distance-between-two-points', messages);
+        // Add hook for service
+        app.service('distance-between-two-points').hooks({
+            before: {
+                find: [distanceBetweenTwoPointsHook],
+            }
+        });
+
+        // Connect to the db, create and register a Feathers service.
+        app.use('/filter-messages', messages);
+        // Add hook for service
+        app.service('filter-messages').hooks({
+            before: {
+                find: [filterMessagesHook],
+            }
+        });
+
+        // Restart the server
+        await this.restartServer(app);
+
+        // Process messages service
+        async function processMessages(app) {
+            // Stores a reference to the messages service so we don't have to call it all the time
+            const messages = app.service('messages');
+            const distanceBetweenTwoPoints = app.service('distance-between-two-points');
+            const filterMessages = app.service('filter-messages');
+
+            // Initialize database and messages table if it does not exists yet
+            await messages.init();
+
+            // If there are messages, then we do not create new ones
+            const _messages = await messages.find();
+            const total = parseInt(_messages.total);
+            if (total >= 0 && total < 10) {
+                const tags = [];
+                for (let counter = total + 1; counter <= 10; counter++) {
+                    tags.push(`${counter}`);
+                    await messages.create({
+                        counter,
+                        message: `Message number ${counter}`,
+                        tags
+                    });
+                }
+            }
+            const messages_1 = await messages.find({
+                query: {
+                    $limit: 3,
+                    $sort: {counter: 1}
+                }
+            });
+
+            const messages_2 = await messages.find({
+                query: {
+                    $limit: 1,
+                    $sort: {counter: -1}
+                }
+
+            });
+            const distance = await distanceBetweenTwoPoints.find();
+            const findFilterMessages = await filterMessages.find();
+            return {messages_1: messages_1.data, messages_2: messages_2.data, distance, count: findFilterMessages.data.length};
+        }
         return processMessages(app);
     }
 }

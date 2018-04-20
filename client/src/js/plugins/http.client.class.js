@@ -1,6 +1,7 @@
 'use strict';
 
-import LocationHelper from 'location-helper'
+// import LocationHelper from 'location-helper'
+import LocationHelper from './location-helper.class'
 import axios from 'axios'
 
 const Utils = require('../../../../plugins/utils.class');

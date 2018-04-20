@@ -14,8 +14,8 @@
     "build-client": "npm run css-build && npm run js-build",
     "watch-client": "npm run css-watch | npm run js-watch",
     "start-mongod": "mongod -f config/mongod.config.yml",
-    "start-elasticsearch": "elasticsearch"
-
+    "start-elasticsearch": "elasticsearch",
+    "start-rethinkdb": "rethinkdb --config-file ./config/rethinkdb.config"
   },
   "dependencies": {
     "@feathersjs/client": "^3.4.2",
@@ -37,12 +37,12 @@
     "feathers-mongodb": "^3.0.1",
     "feathers-mongoose": "^6.1.0",
     "feathers-nedb": "^3.0.0",
+    "feathers-rethinkdb": "^0.5.1",
     "feathers-sequelize": "^3.1.0",
     "fetch-polyfill": "^0.8.2",
     "highlight.js": "^9.12.0",
     "jstorage": "^0.4.8",
     "knex": "^0.14.4",
-    "location-helper": "^1.0.3",
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
     "mongodb": "^3.0.5",
@@ -52,6 +52,7 @@
     "mysql2": "^1.5.3",
     "nedb": "^1.8.0",
     "npm": "^5.7.1",
+    "rethinkdbdash": "^2.3.31",
     "sequelize": "^4.37.4",
     "serve-favicon": "~2.4.5",
     "socket.io-client": "^2.0.4",

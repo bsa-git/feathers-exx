@@ -33,6 +33,7 @@ client/public/js/*
 server/data/log/*
 server/data/db/mongodb/*
 server/data/db/elasticsearch/*
+server/data/db/rethinkdb/*
 ${ES_TMPDIR}
 
 # Configuration file
