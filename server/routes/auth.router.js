@@ -8,7 +8,7 @@ const Auth = require('../controllers/auth.class');
 /* GET auth listing. */
 router.get('/about', function (req, res, next) {
     const context = {
-        title: 'Feathers Auth',
+        title: 'Feathers Authentication',
         req: req
     };
     if (config.debug) {
@@ -16,6 +16,21 @@ router.get('/about', function (req, res, next) {
     }
     // View render
     res.render('tmpls/auth/about/index.html.twig', context);
+    if (config.debug) {
+        console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+    }
+});
+
+router.get('/server', function (req, res, next) {
+    const context = {
+        title: 'Server Authentication',
+        req: req
+    };
+    if (config.debug) {
+        console.log('Router.get: ', req.originalUrl);
+    }
+    // View render
+    res.render('tmpls/auth/server/index.html.twig', context);
     if (config.debug) {
         console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
     }

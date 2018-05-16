@@ -20,17 +20,17 @@ try {
     env = require(filePath);
 }
 
-const node_env = process.env.NODE_ENV;
 const appEnv = env.app_env ? env.app_env : 'development';
+process.env['NODE_ENV'] = appEnv;
 
 const config = {
     development: development,
     production: production,
     testing: testing
-}
+};
 
 const envConfig = merge(config[appEnv], env[appEnv]);
 const globalConfig = merge(global, env['global']);
-const appConfig = merge(globalConfig, envConfig, {app_env: appEnv, node_env});
+const appConfig = merge(globalConfig, envConfig, {app_env: appEnv});
 
-module.exports = appConfig
+module.exports = appConfig;

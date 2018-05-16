@@ -13,11 +13,14 @@
     "js-watch": "webpack --watch",
     "build-client": "npm run css-build && npm run js-build",
     "watch-client": "npm run css-watch | npm run js-watch",
-    "start-mongod": "mongod -f config/mongod.config.yml",
+    "start-mongod": "mongod -f config/db/mongod.config.yml",
     "start-elasticsearch": "elasticsearch",
-    "start-rethinkdb": "rethinkdb --config-file ./config/rethinkdb.config"
+    "start-rethinkdb": "rethinkdb --config-file ./config/db/rethinkdb.config"
   },
   "dependencies": {
+    "@feathersjs/authentication": "^2.1.5",
+    "@feathersjs/authentication-jwt": "^2.0.0",
+    "@feathersjs/authentication-local": "^1.2.1",
     "@feathersjs/client": "^3.4.2",
     "@feathersjs/errors": "^3.3.0",
     "@feathersjs/express": "^1.2.0",

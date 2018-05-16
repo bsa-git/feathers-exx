@@ -13,7 +13,7 @@ class Highlight {
         const _query = query ? query : '.highlight';
         const $els = document.querySelectorAll(_query);
         if ($els.length > 0) {
-            for (var i = 0, len = $els.length; i < len; i++) {
+            for (let i = 0, len = $els.length; i < len; i++) {
                 const $el =  $els[i];
                 hljs.highlightBlock($el);
             }

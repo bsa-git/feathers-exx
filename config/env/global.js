@@ -68,6 +68,7 @@ module.exports = {
                 // mongodb://localhost:27017/dbFeathersExx
                 // mongodb+srv://bsa-lab:BSA2657Lab@cluster0-0mwiq.mongodb.net/test
                 // mongodb+srv://bsa-lab:BSA2657Lab@cluster0-0mwiq.mongodb.net/admin
+                // mongodb://mydb-bsa:mydb@bsa2657@ds159489.mlab.com:59489/my-db
             },
             elasticsearch: {
                 connection_string: 'http://localhost:9200',

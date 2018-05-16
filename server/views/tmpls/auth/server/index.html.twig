@@ -1,0 +1,380 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+
+
+        <h1 id="authentication">Authentication<a class="anchorjs-link " href="#authentication"
+                                                 aria-label="Anchor link for: authentication" data-anchorjs-icon="#"
+                                                 style="padding-left: 0.375em;"></a></h1>
+        <pre><code>$ npm install @feathersjs/authentication --save
+</code></pre>
+        <p>The <a href="https://github.com/feathersjs/authentication" target="_blank">@feathersjs/authentication</a>
+            module assists in using JWT for authentication. It has three primary purposes:</p>
+        <ol>
+            <li>Setup an <code>/authentication</code> endpoint to create JSON Web Tokens (JWT). JWT are used as access
+                tokens. You can learn more about JWT at <a href="https://jwt.io" target="_blank">jwt.io</a></li>
+            <li>Provide a consistent authentication API for all Feathers transports</li>
+            <li>Provide a framework for authentication plugins that use <a href="http://passportjs.org/"
+                                                                           target="_blank">Passport</a> strategies to
+                protect endpoints.
+            </li>
+        </ol>
+        <blockquote>
+            <p><strong>Note:</strong> If you are using a 0.x version of <code>feathers-authentication</code> please
+                refer to <a
+                        href="https://github.com/feathersjs/authentication/blob/4344c6f037f2660e4636c1c05ea22a0000649312/docs/migrating.md"
+                        target="_blank">the migration guide</a>. The hooks that were once bundled with this module are
+                now located at <a href="https://github.com/feathersjs-ecosystem/feathers-authentication-hooks"
+                                  target="_blank">feathers-authentication-hooks</a>.</p>
+        </blockquote>
+        <h2 id="complementary-plugins">Complementary Plugins<a class="anchorjs-link " href="#complementary-plugins"
+                                                               aria-label="Anchor link for: complementary plugins"
+                                                               data-anchorjs-icon="#"
+                                                               style="padding-left: 0.375em;"></a></h2>
+        <p>The following plugins are complementary, but entirely optional:</p>
+        <ul>
+            <li>Using the authencation server on the client: <a href="client.html">@feathersjs/authentication-client</a>
+            </li>
+            <li>Local (username/password) authentication: <a href="local.html">@feathersjs/authentication-local</a></li>
+            <li>JWT authentication: <a href="jwt.html">@feathersjs/authentication-jwt</a></li>
+            <li>OAuth1 authentication: <a href="oauth1.html">@feathersjs/authentication-oauth1</a></li>
+            <li>OAuth2 authentication: <a href="oauth2.html">@feathersjs/authentication-oauth2</a></li>
+        </ul>
+        <h2 id="appconfigureauthoptions">app.configure(auth(options))<a class="anchorjs-link "
+                                                                        href="#appconfigureauthoptions"
+                                                                        aria-label="Anchor link for: appconfigureauthoptions"
+                                                                        data-anchorjs-icon="#"
+                                                                        style="padding-left: 0.375em;"></a></h2>
+        <p>Configure the authentication plugin with the given options. For options that are not provided, the <a
+                    href="#default-options">default options</a> will be used.</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> auth = <span
+                        class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/authentication'</span>);
+
+<span class="hljs-comment">// Available options are listed in the "Default Options" section</span>
+app.configure(auth(options))
+</code></pre>
+        <blockquote>
+            <p><strong>Important:</strong> The plugin has to be configured <strong>before</strong> any other service.
+            </p>
+        </blockquote>
+        <h2 id="options">Options<a class="anchorjs-link " href="#options" aria-label="Anchor link for: options"
+                                   data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>The following default options will be mixed in with your global <code>auth</code> object from your config
+            file. It will set the mixed options back onto the app so that they are available at any time by calling
+            <code>app.get('authentication')</code>. They can all be overridden and are required by some of the
+            authentication plugins.</p>
+        <pre><code class="lang-js">{
+ path: <span class="hljs-string">'/authentication'</span>, <span
+                        class="hljs-comment">// the authentication service path</span>
+ header: <span class="hljs-string">'Authorization'</span>, <span class="hljs-comment">// the header to use when using JWT auth</span>
+ entity: <span class="hljs-string">'user'</span>, <span class="hljs-comment">// the entity that will be added to the request, socket, and context.params. (ie. req.user, socket.user, context.params.user)</span>
+ service: <span class="hljs-string">'users'</span>, <span
+                        class="hljs-comment">// the service to look up the entity</span>
+ passReqToCallback: <span class="hljs-literal">true</span>, <span class="hljs-comment">// whether the request object should be passed to the strategies `verify` function</span>
+ session: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether to use sessions</span>
+ cookie: {
+  enabled: <span class="hljs-literal">false</span>, <span
+                        class="hljs-comment">// whether cookie creation is enabled</span>
+  name: <span class="hljs-string">'feathers-jwt'</span>, <span class="hljs-comment">// the cookie name</span>
+  httpOnly: <span class="hljs-literal">false</span>, <span class="hljs-comment">// when enabled, prevents the client from reading the cookie.</span>
+  secure: <span class="hljs-literal">true</span> <span class="hljs-comment">// whether cookies should only be available over HTTPS</span>
+ },
+ jwt: {
+  header: { typ: <span class="hljs-string">'access'</span> }, <span class="hljs-comment">// by default is an access token but can be any type</span>
+  audience: <span class="hljs-string">'https://yourdomain.com'</span>, <span class="hljs-comment">// The resource server where the token is processed</span>
+  subject: <span class="hljs-string">'anonymous'</span>, <span class="hljs-comment">// Typically the entity id associated with the JWT</span>
+  issuer: <span class="hljs-string">'feathers'</span>, <span class="hljs-comment">// The issuing server, application or resource</span>
+  algorithm: <span class="hljs-string">'HS256'</span>, <span class="hljs-comment">// the algorithm to use</span>
+  expiresIn: <span class="hljs-string">'1d'</span> <span class="hljs-comment">// the access token expiry</span>
+ }
+}
+</code></pre>
+        <h2 id="appserviceauthentication">app.service('authentication')<a class="anchorjs-link "
+                                                                          href="#appserviceauthentication"
+                                                                          aria-label="Anchor link for: appserviceauthentication"
+                                                                          data-anchorjs-icon="#"
+                                                                          style="padding-left: 0.375em;"></a></h2>
+        <p>The heart of this plugin is a service for creating JWT. It's a normal Feathers service that implements only
+            the <code>create</code> and <code>remove</code> methods. The <code>/authentication</code> service provides
+            all of the functionality that the <code>/auth/local</code> and <code>/auth/token</code> endpoints did. To
+            choose a strategy, the client must pass the <code>strategy</code> name in the request body. This will be
+            different based on the plugin used. See the documentation for the plugins listed at the top of this page for
+            more information.</p>
+        <h3 id="servicecreatedata">service.create(data)<a class="anchorjs-link " href="#servicecreatedata"
+                                                          aria-label="Anchor link for: servicecreatedata"
+                                                          data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
+        </h3>
+        <p>The <code>create</code> method will be used in nearly every Feathers application. It creates a JWT based on
+            the <code>jwt</code> options configured on the plugin. The API of this method utilizes the
+            <code>context</code> object.</p>
+        <h3 id="serviceremovedata">service.remove(data)<a class="anchorjs-link " href="#serviceremovedata"
+                                                          aria-label="Anchor link for: serviceremovedata"
+                                                          data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
+        </h3>
+        <p>The <code>remove</code> method is used less often. Its main purpose is adding hooks to the "logout" process.
+            For example, in services that require high control over security, a developer can register hooks on the
+            <code>remove</code> method that perform token blacklisting.</p>
+        <h3 id="servicehooks-before-">service.hooks({ before })<a class="anchorjs-link " href="#servicehooks-before-"
+                                                                  aria-label="Anchor link for: servicehooks before "
+                                                                  data-anchorjs-icon="#"
+                                                                  style="padding-left: 0.375em;"></a></h3>
+        <p>These properties can be modified to change the behavior of the <code>/authentication</code> service:</p>
+        <ul>
+            <li><code>context.data.payload {Object}</code> - determines the payload of the JWT</li>
+            <li><code>context.params.payload {Object}</code> - also determines the payload of the JWT. Any matching
+                attributes in the <code>context.data.payload</code> will be overwritten by these. Persists into after
+                hooks.
+            </li>
+            <li><code>context.params.authenticated {Boolean}</code> - After successful authentication, will be set to
+                <code>true</code>, unless it's set to <code>false</code> in a before hook. If you set it to
+                <code>false</code> in a before hook, it will prevent the websocket from being flagged as authenticated.
+                Persists into after hooks.
+            </li>
+        </ul>
+        <h3 id="servicehooks-after-">service.hooks({ after })<a class="anchorjs-link " href="#servicehooks-after-"
+                                                                aria-label="Anchor link for: servicehooks after "
+                                                                data-anchorjs-icon="#"
+                                                                style="padding-left: 0.375em;"></a></h3>
+        <ul>
+            <li><code>context.params[entity] {Object}</code> - After successful authentication, the <code>entity</code>
+                looked up from the database will be populated here. (The default option is <code>user</code>.)
+            </li>
+        </ul>
+        <h2 id="apppassport">app.passport<a class="anchorjs-link " href="#apppassport"
+                                            aria-label="Anchor link for: apppassport" data-anchorjs-icon="#"
+                                            style="padding-left: 0.375em;"></a></h2>
+        <h3 id="apppassportcreatejwtpayload-options">app.passport.createJWT(payload, options)<a class="anchorjs-link "
+                                                                                                href="#apppassportcreatejwtpayload-options"
+                                                                                                aria-label="Anchor link for: apppassportcreatejwtpayload options"
+                                                                                                data-anchorjs-icon="#"
+                                                                                                style="padding-left: 0.375em;"></a>
+        </h3>
+        <p><code>app.passport.createJWT(payload, options) -&gt; Promise</code> is used by the <a
+                    href="#appserviceauthentication">authentication service</a> to generate JSON Web Tokens.</p>
+        <ul>
+            <li><code>payload {Object}</code> - becomes the JWT payload. Will also include an <code>exp</code> property
+                denoting the expiry timestamp.
+            </li>
+            <li><code>options {Object}</code> - the options passed to <a
+                        href="https://www.npmjs.com/package/jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback"
+                        target="_blank">jsonwebtoken <code>sign()</code></a>
+                <ul>
+                    <li><code>secret {String | Buffer}</code> - either the secret for HMAC algorithms, or the PEM
+                        encoded private key for RSA and ECDSA.
+                    </li>
+                    <li><code>jwt</code> - See the <a
+                                href="https://www.npmjs.com/package/jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback"
+                                target="_blank"><code>jsonwebtoken</code></a> package docs for other available options.
+                        The authenticate method uses the <a href="#default-options">default <code>jwt</code> options</a>.
+                        When using this package directly, they have to be passed in manually.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <p>The returned <code>promise</code> resolves with the JWT or fails with an error.</p>
+        <h3 id="apppassportverifyjwttoken-options">app.passport.verifyJWT(token, options)<a class="anchorjs-link "
+                                                                                            href="#apppassportverifyjwttoken-options"
+                                                                                            aria-label="Anchor link for: apppassportverifyjwttoken options"
+                                                                                            data-anchorjs-icon="#"
+                                                                                            style="padding-left: 0.375em;"></a>
+        </h3>
+        <p>Verifies the signature and payload of the passed in JWT <code>token</code> using the <code>options</code>.
+        </p>
+        <ul>
+            <li><code>token {JWT}</code> - the JWT to be verified.</li>
+            <li><code>options {Object}</code> the options passed to <a
+                        href="https://www.npmjs.com/package/jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback"
+                        target="_blank">jsonwebtoken <code>verify()</code></a>
+                <ul>
+                    <li><code>secret {String | Buffer}</code> - - either the secret for HMAC algorithms, or the PEM
+                        encoded private key for RSA and ECDSA.
+                    </li>
+                    <li>See the <a
+                                href="https://www.npmjs.com/package/jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback"
+                                target="_blank"><code>jsonwebtoken</code></a> package docs for other available options.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <p>The returned <code>promise</code> resolves with the payload or fails with an error.</p>
+        <h2 id="authhooksauthenticatestrategies">auth.hooks.authenticate(strategies)<a class="anchorjs-link "
+                                                                                       href="#authhooksauthenticatestrategies"
+                                                                                       aria-label="Anchor link for: authhooksauthenticatestrategies"
+                                                                                       data-anchorjs-icon="#"
+                                                                                       style="padding-left: 0.375em;"></a>
+        </h2>
+        <p><code>@feathersjs/authentication</code> only includes a single hook. This bundled <code>authenticate</code>
+            hook is used to register an array of authentication strategies on a service method.</p>
+        <blockquote>
+            <p><strong>Note:</strong> This should usually be used on your <code>/authentication</code> service. Without
+                it, you can hit the <code>authentication</code> service and generate a JWT <code>accessToken</code>
+                without authentication (ie. anonymous authentication).</p>
+        </blockquote>
+        <pre><code class="lang-js">app.service(<span class="hljs-string">'authentication'</span>).hooks({
+ before: {
+  create: [
+   <span class="hljs-comment">// You can chain multiple strategies</span>
+   auth.hooks.authenticate([<span class="hljs-string">'jwt'</span>, <span class="hljs-string">'local'</span>]),
+  ],
+  remove: [
+   auth.hooks.authenticate(<span class="hljs-string">'jwt'</span>)
+  ]
+ }
+});
+</code></pre>
+        <h2 id="authentication-events">Authentication Events<a class="anchorjs-link " href="#authentication-events"
+                                                               aria-label="Anchor link for: authentication events"
+                                                               data-anchorjs-icon="#"
+                                                               style="padding-left: 0.375em;"></a></h2>
+        <p>The <code>login</code> and <code>logout</code> events are emitted on the <code>app</code> object whenever a
+            client successfully authenticates or "logs out". (With JWT, logging out doesn't invalidate the JWT. (Read
+            the section on JWT for details.) These events are only emitted on the server.</p>
+        <h3 id="apponlogin-callback">app.on('login', callback))<a class="anchorjs-link " href="#apponlogin-callback"
+                                                                  aria-label="Anchor link for: apponlogin callback"
+                                                                  data-anchorjs-icon="#"
+                                                                  style="padding-left: 0.375em;"></a></h3>
+        <h3 id="apponlogout-callback">app.on('logout', callback))<a class="anchorjs-link " href="#apponlogout-callback"
+                                                                    aria-label="Anchor link for: apponlogout callback"
+                                                                    data-anchorjs-icon="#"
+                                                                    style="padding-left: 0.375em;"></a></h3>
+        <p>These two events use a <code>callback</code> function with the same signature.</p>
+        <ul>
+            <li><code>result</code> {Object} - The final <code>context.result</code> from the
+                <code>authentication</code> service. Unless you customize the <code>context.response</code> in an after
+                hook, this will only contain the <code>accessToken</code>, which is the JWT.
+            </li>
+            <li><code>meta</code> {Object} - information about the request. <em>The <code>meta</code> data varies per
+                    transport / provider as follows.</em>
+                <ul>
+                    <li>Using <code>@feathersjs/express/rest</code>
+                        <ul>
+                            <li><code>provider</code> {String} - will always be <code>"rest"</code></li>
+                            <li><code>req</code> {Object} - the Express request object.</li>
+                            <li><code>res</code> {Object} - the Express response object.</li>
+                        </ul>
+                    </li>
+                    <li>Using <code>feathers-socketio</code> and <code>feathers-primus</code>:
+                        <ul>
+                            <li><code>provider</code> {String} - the transport name: <code>socketio</code> or <code>primus</code>
+                            </li>
+                            <li><code>connection</code> {Object} - the same as <code>params</code> in the hook context
+                            </li>
+                            <li><code>socket</code> {SocketObject} - the current user's WebSocket object. It also
+                                contains the <code>feathers</code> attribute, which is the same as <code>params</code>
+                                in the hook context.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="express-middleware">Express Middleware<a class="anchorjs-link " href="#express-middleware"
+                                                         aria-label="Anchor link for: express middleware"
+                                                         data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>There is an <code>authenticate</code> middleware. It is used the exact same way as the regular Passport
+            express middleware:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> cookieParser = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'cookie-parser'</span>);
+
+app.post(<span class="hljs-string">'/protected-route'</span>, cookieParser(), auth.express.authenticate(<span
+                        class="hljs-string">'jwt'</span>));
+app.post(<span class="hljs-string">'/protected-route-that-redirects'</span>, cookieParser(), auth.express.authenticate(<span
+                        class="hljs-string">'jwt'</span>, {
+  failureRedirect: <span class="hljs-string">'/login'</span>
+}));
+</code></pre>
+        <p>For details, see the <a href="../../guides/auth/recipe.express-middleware.html">Express middleware recipe</a>.
+        </p>
+        <p>Additional middleware are included and exposed, but you typically don't need to worry about them:</p>
+        <ul>
+            <li><code>emitEvents</code> - emit <code>login</code> and <code>logout</code> events</li>
+            <li><code>exposeCookies</code> - expose cookies to Feathers so they are available to hooks and services.
+                <strong>This is NOT used by default as its use exposes your API to CSRF vulnerabilities.</strong> Only
+                use it if you really know what you're doing.
+            </li>
+            <li><code>exposeHeaders</code> - expose headers to Feathers so they are available to hooks and services.
+                <strong>This is NOT used by default as its use exposes your API to CSRF vulnerabilities.</strong> Only
+                use it if you really know what you're doing.
+            </li>
+            <li><code>failureRedirect</code> - support redirecting on auth failure. Only triggered if <code>hook.redirect</code>
+                is set.
+            </li>
+            <li><code>successRedirect</code> - support redirecting on auth success. Only triggered if <code>hook.redirect</code>
+                is set.
+            </li>
+            <li><code>setCookie</code> - support setting the JWT access token in a cookie. Only enabled if cookies are
+                enabled. <strong>Note: Feathers will NOT read an access token from a cookie. This would expose the API
+                    to CSRF attacks.</strong> This <code>setCookie</code> feature is available primarily for helping
+                with Server Side Rendering.
+            </li>
+        </ul>
+        <h2 id="complete-example">Complete Example<a class="anchorjs-link " href="#complete-example"
+                                                     aria-label="Anchor link for: complete example"
+                                                     data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>Here's an example of a Feathers server that uses <code>@feathersjs/authentication</code> for local
+            authentication.</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/express'</span>);
+<span class="hljs-keyword">const</span> socketio = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/socketio'</span>);
+<span class="hljs-keyword">const</span> auth = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication'</span>);
+<span class="hljs-keyword">const</span> local = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-local'</span>);
+<span class="hljs-keyword">const</span> jwt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-jwt'</span>);
+<span class="hljs-keyword">const</span> memory = <span class="hljs-built_in">require</span>(<span class="hljs-string">'feathers-memory'</span>);
+
+<span class="hljs-keyword">const</span> app = express(feathers());
+app.configure(express.rest())
+ .configure(socketio())
+ .use(express.json())
+ .use(express.urlencoded({ extended: <span class="hljs-literal">true</span> }))
+ .configure(auth({ secret: <span class="hljs-string">'supersecret'</span> }))
+ .configure(local())
+ .configure(jwt())
+ .use(<span class="hljs-string">'/users'</span>, memory())
+ .use(<span class="hljs-string">'/'</span>, feathers.static(__dirname + <span class="hljs-string">'/public'</span>))
+ .use(express.errorHandler());
+
+app.service(<span class="hljs-string">'users'</span>).hooks({
+  <span class="hljs-comment">// Make sure `password` never gets sent to the client</span>
+  after: local.hooks.protect(<span class="hljs-string">'password'</span>)
+});
+
+app.service(<span class="hljs-string">'authentication'</span>).hooks({
+ before: {
+  create: [
+   <span class="hljs-comment">// You can chain multiple strategies</span>
+   auth.hooks.authenticate([<span class="hljs-string">'jwt'</span>, <span class="hljs-string">'local'</span>])
+  ],
+  remove: [
+   auth.hooks.authenticate(<span class="hljs-string">'jwt'</span>)
+  ]
+ }
+});
+
+<span class="hljs-comment">// Add a hook to the user service that automatically replaces</span>
+<span class="hljs-comment">// the password with a hash of the password, before saving it.</span>
+app.service(<span class="hljs-string">'users'</span>).hooks({
+ before: {
+  find: [
+   auth.hooks.authenticate(<span class="hljs-string">'jwt'</span>)
+  ],
+  create: [
+   local.hooks.hashPassword({ passwordField: <span class="hljs-string">'password'</span> })
+  ]
+ }
+});
+
+<span class="hljs-keyword">const</span> port = <span class="hljs-number">3030</span>;
+<span class="hljs-keyword">let</span> server = app.listen(port);
+server.on(<span class="hljs-string">'listening'</span>, <span class="hljs-function"><span
+                            class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+ <span class="hljs-built_in">console</span>.log(<span
+                        class="hljs-string">`Feathers application started on localhost:<span
+                            class="hljs-subst">${port}</span>`</span>);
+});
+</code></pre>
+
+    </section>
+{% endblock %}

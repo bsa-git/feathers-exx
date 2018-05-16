@@ -7,6 +7,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const HttpBox = require('./plugins/http.server.class');
+const config = require('../config/env');
 
 // Require routers
 const index = require('./routes/index.router');
@@ -22,6 +23,8 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
+// Set config
+app.set('config', config);
 
 // your favicon in /public
 app.use(favicon(path.join(__dirname, '../client/public/images', 'favicon.ico')));
