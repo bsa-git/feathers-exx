@@ -88,6 +88,8 @@ function onListening() {
     const bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port ' + addr.port;
+    const address = server.address();
+    debug('Server.Address: ', address);
     debug('App is running at %s:%d in %s mode', app.get('host'), app.get('port'), app.get('env'));
     debug('Press CTRL-C to stop');
 }
