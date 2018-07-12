@@ -8,6 +8,7 @@ class Base {
         this.bulma = this.client.bulma;
         // this.config = this.client.config;
         this.req = this.client.req;
+        this.data = this.client.data;
     }
 
     /**

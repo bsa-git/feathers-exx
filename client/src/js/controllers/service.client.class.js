@@ -6,7 +6,7 @@ const debug = require('debug')('app:service.controller');
 class Service extends Base {
     constructor(client) {
         super(client);
-        this.urlService = `${this.req.protocol}//${this.req.hostname}:${process.env.PORT}/messages`;
+        this.urlService = `${this.req.protocol}//${this.req.hostname}:${this.data.port}/messages`;
         debug('Service Url: ', this.urlService);
     }
 

@@ -5,6 +5,7 @@ import Highlight from './highlight.class'
 class Bulma {
     constructor(options) {
         this.opts = {
+            idDataBox: 'data-box',
             idMsgBox: 'message-box',
             idMsgError: 'message-error',
             queryNavbarBurgers: '.navbar-burger',
@@ -72,6 +73,16 @@ class Bulma {
             }
         }
         return _isClass;
+    }
+
+    getData(){
+        let data = {};
+        const $elData = document.getElementById(this.opts.idDataBox);
+        if($elData){
+            const port = $elData.dataset.port;
+            return {port}
+        }
+        return data
     }
 
     showMessage(data){

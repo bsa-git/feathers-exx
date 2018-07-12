@@ -13,6 +13,7 @@ class Client {
         this.bulma = new Bulma();
         // this.config = config;
         this.req = new HttpBox();
+        this.data = this.bulma.getData();
         this.init();
     }
 

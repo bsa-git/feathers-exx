@@ -18,6 +18,7 @@ module.exports = function (req, res, next) {
     // req.config = config;
 
     // Set values for view
+    res.locals.port = req.app.get('port');
     res.locals.req = req;
     res.locals.controllers = config.controllers;
     res.locals.actions = config.actions;
