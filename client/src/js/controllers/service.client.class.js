@@ -59,6 +59,7 @@ class Service extends Base {
                     // Create message
                     const message = await self.req.post(self.urlService, {text: `Client create message-${messages.length + 1}`});
                     debug(`HttpBox.post message: `, message);
+                    console.log(`HttpBox.post message: `, message);
                     await self._showMessages('create()', 'POST');
                 } catch (ex) {
                     self.bulma.showError(ex);
