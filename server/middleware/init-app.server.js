@@ -26,10 +26,13 @@ module.exports = function (req, res, next) {
     res.locals.contact_website = process.env.PERSONAL_WEBSITE;
     res.locals.copyright = process.env.PERSONAL_COPYRIGHT;
 
+
+
     // Check .env
     if(req.app.get('env') === 'development'){
         Base.isEnvJs();
     }
+
 
     next()
 };
