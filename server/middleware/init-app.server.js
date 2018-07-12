@@ -27,7 +27,9 @@ module.exports = function (req, res, next) {
     res.locals.copyright = process.env.PERSONAL_COPYRIGHT;
 
     // Check .env
-    Base.isEnvJs();
+    if(req.app.get('env') === 'development'){
+        Base.isEnvJs();
+    }
 
     next()
 };
