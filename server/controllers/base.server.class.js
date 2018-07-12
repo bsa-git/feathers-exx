@@ -40,6 +40,8 @@ class Base {
         httpServer.listen(process.env.EXX_PORT);
         httpServer.on('listening', () => {
             self.req.app.set('httpServer', httpServer);
+            const address = server.address();
+            debug('Server.Address: ', address);
             debug(`Feathers REST API started at ${process.env.BASE_URL}:${process.env.EXX_PORT}`);
         });
     }

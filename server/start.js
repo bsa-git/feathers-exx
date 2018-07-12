@@ -14,7 +14,7 @@ require('./plugins/unhandled-rejection');
 const _port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000;
 const port = normalizePort(_port);
 app.set('port', port);
-debug('PORT: ', process.env.PORT, ' OPENSHIFT_NODEJS_PORT: ', process.env.OPENSHIFT_NODEJS_PORT);
+// debug('PORT: ', process.env.PORT, ' OPENSHIFT_NODEJS_PORT: ', process.env.OPENSHIFT_NODEJS_PORT);
 
 /**
  * Get host from environment and store in Express.
