@@ -1,1 +1,1 @@
-web: cross-env DEBUG=app:* node ./server/start.js
+web: node ./server/start.js
