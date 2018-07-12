@@ -1,9 +1,8 @@
 "use strict";
 
-const Base = require('./base.class');
+import Base from './base.client.class'
 
 class Auth extends Base {
-
     constructor(context) {
         super(context);
     }

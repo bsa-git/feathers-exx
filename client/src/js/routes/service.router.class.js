@@ -1,6 +1,6 @@
 "use strict";
 
-import Service from '../controllers/service.class'
+import Service from '../controllers/service.client.class'
 
 class ServiceRouter {
     constructor(client) {

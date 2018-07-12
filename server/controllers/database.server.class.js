@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require('path');
-const Base = require('./base.class');
+const Base = require('./base.server.class');
 const debug = require('debug')('app:database.controller');
 
 class Database extends Base {

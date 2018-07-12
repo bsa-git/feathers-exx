@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const Base = require('../controllers/base.class');
-const Service = require('../controllers/service.class');
+const Base = require('../controllers/base.server.class');
+const Service = require('../controllers/service.server.class');
 const debug = require('debug')('app:service.router');
 
 // GET service listing.

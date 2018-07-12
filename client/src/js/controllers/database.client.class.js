@@ -1,6 +1,6 @@
 "use strict";
 
-import Base from './base.class'
+import Base from './base.client.class'
 
 class Database extends Base {
     constructor(client) {

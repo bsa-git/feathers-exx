@@ -1,6 +1,6 @@
 "use strict";
 
-const Base = require('./base.class');
+const Base = require('./base.server.class');
 const debug = require('debug')('app:service.controller');
 
 class Service extends Base {

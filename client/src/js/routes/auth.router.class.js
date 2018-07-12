@@ -1,6 +1,6 @@
 "use strict";
 
-import Auth from '../controllers/auth.class'
+import Auth from '../controllers/auth.client.class'
 
 class AuthRouter {
     constructor(client) {

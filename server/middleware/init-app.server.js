@@ -2,7 +2,7 @@
 
 module.exports = function (req, res, next) {
 
-    const Base = require('../controllers/base.class');
+    const Base = require('../controllers/base.server.class');
     const config = require('../../config/app.config');
     const debug = require('debug')('app:middleware.init');
 

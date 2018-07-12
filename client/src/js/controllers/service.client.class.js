@@ -1,6 +1,6 @@
 "use strict";
 
-import Base from './base.class'
+import Base from './base.client.class'
 const debug = require('debug')('app:service.controller');
 
 class Service extends Base {

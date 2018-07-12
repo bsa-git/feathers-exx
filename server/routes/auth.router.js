@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Auth = require('../controllers/auth.class');
+const Auth = require('../controllers/auth.server.class');
 const debug = require('debug')('app:auth.router');
 
 /* GET auth listing. */

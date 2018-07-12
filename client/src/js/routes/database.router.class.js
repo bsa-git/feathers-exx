@@ -1,6 +1,6 @@
 "use strict";
 
-import Database from '../controllers/database.class'
+import Database from '../controllers/database.client.class'
 
 /**
  * Database router

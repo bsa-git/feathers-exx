@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const Base = require('../controllers/base.class');
-const Database = require('../controllers/database.class');
+const Base = require('../controllers/base.server.class');
+const Database = require('../controllers/database.server.class');
 const debug = require('debug')('app:database.router');
 
 // GET database listing.

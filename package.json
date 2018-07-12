@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./server/start.js",
-    "dev": "cross-env NODE_ENV=development DEBUG=app:* nodemon ./server/start.js -e js,twig --ignore server/data/, client/",
+    "dev": "cross-env NODE_ENV=development DEBUG=app:* nodemon ./server/start.js -e js,twig --ignore server/data/,client/",
     "css-mixins": "node-sass client/src/sass/mixins.scss -o client/public/css/",
     "css-themes": "node-sass client/src/sass/themes/ -o client/public/css/themes/",
     "css-build": "npm run css-mixins && npm run css-themes",
