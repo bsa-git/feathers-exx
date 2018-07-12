@@ -6,8 +6,8 @@ const debug = require('debug')('app:service.controller');
 class Service extends Base {
     constructor(client) {
         super(client);
-        this.urlService = `${this.req.protocol}//${this.req.hostname}:${process.env.EXX_PORT}/messages`;
-        console.log('urlService: ', this.urlService);
+        this.urlService = `${this.req.protocol}//${this.req.hostname}:${process.env.PORT}/messages`;
+        debug('Service Url: ', this.urlService);
     }
 
     /**
@@ -59,7 +59,6 @@ class Service extends Base {
                     // Create message
                     const message = await self.req.post(self.urlService, {text: `Client create message-${messages.length + 1}`});
                     debug(`HttpBox.post message: `, message);
-                    console.log(`HttpBox.post message: `, message);
                     await self._showMessages('create()', 'POST');
                 } catch (ex) {
                     self.bulma.showError(ex);
