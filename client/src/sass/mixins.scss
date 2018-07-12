@@ -2,10 +2,10 @@
 
 //--- Fonts ---//
 $OpenSansFont: unquote("Open Sans");
-@import url("http://fonts.googleapis.com/css?family=#{$OpenSansFont}");
+@import url("https://fonts.googleapis.com/css?family=#{$OpenSansFont}");
 
 $ExoticFont: unquote("Playball");
-@import url("http://fonts.googleapis.com/css?family=#{$ExoticFont}");
+@import url("https://fonts.googleapis.com/css?family=#{$ExoticFont}");
 
 //--- Import the initial variables ---//
 @import "../../../node_modules/bulma/sass/utilities/initial-variables";
