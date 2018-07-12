@@ -23,15 +23,15 @@ Getting up and running is as easy as 1, 2, 3, 4, 5.
 
 4. Environment variables
 
-Add file "/env.js" to your project to set user environment variables.
-See the sample file "/env.example.js".
+Add file ".env" to your project to set user environment variables.
+See the sample file ".env.example".
 
 5. Start your app
 
 Let's start building packages on the client side
 
   ```bash
-  npm run build-client
+  npm run build
   ```
 
 Start the local server, so that you can see the application running
