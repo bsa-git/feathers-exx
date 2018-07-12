@@ -1,9 +1,8 @@
 "use strict";
 
-const config = require('../../../config/env');
 const knex = require('knex');
 // Create model
-const dbCurrent = config.api.database.current;
-const model = knex(config.api.database.knex[dbCurrent]);
+const config = require('../../../config/db');
+const model = knex(config.knex[process.env.DB_CURRENT]);
 
 module.exports = model;

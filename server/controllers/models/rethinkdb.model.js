@@ -1,7 +1,7 @@
 "use strict";
 
-const config = require('../../../config/env');
-const rdbConfig = config.api.database.rethinkdb;
+const config = require('../../../config/db');
+const rdbConfig = config.rethinkdb;
 const rethink = require('rethinkdbdash');
 
 // Connect to a local RethinkDB server.

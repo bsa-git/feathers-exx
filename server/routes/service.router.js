@@ -2,9 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const config = require('../../config/env');
 const Base = require('../controllers/base.class');
 const Service = require('../controllers/service.class');
+const debug = require('debug')('app:service.router');
 
 // GET service listing.
 router.get('/about', function (req, res, next) {
@@ -12,14 +12,10 @@ router.get('/about', function (req, res, next) {
         title: 'Feathers Service',
         req: req
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     // View render
     res.render('tmpls/service/about/index.html.twig', context);
-    if (config.debug) {
-        console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-    }
+    debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
 });
 
 router.get('/start-client', function (req, res, next) {
@@ -27,14 +23,10 @@ router.get('/start-client', function (req, res, next) {
         title: 'Our first Feathers application on the client',
         req: req
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     // View render
     res.render('tmpls/service/start-client/index.html.twig', context);
-    if (config.debug) {
-        console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-    }
+    debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
 });
 
 router.get('/start-server', async function (req, res, next) {
@@ -43,9 +35,7 @@ router.get('/start-server', async function (req, res, next) {
         req: req,
         res: res
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     try {
         // Create controller
         const service = new Service(context);
@@ -58,9 +48,7 @@ router.get('/start-server', async function (req, res, next) {
         res.locals.msgBox = {type: 'info', text: html};
         // View render
         res.render('tmpls/service/start-server/index.html.twig', context);
-        if (config.debug) {
-            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-        }
+        debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
     }
     catch (ex) {
         Base.showError(ex, req, res);
@@ -73,9 +61,7 @@ router.get('/methods', async function (req, res, next) {
         req: req,
         res: res
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     try {
         // Create controller
         const service = new Service(context);
@@ -88,9 +74,7 @@ router.get('/methods', async function (req, res, next) {
         res.locals.msgBox = {type: 'info', text: html};
         // View render
         res.render('tmpls/service/methods/index.html.twig', context);
-        if (config.debug) {
-            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-        }
+        debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
     }
     catch (ex) {
         Base.showError(ex, req, res);
@@ -103,9 +87,7 @@ router.get('/events', async function (req, res, next) {
         req: req,
         res: res
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     try {
         // Create controller
         const service = new Service(context);
@@ -118,9 +100,7 @@ router.get('/events', async function (req, res, next) {
         res.locals.msgBox = {type: 'info', text: html};
         // View render
         res.render('tmpls/service/events/index.html.twig', context);
-        if (config.debug) {
-            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-        }
+        debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
     }
     catch (ex) {
         Base.showError(ex, req, res);
@@ -135,9 +115,7 @@ router.get('/hooks/:validate', async function (req, res, next) {//
         req: req,
         res: res
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     try {
         // Create controller
         const service = new Service(context);
@@ -150,9 +128,7 @@ router.get('/hooks/:validate', async function (req, res, next) {//
         res.locals.msgBox = {type: 'info', text: html};
         // View render
         res.render('tmpls/service/hooks/index.html.twig', context);
-        if (config.debug) {
-            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-        }
+        debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
     }
     catch (ex) {
         // Base.showError(ex, req, res);
@@ -171,9 +147,7 @@ router.get('/rest-apis', async function (req, res, next) {
         req: req,
         res: res
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     try {
         // Create controller
         const service = new Service(context);
@@ -186,9 +160,7 @@ router.get('/rest-apis', async function (req, res, next) {
         res.locals.msgBox = {type: 'info', text: html};
         // View render
         res.render('tmpls/service/rest-apis/index.html.twig', context);
-        if (config.debug) {
-            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-        }
+        debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
     }
     catch (ex) {
         Base.showError(ex, req, res);
@@ -202,9 +174,7 @@ router.get('/rest-client', async function (req, res, next) {
         req: req,
         res: res
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     try {
         // Create controller
         const service = new Service(context);
@@ -217,9 +187,7 @@ router.get('/rest-client', async function (req, res, next) {
         res.locals.msgBox = {type: 'info', text: html};
         // View render
         res.render('tmpls/service/rest-client/index.html.twig', context);
-        if (config.debug) {
-            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-        }
+        debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
     }
     catch (ex) {
         Base.showError(ex, req, res);
@@ -233,9 +201,7 @@ router.get('/real-time', async function (req, res, next) {
         req: req,
         res: res
     };
-    if (config.debug) {
-        console.log('Router.get: ', req.originalUrl);
-    }
+    debug('Router.get: ', req.originalUrl);
     try {
         // Create controller
         const service = new Service(context);
@@ -248,9 +214,7 @@ router.get('/real-time', async function (req, res, next) {
         res.locals.msgBox = {type: 'info', text: html};
         // View render
         res.render('tmpls/service/real-time/index.html.twig', context);
-        if (config.debug) {
-            console.log(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
-        }
+        debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
     }
     catch (ex) {
         Base.showError(ex, req, res);

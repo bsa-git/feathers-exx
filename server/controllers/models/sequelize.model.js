@@ -1,12 +1,12 @@
 "use strict";
 
-const config = require('../../../config/env');
+const config = require('../../../config/db');
 const Sequelize = require('sequelize');
 //---------------------------------------
 
 // Create Model
-const dbCurrent = config.api.database.current;
-const dbConfig = config.api.database.sequelize[dbCurrent];
+// const dbCurrent = config.api.database.current;
+const dbConfig = config.sequelize[process.env.DB_CURRENT];
 // Set Messages model
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig.options);
 const model = sequelize.define('messages', {

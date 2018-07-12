@@ -4,40 +4,38 @@
  * Module dependencies.
  */
 const app = require('./app.server');
-const debug = require('debug')('feathers:server');
+const debug = require('debug')('app:server');
 const http = require('http');
-const config = require('../config/env');
 require('./plugins/unhandled-rejection');
 
 /**
  * Get port from environment and store in Express.
  */
-
-// console.log('config.api: ', config.api);
-
-const port = normalizePort(process.env.PORT || config.api.appPort);
+const _port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000;
+const port = normalizePort(_port);
 app.set('port', port);
+
+/**
+ * Get host from environment and store in Express.
+ */
+const _host = process.env.BASE_URL || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+app.set('host', _host);
 
 /**
  * Create HTTP server.
  */
-
 const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-console.log(`Listen on localhost: ${port}`);
-
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
     const port = parseInt(val, 10);
 
@@ -57,7 +55,6 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
     if (error.syscall !== 'listen') {
         throw error;
@@ -85,11 +82,11 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
     const addr = server.address();
     const bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port ' + addr.port;
-    debug('Listening on ' + bind);
+    debug('App is running at %s:%d in %s mode', app.get('host'), app.get('port'), app.get('env'));
+    debug('Press CTRL-C to stop');
 }

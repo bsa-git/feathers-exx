@@ -339,7 +339,6 @@ class HttpBox {
             // Something happened in setting up the request that triggered an Error
             console.log('Error.message', error.message);
         }
-        // console.log('Error.config: ', error.config);
         throw error;
     }
 

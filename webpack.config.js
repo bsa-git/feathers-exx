@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
     // context: path.resolve(__dirname, 'client/src'), // source directory
@@ -28,6 +29,12 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        new Dotenv({
+            path: './.env', // Path to .env file (this is the default)
+            systemvars: true // It makes it possible to work in production mode on Heroku hosting
+        })
+    ],
     node: {
         fs: "empty" // avoids error messages
     }

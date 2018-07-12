@@ -1,6 +1,6 @@
 "use strict";
 
-const config = require('../../../config/env');
+const debug = require('debug')('app:messages.model');
 
 class Messages {
     constructor() {
@@ -11,9 +11,7 @@ class Messages {
 
     async find(params) {
         // Return the list of all messages
-        if(config.debug){
-            console.log(`Service.messages.find: `, this.messages);
-        }
+        debug(`Service.messages.find: `, this.messages);
         return this.messages;
     }
 
@@ -25,9 +23,7 @@ class Messages {
         if (!message) {
             throw new Error(`Message with id ${id} not found`);
         }
-        if(config.debug){
-            console.log(`Service.messages.get(id=${id}): `, message);
-        }
+        debug(`Service.messages.get(id=${id}): `, message);
 
         // Otherwise return the message
         return message;
@@ -40,9 +36,7 @@ class Messages {
             id: ++this.currentId
         }, data);
         this.messages.push(message);
-        if(config.debug){
-            console.log(`Service.messages.create: `, message);
-        }
+        debug(`Service.messages.create: `, message);
         return message;
     }
 
@@ -50,9 +44,7 @@ class Messages {
         // Get the existing message. Will throw an error if not found
         let message = await this.get(id);
         message = Object.assign(message, data);
-        if(config.debug){
-            console.log(`Service.messages.patch: `, 'data=', data, '; message=', message);
-        }
+        debug(`Service.messages.patch: `, 'data=', data, '; message=', message);
         // Merge the existing message with the new data
         // and return the result
         return message;
@@ -62,9 +54,7 @@ class Messages {
         // Get the existing message. Will throw an error if not found
         let message = await this.get(id);
         message = Object.assign({id: message.id}, data);
-        if(config.debug){
-            console.log(`Service.messages.update: `, 'data=', data, '; message=', message);
-        }
+        debug(`Service.messages.update: `, 'data=', data, '; message=', message);
         // Merge the existing message with the new data
         // and return the result
         return message;
@@ -78,9 +68,7 @@ class Messages {
 
         // Remove the found message from our array
         this.messages.splice(index, 1);
-        if(config.debug){
-            console.log(`Service.messages.remove(id=${id}): `, message);
-        }
+        debug(`Service.messages.remove(id=${id}): `, message);
         // Return the removed message
         return message;
     }

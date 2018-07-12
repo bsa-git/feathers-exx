@@ -40,3 +40,4 @@ ${ES_TMPDIR}
 # Configuration file
 .idea
 env.js
+.env

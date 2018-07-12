@@ -10,17 +10,9 @@
     "js": "node --harmony"
   },
   "watch": [
-    "env.js",
     "config/",
     "plugins/",
-    "client/public/",
-    "server/controllers/",
-    "server/middleware/",
-    "server/plugins/",
-    "server/routes/",
-    "server/views/",
-    "server/app.server.js",
-    "server/start.js"
+    "server/"
   ],
   "env": {
     "NODE_ENV": "development"

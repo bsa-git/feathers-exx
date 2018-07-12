@@ -1,11 +1,12 @@
 "use strict";
 
 const HttpBox = require('../../plugins/http.server.class');
-const config = require('../../../config/env');
-const es_config = config.api.database.elasticsearch;
+const config = require('../../../config/db');
+const es_config = config.elasticsearch;
 const collection = require('lodash/collection');
 const Utils = require('../../../plugins/utils.class');
 const elasticsearch = require('elasticsearch');
+const debug = require('debug')('app:elasticsearch.model');
 
 //-----------------------------------------------
 
@@ -42,9 +43,7 @@ class Messages {
         // If the index is not created, then create it
         if (collection.find(arrData, ['index', es_config.index]) === undefined) {
             responseData = await this._createIndex();
-            if (config.debug) {
-                console.log('Response Data: ', responseData);
-            }
+            debug('Response Data: ', responseData);
             console.log('Created index: ', es_config.index);
             // Delay time 1 sec
             await Utils.delayTime(1);

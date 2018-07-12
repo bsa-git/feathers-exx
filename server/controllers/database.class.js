@@ -2,6 +2,7 @@
 
 const path = require('path');
 const Base = require('./base.class');
+const debug = require('debug')('app:database.controller');
 
 class Database extends Base {
 
@@ -119,7 +120,7 @@ class Database extends Base {
                 }
                 // Create an index
                 await model.ensureIndex({fieldName: 'counter'});
-                console.log('Created an index for \'counter\' field name.');
+                debug('Created an index for \'counter\' field name.');
             }
             const messages_1 = await messages.find({
                 query: {
@@ -187,10 +188,10 @@ class Database extends Base {
             const sumCounter = app.service('sum-counter');
             // Clean up our data.
             await model.schema.dropTableIfExists('messages');
-            console.log('Dropped messages table');
+            debug('Dropped messages table');
             // Create 'messages' table
             await model.schema.createTable('messages', table => {
-                console.log('Creating messages table');
+                debug('Creating messages table');
                 table.increments('id');
                 table.integer('counter');
                 table.string('message');
@@ -202,7 +203,7 @@ class Database extends Base {
                     message: `Message number ${counter}`
                 });
             }
-            console.log('Created messages table.');
+            debug('Created messages table.');
 
             const messages_1 = await messages.find({
                 query: {
@@ -267,7 +268,7 @@ class Database extends Base {
             const sumCounter = app.service('sum-counter');
             // force: true will drop the table if it already exists
             await model.sync({force: true});
-            console.log('Dropped messages table');
+            debug('Dropped messages table');
             // Create a dummy messages
             for (let counter = 1; counter <= 10; counter++) {
                 await model.create({
@@ -275,7 +276,7 @@ class Database extends Base {
                     message: `Message number ${counter}`
                 });
             }
-            console.log('Created messages.');
+            debug('Created messages.');
             const messages_1 = await messages.find({
                 query: {
                     $limit: 3,
@@ -306,6 +307,7 @@ class Database extends Base {
         const mongoose = require('mongoose');
         const service = require('feathers-mongoose');
         const Model = require('./models/mongoose.model');
+        const config = require('../../config/db');
         //------------------------------------------------
         // Set rest transport
         const app = this.setRestTransport();
@@ -313,7 +315,7 @@ class Database extends Base {
         mongoose.Promise = global.Promise;
 
         // Connect to your MongoDB instance(s)
-        mongoose.connect(this.config.api.database.mongoose.connection_string);
+        mongoose.connect(config.mongoose.connection_string);
 
         // Connect to the db, create and register a Feathers service.
         app.use('/messages', service({
@@ -532,9 +534,6 @@ class Database extends Base {
 
             });
             const queryResult = await queryMessages.find({type: 'aggs-count-sum'});
-            // const _queryResult = await queryMessages.find();
-            // console.log('_queryResult', _queryResult);
-            // const queryResult = {count: 10, sum: 55};
             return {messages_1: messages_1.data, messages_2: messages_2.data, queryResult};
         }
 

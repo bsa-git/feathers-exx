@@ -1,7 +1,6 @@
 "use strict";
 
 import Highlight from './highlight.class'
-import config from '../../../../config/env/index.client'
 
 class Bulma {
     constructor(options) {
@@ -95,8 +94,7 @@ class Bulma {
             // Set error values
             err.code = err.code || err.status || 500;
             err.type = err.type || err.statusText || 'Request Error';
-            console.log('Error.stack: ', config)
-            err.stack = config.app_env === 'development' ? err.stack : '';
+            err.stack = process.env.NODE_ENV === 'development' ? err.stack : '';
             err.request_info = err.request_info ? err.request_info : '';
             err.response_data = err.response_data ? err.response_data : '';
 

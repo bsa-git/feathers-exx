@@ -1,6 +1,7 @@
 "use strict";
 
 const Base = require('./base.class');
+const debug = require('debug')('app:service.controller');
 
 class Service extends Base {
     constructor(context) {
@@ -113,14 +114,10 @@ class Service extends Base {
         // Add aplication hooks
         app.hooks({
             before: async context => {
-                if (self.config) {
-                    console.log(`Hook.before for '${context.path}' service method '${context.method}'`);
-                }
+                debug(`Hook.before for '${context.path}' service method '${context.method}'`);
             },
             after: async context => {
-                if (self.config) {
-                    console.log(`Hook.after for '${context.path}' service method '${context.method}'`);
-                }
+                debug(`Hook.after for '${context.path}' service method '${context.method}'`);
             },
             error: async context => {
                 const errMessage = `Error: '${context.error.message}';  Path: '${context.path}'; service-method: '${context.method}';`;

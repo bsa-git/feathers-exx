@@ -49,6 +49,6 @@ export default async function (client) {
             return await databaseRouter.routeRethinkDB();
             break;
         default:
-            return `Does not match controller/action:  '${client.req.controller}/${client.req.action}'`
+            return `Path controller/action:  '${client.req.controller}/${client.req.action}'`
     }
 }

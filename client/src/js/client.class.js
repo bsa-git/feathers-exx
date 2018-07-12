@@ -2,7 +2,6 @@
 
 import 'jstorage'
 import Bulma from './plugins/bulma.class'
-import config from '../../../config/env/index.client'
 import HttpBox from './plugins/http.client.class'
 
 /**
@@ -12,7 +11,7 @@ class Client {
     constructor() {
         this.storage = $.jStorage;
         this.bulma = new Bulma();
-        this.config = config;
+        // this.config = config;
         this.req = new HttpBox();
         this.init();
     }
@@ -21,7 +20,7 @@ class Client {
      * Init Application
      */
     init() {
-        this.storage.set('config', config);
+        // this.storage.set('config', config);
         this.storage.set('bulma', this.bulma);
         this.storage.set('req', this.req);
     }

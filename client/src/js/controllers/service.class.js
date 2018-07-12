@@ -1,11 +1,12 @@
 "use strict";
 
 import Base from './base.class'
+const debug = require('debug')('app:service.controller');
 
 class Service extends Base {
     constructor(client) {
         super(client);
-        this.urlService = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}/messages`;
+        this.urlService = `${this.req.protocol}//${this.req.hostname}:${process.env.EXX_PORT}/messages`;
     }
 
     /**
@@ -56,7 +57,7 @@ class Service extends Base {
                     const messages = await self.req.get(self.urlService);
                     // Create message
                     const message = await self.req.post(self.urlService, {text: `Client create message-${messages.length + 1}`});
-                    console.log(`HttpBox.post message: `, message);
+                    debug(`HttpBox.post message: `, message);
                     await self._showMessages('create()', 'POST');
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -69,10 +70,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await self.req.get(`${self.urlService}/${lastMessageId}`);
-                        console.log(`HttpBox.get message: `, message);
+                        debug(`HttpBox.get message: `, message);
                         await self._showMessage('get()', 'GET', lastMessageId);
                     } else {
-                        console.log(`HttpBox.get message: `, '[]');
+                        debug(`HttpBox.get message: `, '[]');
                         await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
@@ -93,10 +94,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await this.req.patch(`${self.urlService}/${lastMessageId}`, {text: `Client patch last message-${lastMessageId}`});
-                        console.log(`HttpBox.patch message: `, message);
+                        debug(`HttpBox.patch message: `, message);
                         await self._showMessages('patch()', 'PATCH', lastMessageId);
                     } else {
-                        console.log(`HttpBox.patch messages: `, '[]');
+                        debug(`HttpBox.patch messages: `, '[]');
                         await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
@@ -110,10 +111,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await this.req.put(`${self.urlService}/${lastMessageId}`, {text: `Client put last message-${lastMessageId}`});
-                        console.log(`HttpBox.put message: `, message);
+                        debug(`HttpBox.put message: `, message);
                         await self._showMessages('.update()', 'PUT', lastMessageId);
                     } else {
-                        console.log(`HttpBox.put messages: `, '[]');
+                        debug(`HttpBox.put messages: `, '[]');
                         await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
@@ -127,10 +128,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await this.req.delete(`${self.urlService}/${lastMessageId}`, {text: `Client delete last message-${lastMessageId}`});
-                        console.log(`HttpBox.delete message: `, message);
+                        debug(`HttpBox.delete message: `, message);
                         await self._showMessages('remove()', 'DELETE', lastMessageId);
                     } else {
-                        console.log(`HttpBox.delete messages: `, '[]');
+                        debug(`HttpBox.delete messages: `, '[]');
                         await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
@@ -158,7 +159,7 @@ class Service extends Base {
                     // Find messages
                     const messages = await serviceMessages.find();
                     const message = await serviceMessages.create({text: `Client create message-${messages.length + 1}`});
-                    console.log(`HttpBox.post message: `, message);
+                    debug(`HttpBox.post message: `, message);
                     await self._showMessages('create()', 'POST');
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -171,10 +172,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.get(lastMessageId);
-                        console.log(`HttpBox.get message: `, message);
+                        debug(`HttpBox.get message: `, message);
                         await self._showMessage('get()', 'GET', lastMessageId);
                     } else {
-                        console.log(`HttpBox.get message: `, '[]');
+                        debug(`HttpBox.get message: `, '[]');
                         await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
@@ -195,10 +196,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.patch(lastMessageId, {text: `Client patch last message-${lastMessageId}`});
-                        console.log(`HttpBox.patch message: `, message);
+                        debug(`HttpBox.patch message: `, message);
                         await self._showMessages('patch()', 'PATCH', lastMessageId);
                     } else {
-                        console.log(`HttpBox.patch messages: `, '[]');
+                        debug(`HttpBox.patch messages: `, '[]');
                         await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
@@ -212,10 +213,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.update(lastMessageId, {text: `Client put last message-${lastMessageId}`});
-                        console.log(`HttpBox.put message: `, message);
+                        debug(`HttpBox.put message: `, message);
                         await self._showMessages('.update()', 'PUT', lastMessageId);
                     } else {
-                        console.log(`HttpBox.put messages: `, '[]');
+                        debug(`HttpBox.put messages: `, '[]');
                         await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
@@ -229,10 +230,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.remove(lastMessageId, {text: `Client delete last message-${lastMessageId}`});
-                        console.log(`HttpBox.delete message: `, message);
+                        debug(`HttpBox.delete message: `, message);
                         await self._showMessages('remove()', 'DELETE', lastMessageId);
                     } else {
-                        console.log(`HttpBox.delete messages: `, '[]');
+                        debug(`HttpBox.delete messages: `, '[]');
                         await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
@@ -259,25 +260,25 @@ class Service extends Base {
 
         // Subscribe to the event 'created'
         app.service('messages').on('created', async message => {
-            console.log('Created a new message', message);
+            debug('Created a new message', message);
             await self._showMessages('create()', 'POST', message.id);
         });
 
         // Subscribe to the event 'updated'
         app.service('messages').on('updated', async message => {
-            console.log('Updated message', message);
+            debug('Updated message', message);
             await self._showMessages('.update()', 'PUT', message.id);
         });
 
         // Subscribe to the event 'patched'
         app.service('messages').on('patched', async message => {
-            console.log('Patched message', message);
+            debug('Patched message', message);
             await self._showMessages('patch()', 'PATCH', message.id);
         });
 
         // Subscribe to the event 'removed'
         app.service('messages').on('removed', async message => {
-            console.log('Deleted message', message);
+            debug('Deleted message', message);
             await self._showMessages('remove()', 'DELETE', message.id);
         });
         const MethodList = {
@@ -297,10 +298,10 @@ class Service extends Base {
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.get(lastMessageId);
-                        console.log(`HttpBox.get message: `, message);
+                        debug(`HttpBox.get message: `, message);
                         await self._showMessage('get()', 'GET', lastMessageId);
                     } else {
-                        console.log(`HttpBox.get message: `, '[]');
+                        debug(`HttpBox.get message: `, '[]');
                         await self._showMessages('get()', 'GET', 1);
                     }
                 } catch (ex) {
@@ -322,7 +323,7 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         await serviceMessages.patch(lastMessageId, {text: `Client patch last message-${lastMessageId}`});
                     } else {
-                        console.log(`HttpBox.patch messages: `, '[]');
+                        debug(`HttpBox.patch messages: `, '[]');
                         await self._showMessages('patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
@@ -337,7 +338,7 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         await serviceMessages.update(lastMessageId, {text: `Client put last message-${lastMessageId}`});
                     } else {
-                        console.log(`HttpBox.put messages: `, '[]');
+                        debug(`HttpBox.put messages: `, '[]');
                         await self._showMessages('update()', 'PUT', 1);
                     }
                 } catch (ex) {
@@ -352,7 +353,7 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         await serviceMessages.remove(lastMessageId, {text: `Client delete last message-${lastMessageId}`});
                     } else {
-                        console.log(`HttpBox.delete messages: `, '[]');
+                        debug(`HttpBox.delete messages: `, '[]');
                         await self._showMessages('remove()', 'DELETE', 1);
                     }
                 } catch (ex) {

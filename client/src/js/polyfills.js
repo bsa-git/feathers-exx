@@ -1,9 +1,11 @@
+const debug = require('debug')('app:polyfills');
+
 if(!('assign' in Object)){
     require('babel-polyfill');
-    console.log('Added  babel-polyfill.js');
+    debug('Added  babel-polyfill.js');
 }
 
 // if(!('fetch' in window)){
 //     require('fetch-polyfill');
-//     console.log('Added  fetch-polyfill.js');
+//     debug('Added  fetch-polyfill.js');
 // }

@@ -3,14 +3,14 @@
 const fs = require('fs');
 const path = require('path');
 const HttpBox = require('../plugins/http.server.class');
-const config = require('../../config/env');
+const debug = require('debug')('app:base.controller');
 
 class Base {
     constructor(context) {
         this.context = context ? context : {};
         this.req = this.context.req ? this.context.req : {};
         this.res = this.context.res ? this.context.res : {};
-        this.config = config;
+        // this.config = config;
         this.http = new HttpBox(this.req);
     }
 
@@ -22,9 +22,7 @@ class Base {
         // Restart the server on port 3030
         if (this.req.app.get('httpServer')) {
             await this.req.app.get('httpServer').close();
-            if (this.config.debug) {
-                console.log(`Feathers REST API closed at ${this.config.api.base_url}:${this.config.api.exxPort}`);
-            }
+            debug(`Feathers REST API closed at ${process.env.BASE_URL}:${process.env.EXX_PORT}`);
             this.createServer(app);
         } else {
             this.createServer(app);
@@ -39,10 +37,10 @@ class Base {
         const self = this;
         const http = require('http');
         const httpServer = http.createServer(app);
-        httpServer.listen(this.config.api.exxPort);
+        httpServer.listen(process.env.EXX_PORT);
         httpServer.on('listening', () => {
             self.req.app.set('httpServer', httpServer);
-            console.log(`Feathers REST API started at ${this.config.api.base_url}:${self.config.api.exxPort}`);
+            debug(`Feathers REST API started at ${process.env.BASE_URL}:${process.env.EXX_PORT}`);
         });
     }
 
@@ -151,10 +149,10 @@ class Base {
      */
     static isEnvJs() {
         try {
-            const filePath = path.join(__dirname, '../../env.js');
+            const filePath = path.join(__dirname, '../../.env');
             fs.accessSync(filePath);
         } catch (err) {
-            const errEnv = new Error(`Can not find 'env.js' file! <br>Please create a file '/env.js', see the example '/env.examples.js'`);
+            const errEnv = new Error(`Can not find '.env' file! <br>Please create a file '/.env', see the example '/.env.example'`);
             errEnv.code = 500;
             throw errEnv;
         }

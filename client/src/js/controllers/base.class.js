@@ -1,10 +1,12 @@
 "use strict";
 
+const debug = require('debug')('app:base.controller');
+
 class Base {
     constructor(client) {
         this.client = client ? client : {};
         this.bulma = this.client.bulma;
-        this.config = this.client.config;
+        // this.config = this.client.config;
         this.req = this.client.req;
     }
 
@@ -13,7 +15,7 @@ class Base {
      * @return {*}
      */
     setRestTransport() {
-        const restURL = `${this.req.protocol}//${this.req.hostname}:${this.config.api.exxPort}`;
+        const restURL = `${this.req.protocol}//${this.req.hostname}:${process.env.EXX_PORT}`;
         const feathers = require('@feathersjs/client');
         const axios = require('axios');
         //---------------------------------
@@ -22,7 +24,6 @@ class Base {
         // Connect to a different URL
         const restClient = feathers.rest(restURL);
         // Configure an AJAX library (see below) with that client
-        // app.configure(restClient.axios(axios));
         app.configure(restClient.axios(axios));
         return app
     }
@@ -44,7 +45,7 @@ class Base {
                     if (script.readyState == "loaded" ||
                         script.readyState == "complete") {
                         script.onreadystatechange = null;
-                        console.log('Loaded - ' + url);
+                        debug('Loaded - ' + url);
                         if (callback) {
                             callback();
                         }
@@ -53,7 +54,7 @@ class Base {
                 };
             } else {  //Others
                 script.onload = function () {
-                    console.log('Loaded - ' + url);
+                    debug('Loaded - ' + url);
                     if (callback) {
                         callback();
                     }
