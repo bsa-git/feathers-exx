@@ -7,6 +7,7 @@ class Service extends Base {
     constructor(client) {
         super(client);
         this.urlService = `${this.req.protocol}//${this.req.hostname}:${process.env.EXX_PORT}/messages`;
+        console.log('urlService: ', this.urlService);
     }
 
     /**
