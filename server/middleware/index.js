@@ -5,4 +5,5 @@ const cors = require('./cors');
 
 module.exports = function (app) {
     app.use(initApp);
+    app.use(cors);
 };
