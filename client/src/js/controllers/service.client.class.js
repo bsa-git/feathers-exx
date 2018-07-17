@@ -1,13 +1,13 @@
 "use strict";
 
 import Base from './base.client.class'
+
 const debug = require('debug')('app:service.controller');
 
 class Service extends Base {
     constructor(client) {
         super(client);
-        this.urlService = `${this.req.protocol}//${this.req.hostname}:${this.data.port}/messages`;
-        debug('Service Url: ', this.urlService);
+        this.urlHost = `${this.req.protocol}//${this.req.hostname}:${this.data.port}`;
     }
 
     /**
@@ -17,10 +17,11 @@ class Service extends Base {
      */
     startClient(name) {
         const feathers = require('@feathersjs/client');
+        const urlService = 'service/start-server/todos';
         //----------------------------------------------
         const app = feathers();
         // Register a simple todos service that return the name and a text
-        app.use('todos', {
+        app.use(urlService, {
             async get(name) {
                 // Return an object in the form of { name, text }
                 return {
@@ -33,7 +34,7 @@ class Service extends Base {
         // A function that gets and logs a todos from the service
         async function getTodo(name) {
             // Get the service we registered above
-            const service = app.service('todos');
+            const service = app.service(urlService);
             // Call the `get` method with a name
             const todo = await service.get(name);
             // Render twig template
@@ -50,16 +51,17 @@ class Service extends Base {
      */
     restApis() {
         const self = this;
+        const urlService = `${this.urlHost}/service/rest-apis/messages`;
         //---------------------------------
         const MethodList = {
             create: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(self.urlService);
+                    const messages = await self.req.get(urlService);
                     // Create message
-                    const message = await self.req.post(self.urlService, {text: `Client create message-${messages.length + 1}`});
+                    const message = await self.req.post(urlService, {text: `Client create message-${messages.length + 1}`});
                     debug(`HttpBox.post message: `, message);
-                    await self._showMessages('create()', 'POST');
+                    await self._showMessages(urlService, 'create()', 'POST');
                 } catch (ex) {
                     self.bulma.showError(ex);
                 }
@@ -67,15 +69,15 @@ class Service extends Base {
             get: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(self.urlService);
+                    const messages = await self.req.get(urlService);
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
-                        const message = await self.req.get(`${self.urlService}/${lastMessageId}`);
+                        const message = await self.req.get(`${urlService}/${lastMessageId}`);
                         debug(`HttpBox.get message: `, message);
-                        await self._showMessage('get()', 'GET', lastMessageId);
+                        await self._showMessage(urlService, 'get()', 'GET', lastMessageId);
                     } else {
                         debug(`HttpBox.get message: `, '[]');
-                        await self._showMessages('get()', 'GET', 1);
+                        await self._showMessages(urlService, 'get()', 'GET', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -83,7 +85,7 @@ class Service extends Base {
             },
             find: async () => {
                 try {
-                    await self._showMessages('find()', 'GET');
+                    await self._showMessages(urlService, 'find()', 'GET');
                 } catch (ex) {
                     self.bulma.showError(ex);
                 }
@@ -91,15 +93,15 @@ class Service extends Base {
             patch: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(self.urlService);
+                    const messages = await self.req.get(urlService);
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
-                        const message = await this.req.patch(`${self.urlService}/${lastMessageId}`, {text: `Client patch last message-${lastMessageId}`});
+                        const message = await this.req.patch(`${urlService}/${lastMessageId}`, {text: `Client patch last message-${lastMessageId}`});
                         debug(`HttpBox.patch message: `, message);
-                        await self._showMessages('patch()', 'PATCH', lastMessageId);
+                        await self._showMessages(urlService, 'patch()', 'PATCH', lastMessageId);
                     } else {
                         debug(`HttpBox.patch messages: `, '[]');
-                        await self._showMessages('patch()', 'PATCH', 1);
+                        await self._showMessages(urlService, 'patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -108,15 +110,15 @@ class Service extends Base {
             update: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(self.urlService);
+                    const messages = await self.req.get(urlService);
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
-                        const message = await this.req.put(`${self.urlService}/${lastMessageId}`, {text: `Client put last message-${lastMessageId}`});
+                        const message = await this.req.put(`${urlService}/${lastMessageId}`, {text: `Client put last message-${lastMessageId}`});
                         debug(`HttpBox.put message: `, message);
-                        await self._showMessages('.update()', 'PUT', lastMessageId);
+                        await self._showMessages(urlService, '.update()', 'PUT', lastMessageId);
                     } else {
                         debug(`HttpBox.put messages: `, '[]');
-                        await self._showMessages('update()', 'PUT', 1);
+                        await self._showMessages(urlService, 'update()', 'PUT', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -125,15 +127,15 @@ class Service extends Base {
             delete: async () => {
                 try {
                     // Find messages
-                    const messages = await self.req.get(self.urlService);
+                    const messages = await self.req.get(urlService);
                     if (messages.length > 0) {
                         const lastMessageId = messages[messages.length - 1].id;
-                        const message = await this.req.delete(`${self.urlService}/${lastMessageId}`, {text: `Client delete last message-${lastMessageId}`});
+                        const message = await this.req.delete(`${urlService}/${lastMessageId}`, {text: `Client delete last message-${lastMessageId}`});
                         debug(`HttpBox.delete message: `, message);
-                        await self._showMessages('remove()', 'DELETE', lastMessageId);
+                        await self._showMessages(urlService, 'remove()', 'DELETE', lastMessageId);
                     } else {
                         debug(`HttpBox.delete messages: `, '[]');
-                        await self._showMessages('remove()', 'DELETE', 1);
+                        await self._showMessages(urlService, 'remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -149,11 +151,12 @@ class Service extends Base {
      */
     restClient() {
         const self = this;
+        const urlService = 'service/rest-client/messages';
         //---------------------------------
         // Set rest transport
         const app = this.setRestTransport();
-        // Connect to the `http://localhost:3030/messages` service
-        const serviceMessages = app.service('messages');
+        // Connect to service
+        const serviceMessages = app.service(urlService);
         const MethodList = {
             create: async () => {
                 try {
@@ -161,7 +164,7 @@ class Service extends Base {
                     const messages = await serviceMessages.find();
                     const message = await serviceMessages.create({text: `Client create message-${messages.length + 1}`});
                     debug(`HttpBox.post message: `, message);
-                    await self._showMessages('create()', 'POST');
+                    await self._showMessages(`${self.urlHost}/${urlService}`, 'create()', 'POST');
                 } catch (ex) {
                     self.bulma.showError(ex);
                 }
@@ -174,10 +177,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.get(lastMessageId);
                         debug(`HttpBox.get message: `, message);
-                        await self._showMessage('get()', 'GET', lastMessageId);
+                        await self._showMessage(`${self.urlHost}/${urlService}`, 'get()', 'GET', lastMessageId);
                     } else {
                         debug(`HttpBox.get message: `, '[]');
-                        await self._showMessages('get()', 'GET', 1);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'get()', 'GET', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -185,7 +188,7 @@ class Service extends Base {
             },
             find: async () => {
                 try {
-                    await self._showMessages('find()', 'GET');
+                    await self._showMessages(`${self.urlHost}/${urlService}`, 'find()', 'GET');
                 } catch (ex) {
                     self.bulma.showError(ex);
                 }
@@ -198,10 +201,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.patch(lastMessageId, {text: `Client patch last message-${lastMessageId}`});
                         debug(`HttpBox.patch message: `, message);
-                        await self._showMessages('patch()', 'PATCH', lastMessageId);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'patch()', 'PATCH', lastMessageId);
                     } else {
                         debug(`HttpBox.patch messages: `, '[]');
-                        await self._showMessages('patch()', 'PATCH', 1);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -215,10 +218,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.update(lastMessageId, {text: `Client put last message-${lastMessageId}`});
                         debug(`HttpBox.put message: `, message);
-                        await self._showMessages('.update()', 'PUT', lastMessageId);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, '.update()', 'PUT', lastMessageId);
                     } else {
                         debug(`HttpBox.put messages: `, '[]');
-                        await self._showMessages('update()', 'PUT', 1);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'update()', 'PUT', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -232,10 +235,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.remove(lastMessageId, {text: `Client delete last message-${lastMessageId}`});
                         debug(`HttpBox.delete message: `, message);
-                        await self._showMessages('remove()', 'DELETE', lastMessageId);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'remove()', 'DELETE', lastMessageId);
                     } else {
                         debug(`HttpBox.delete messages: `, '[]');
-                        await self._showMessages('remove()', 'DELETE', 1);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -252,35 +255,36 @@ class Service extends Base {
      */
     realTime() {
         const self = this;
+        const urlService = 'service/real-time/messages';
         //---------------------------------
         // Set rest transport
         const app = this.setRestTransport();
 
-        // Connect to the `http://localhost:3030/messages` service
-        const serviceMessages = app.service('messages');
+        // Connect to service
+        const serviceMessages = app.service(urlService);
 
         // Subscribe to the event 'created'
-        app.service('messages').on('created', async message => {
+        app.service(urlService).on('created', async message => {
             debug('Created a new message', message);
-            await self._showMessages('create()', 'POST', message.id);
+            await self._showMessages(`${self.urlHost}/${urlService}`, 'create()', 'POST', message.id);
         });
 
         // Subscribe to the event 'updated'
-        app.service('messages').on('updated', async message => {
+        app.service(urlService).on('updated', async message => {
             debug('Updated message', message);
-            await self._showMessages('.update()', 'PUT', message.id);
+            await self._showMessages(`${self.urlHost}/${urlService}`, '.update()', 'PUT', message.id);
         });
 
         // Subscribe to the event 'patched'
-        app.service('messages').on('patched', async message => {
+        app.service(urlService).on('patched', async message => {
             debug('Patched message', message);
-            await self._showMessages('patch()', 'PATCH', message.id);
+            await self._showMessages(`${self.urlHost}/${urlService}`, 'patch()', 'PATCH', message.id);
         });
 
         // Subscribe to the event 'removed'
-        app.service('messages').on('removed', async message => {
+        app.service(urlService).on('removed', async message => {
             debug('Deleted message', message);
-            await self._showMessages('remove()', 'DELETE', message.id);
+            await self._showMessages(`${self.urlHost}/${urlService}`, 'remove()', 'DELETE', message.id);
         });
         const MethodList = {
             create: async () => {
@@ -300,10 +304,10 @@ class Service extends Base {
                         const lastMessageId = messages[messages.length - 1].id;
                         const message = await serviceMessages.get(lastMessageId);
                         debug(`HttpBox.get message: `, message);
-                        await self._showMessage('get()', 'GET', lastMessageId);
+                        await self._showMessage(`${self.urlHost}/${urlService}`, 'get()', 'GET', lastMessageId);
                     } else {
                         debug(`HttpBox.get message: `, '[]');
-                        await self._showMessages('get()', 'GET', 1);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'get()', 'GET', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -311,7 +315,7 @@ class Service extends Base {
             },
             find: async () => {
                 try {
-                    await self._showMessages('find()', 'GET');
+                    await self._showMessages(`${self.urlHost}/${urlService}`, 'find()', 'GET');
                 } catch (ex) {
                     self.bulma.showError(ex);
                 }
@@ -325,7 +329,7 @@ class Service extends Base {
                         await serviceMessages.patch(lastMessageId, {text: `Client patch last message-${lastMessageId}`});
                     } else {
                         debug(`HttpBox.patch messages: `, '[]');
-                        await self._showMessages('patch()', 'PATCH', 1);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'patch()', 'PATCH', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -340,7 +344,7 @@ class Service extends Base {
                         await serviceMessages.update(lastMessageId, {text: `Client put last message-${lastMessageId}`});
                     } else {
                         debug(`HttpBox.put messages: `, '[]');
-                        await self._showMessages('update()', 'PUT', 1);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'update()', 'PUT', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -355,7 +359,7 @@ class Service extends Base {
                         await serviceMessages.remove(lastMessageId, {text: `Client delete last message-${lastMessageId}`});
                     } else {
                         debug(`HttpBox.delete messages: `, '[]');
-                        await self._showMessages('remove()', 'DELETE', 1);
+                        await self._showMessages(`${self.urlHost}/${urlService}`, 'remove()', 'DELETE', 1);
                     }
                 } catch (ex) {
                     self.bulma.showError(ex);
@@ -371,26 +375,26 @@ class Service extends Base {
      * @param data Object
      * @private
      */
-    _twigRender(data){
+    _twigRender(data) {
         const template = require('../tmpls/service/rest-apis/messages.html.twig');
         const html = template(data);
         this.bulma.addMessage(html);
     };
 
     // Show messages
-    async _showMessages(serviceMethod, httpMethod, id){
+    async _showMessages(urlService, serviceMethod, httpMethod, id) {
         // Find messages
-        let messages = await this.req.get(this.urlService);
-        const _url = id ? `${this.urlService}/${id}` : this.urlService;
+        let messages = await this.req.get(urlService);
+        const _url = id ? `${urlService}/${id}` : this.urlService;
         // Render twig template
         this._twigRender({messages, url: _url, serviceMethod, httpMethod});
     };
 
     // Show message
-    async _showMessage(serviceMethod, httpMethod, id){
+    async _showMessage(urlService, serviceMethod, httpMethod, id) {
         // Find messages
-        const message = await this.req.get(`${this.urlService}/${id}`);
-        const _url = `${this.urlService}/${id}`;
+        const message = await this.req.get(`${urlService}/${id}`);
+        const _url = `${urlService}/${id}`;
         const messages = [message];
         // Render twig template
         this._twigRender({messages, url: _url, serviceMethod, httpMethod});

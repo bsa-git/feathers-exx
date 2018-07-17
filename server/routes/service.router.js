@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const Base = require('../controllers/base.server.class');
 const Service = require('../controllers/service.server.class');
+const HttpBox = require('../plugins/http.server.class');
 const debug = require('debug')('app:service.router');
 
 // GET service listing.
@@ -142,6 +143,9 @@ router.get('/hooks/:validate', async function (req, res, next) {//
 });
 
 router.get('/rest-apis', async function (req, res, next) {
+
+    const http = new HttpBox(req);
+
     const context = {
         title: 'REST APIs',
         req: req,
@@ -155,7 +159,7 @@ router.get('/rest-apis', async function (req, res, next) {
         const messages = await service.restApis();
 
         // Render twig template
-        const html = await  Base.twigRender('messages.html.twig', req, {messages});
+        const html = await  Base.twigRender('messages.html.twig', req, {messages, url: http.getHostAndPath()});
         // Set view params
         res.locals.msgBox = {type: 'info', text: html};
         // View render
@@ -169,6 +173,9 @@ router.get('/rest-apis', async function (req, res, next) {
 });
 
 router.get('/rest-client', async function (req, res, next) {
+
+    const http = new HttpBox(req);
+
     const context = {
         title: 'REST Client',
         req: req,
@@ -182,7 +189,7 @@ router.get('/rest-client', async function (req, res, next) {
         const messages = await service.restClient();
 
         // Render twig template
-        const html = await  Base.twigRender('messages.html.twig', req, {messages});
+        const html = await  Base.twigRender('messages.html.twig', req, {messages, url: http.getHostAndPath()});
         // Set view params
         res.locals.msgBox = {type: 'info', text: html};
         // View render
@@ -196,6 +203,9 @@ router.get('/rest-client', async function (req, res, next) {
 });
 
 router.get('/real-time', async function (req, res, next) {
+
+    const http = new HttpBox(req);
+
     const context = {
         title: 'Real-time APIs',
         req: req,
@@ -209,7 +219,7 @@ router.get('/real-time', async function (req, res, next) {
         const messages = await service.realTime();
 
         // Render twig template
-        const html = await  Base.twigRender('messages.html.twig', req, {messages});
+        const html = await  Base.twigRender('messages.html.twig', req, {messages, url: http.getHostAndPath()});
         // Set view params
         res.locals.msgBox = {type: 'info', text: html};
         // View render

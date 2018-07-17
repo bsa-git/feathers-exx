@@ -5,6 +5,7 @@ import Base from './base.client.class'
 class Database extends Base {
     constructor(client) {
         super(client);
+        this.urlHost = `${this.req.protocol}//${this.req.hostname}:${this.data.port}`;
     }
 
     /**
@@ -19,27 +20,17 @@ class Database extends Base {
     }
 
     /**
-     * Action database feathers-nedb
-     * @return Promise
-     */
-    async feathersNeDB() {
-        // Set rest transport
-        const app = this.setRestTransport();
-        // Service messages find
-        return this._serviceMessagesFind(app, 'nedb');
-    }
-
-    /**
      * Action database feathers-localstorage
      * @return Promise
      */
     async feathersLocalStorage() {
         const feathers = require('@feathersjs/client');
         const service = require('feathers-localstorage');
+        const urlService = 'database/feathers-localstorage/messages';
         //---------------------------------
 
         const app = feathers();
-        app.use('/messages', service({
+        app.use(urlService, service({
             storage: window.localStorage || AsyncStorage,
             paginate: {
                 default: 5,
@@ -47,7 +38,7 @@ class Database extends Base {
             }
         }));
 
-        const messages = app.service('messages');
+        const messages = app.service(urlService);
 
         // If there are messages, then we do not create new ones
         const _msessages = await messages.find();
@@ -76,12 +67,24 @@ class Database extends Base {
 
         // Show messages list from LocalStorage
         const data = {messages_1: messages_1.data, messages_2: messages_2.data};
+        Object.assign(data, {url: `${this.urlHost}/${urlService}`})
         const template = require('../tmpls/database/feathers-localstorage/messages-1.html.twig');
         const html = template(data);
         this.bulma.addMessage(html);
 
         // Service messages find
         return this._serviceMessagesFind(app, 'localstorage');
+    }
+
+    /**
+     * Action database feathers-nedb
+     * @return Promise
+     */
+    async feathersNeDB() {
+        // Set rest transport
+        const app = this.setRestTransport();
+        // Service messages find
+        return this._serviceMessagesFind(app, 'nedb');
     }
 
 
@@ -160,9 +163,10 @@ class Database extends Base {
      */
     async _serviceMessagesFind(app, tmpl) {
         const self = this;
+        const urlService = `database/feathers-${tmpl}/messages`;
         //------------------------
         // Connect to the service
-        const serviceMessages = app.service('messages');
+        const serviceMessages = app.service(urlService);
         // Render twig template
         let template;
         const twigRender = (data) => {

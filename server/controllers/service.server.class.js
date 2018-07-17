@@ -14,11 +14,11 @@ class Service extends Base {
      * @return Promise
      */
     startServer(name) {
-        const feathers = require('@feathersjs/feathers');
+        const self = this;
+        const urlService = 'service/start-server/todos';
         //-----------------------------------------------
-        const app = feathers();
         // Register a simple todos service that return the name and a text
-        app.use('todos', {
+        this.app.use(urlService, {// /start-client
             async get(name) {
                 // Return an object in the form of { name, text }
                 return {
@@ -30,7 +30,7 @@ class Service extends Base {
         // A function that gets and logs a todos from the service
         async function getTodo(name) {
             // Get the service we registered above
-            const service = app.service('todos');
+            const service = self.app.service(urlService);
             // Call the `get` method with a name
             const todo = await service.get(name);
             return todo;
@@ -43,21 +43,21 @@ class Service extends Base {
      * @return Promise
      */
     methods() {
-        const feathers = require('@feathersjs/feathers');
+        const self = this;
         const Messages = require('./models/messages.model.class');
+        const urlService = 'service/methods/messages';
         //-------------------------------------------------------
-        const app = feathers();
         // Initialize the messages service by creating
         // a new instance of our class
-        app.use('messages', new Messages());
+        this.app.use(urlService, new Messages());
         async function processMessages() {
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'First message'
             });
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'Second message'
             });
-            const messages = await app.service('messages').find();
+            const messages = await self.app.service(urlService).find();
             return messages;
         }
         return processMessages();
@@ -68,31 +68,31 @@ class Service extends Base {
      * @return Promise
      */
     events() {
-        const feathers = require('@feathersjs/feathers');
+        const self = this;
         const Messages = require('./models/messages.model.class');
+        const urlService = 'service/events/messages';
         //----------------------------------------------------
-        const app = feathers();
         // Initialize the messages service by creating
         // a new instance of our class
-        app.use('messages', new Messages());
+        this.app.use(urlService, new Messages());
         async function processMessages() {
             let events = [];
-            app.service('messages').on('created', message => {
+            self.app.service(urlService).on('created', message => {
                 events.push(`Created a new message: { id: ${message.id}, text: '${message.text}' }`);
             });
-            app.service('messages').on('removed', message => {
+            self.app.service(urlService).on('removed', message => {
                 events.push(`Deleted message: { id: ${message.id}, text: '${message.text}' }`);
             });
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'First message'
             });
-            const lastMessage = await app.service('messages').create({
+            const lastMessage = await self.app.service(urlService).create({
                 text: 'Second message'
             });
             // Remove the message we just created
-            await app.service('messages').remove(lastMessage.id);
+            await self.app.service(urlService).remove(lastMessage.id);
             // Find available messages
-            const messages = await app.service('messages').find();
+            const messages = await self.app.service(urlService).find();
             events.push(`Available messages: [ { id: ${messages[0].id}, text: '${messages[0].text}' } ]`);
             return events;
         }
@@ -104,15 +104,14 @@ class Service extends Base {
      * @return Promise
      */
     hooks() {
-        const feathers = require('@feathersjs/feathers');
+        const self = this;
         const Messages = require('./models/messages.model.class');
         const validate = require('./hooks/validate-messages');
         const setTimestamp = require('./hooks/set-timestamp.js');
-        const self = this;
+        const urlService = 'service/hooks/messages';
         //--------------------------------------------
-        const app = feathers();
         // Add aplication hooks
-        app.hooks({
+        this.app.hooks({
             before: async context => {
                 debug(`Hook.before for '${context.path}' service method '${context.method}'`);
             },
@@ -124,11 +123,11 @@ class Service extends Base {
                 console.error(errMessage);
             }
         });
-        // Initialize the messages service by creating
+        // Initialize the messages service
         // a new instance of our class
-        app.use('messages', new Messages());
+        this.app.use(urlService, new Messages());
         // Add "validate" and "setTimestamp" hooks for create, update, patch methods
-        app.service('messages').hooks({
+        this.app.service(urlService).hooks({
             before: {
                 create: [validate, setTimestamp({name: 'createdAt'})],
                 update: [validate, setTimestamp({name: 'updatedAt'})],
@@ -143,16 +142,16 @@ class Service extends Base {
             } else {
                 text = '';
             }
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: text
             });
-            const lastMessage = await app.service('messages').create({
+            const lastMessage = await self.app.service(urlService).create({
                 text: 'Create Second message'
             });
-            await app.service('messages').patch(lastMessage.id, {
+            await self.app.service(urlService).patch(lastMessage.id, {
                 text: 'Create and Update second message'
             });
-            const messages = await app.service('messages').find();
+            const messages = await self.app.service(urlService).find();
             return messages;
         }
         return processMessages();
@@ -163,33 +162,31 @@ class Service extends Base {
      * @return Promise
      */
     async restApis() {
+        const self = this;
         const Messages = require('./models/messages.model.class');
+        const urlService = 'service/rest-apis/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
-        // Initialize the messages service by creating
-        // a new instance of our class with CORS
-        app.use('messages', new Messages());
-        // Restart the server
-        await this.restartServer(app);
+        // Initialize the messages service
+        this.app.use(urlService, new Messages());
         // Process messages service
         async function processMessages() {
+
             // Use the service to create a new message on the server
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'Hello from the server'
             });
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'First message'
             });
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'Second message'
             });
 
-            await app.service('messages').update(3, {
+            await self.app.service(urlService).update(3, {
                 text: 'Update Second message'
             });
 
-            const messages = await app.service('messages').find();
+            const messages = await self.app.service(urlService).find();
             return messages;
         }
         return processMessages();
@@ -200,32 +197,29 @@ class Service extends Base {
      * @return Promise
      */
     async restClient() {
+        const self = this;
         const Messages = require('./models/messages.model.class');
+        const urlService = 'service/rest-client/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
-        // Initialize the messages service by creating
-        // a new instance of our class with CORS
-        app.use('messages', new Messages());
-        // Restart the server
-        await this.restartServer(app);
+        // Initialize the messages service
+        this.app.use(urlService, new Messages());
         // Process messages service
         async function processMessages() {
             // Use the service to create a new message on the server
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'Hello from the server'
             });
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'First message'
             });
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'Second message'
             });
 
-            await app.service('messages').update(3, {
+            await self.app.service(urlService).update(3, {
                 text: 'Update Second message'
             });
-            const messages = await app.service('messages').find();
+            const messages = await self.app.service(urlService).find();
             return messages;
         }
         return processMessages();
@@ -236,36 +230,29 @@ class Service extends Base {
      * @return Promise
      */
     async realTime() {
+        const self = this;
         const Messages = require('./models/messages.model.class');
+        const urlService = 'service/real-time/messages';
         //------------------------------------------------
-        // Set rest transports
-        const app = this.setRestTransport();
-        // Set socketio transports
-        this.setSocketioTransport(app);
-        // Set real time events
-        this.setRealTimeEvents(app);
-        // Initialize the messages service by creating
-        // a new instance of our class with CORS
-        app.use('messages', new Messages());
-        // Restart the server
-        await this.restartServer(app);
+        // Initialize the messages service
+        this.app.use(urlService, new Messages());
         // Process messages service
         async function processMessages() {
             // Use the service to create a new message on the server
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'Hello from the server'
             });
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'First message'
             });
-            await app.service('messages').create({
+            await self.app.service(urlService).create({
                 text: 'Second message'
             });
 
-            await app.service('messages').update(3, {
+            await self.app.service(urlService).update(3, {
                 text: 'Update Second message'
             });
-            const messages = await app.service('messages').find();
+            const messages = await self.app.service(urlService).find();
             return messages;
         }
         return processMessages();

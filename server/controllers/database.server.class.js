@@ -17,29 +17,25 @@ class Database extends Base {
     async feathersMemory() {
         const correctTypeQuery = require('./hooks/correct-type-query');
         const memory = require('feathers-memory');
+        const urlService = 'database/feathers-memory/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
         // Initialize the messages service
-        app.use('messages', memory({
+        this.app.use(urlService, memory({
             paginate: {
                 default: 5,
                 max: 10
             }
         }));
         // Add "correctTypeQuery" hooks for find methods
-        app.service('messages').hooks({
+        this.app.service(urlService).hooks({
             before: {
                 find: [correctTypeQuery({id: 'int', counter: 'int'})]
             }
         });
-        // Restart the server
-        await this.restartServer(app);
-
         // Process messages service
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
-            const messages = app.service('messages');
+            const messages = app.service(urlService);
             for (let counter = 1; counter <= 10; counter++) {
                 await messages.create({
                     counter,
@@ -62,7 +58,7 @@ class Database extends Base {
             return {messages_1: messages_1.data, messages_2: messages_2.data};
         }
 
-        return processMessages(app);
+        return processMessages(this.app);
     }
 
     /**
@@ -70,15 +66,15 @@ class Database extends Base {
      * @return Promise
      */
     async feathersNeDB() {
+        const self = this;
         const correctTypeQueryHook = require('./hooks/correct-type-query');
         const countMessagesHook = require('./hooks/feathers-nedb/count-messages.hook');
         const service = require('feathers-nedb');
         const model = require('./models/nedb.model');
+        const urlService = 'database/feathers-nedb/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
         // Connect to the db, create and register a Feathers service.
-        app.use('/messages', service({
+        this.app.use(urlService, service({
             Model: model,
             paginate: {
                 default: 5,
@@ -86,29 +82,26 @@ class Database extends Base {
             }
         }));
         // Add "correctTypeQueryHook" for find method
-        app.service('messages').hooks({
+        this.app.service(urlService).hooks({
             before: {
                 find: [correctTypeQueryHook({counter: 'int'})]
             }
         });
         // Register 'count-messages' service
-        app.use('count-messages', service({
+        this.app.use('count-messages', service({
             Model: model
         }));
         // Add "countMessagesHook" for find method
-        app.service('count-messages').hooks({
+        this.app.service('count-messages').hooks({
             before: {
                 find: [countMessagesHook]
             }
         });
-        // Restart the server
-        await this.restartServer(app);
-
         // Process messages service
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
-            const messages = app.service('messages');
-            const countMessages = app.service('count-messages');
+            const messages = self.app.service(urlService);
+            const countMessages = self.app.service('count-messages');
             // If there are messages, then we do not create new ones
             const _msessages = await messages.find();
             if (parseInt(_msessages.total) === 0) {
@@ -141,7 +134,7 @@ class Database extends Base {
             return {messages_1: messages_1.data, messages_2: messages_2.data, numberMessages};
         }
 
-        return processMessages(app);
+        return processMessages( this.app);
     }
 
     /**
@@ -153,11 +146,10 @@ class Database extends Base {
         const sumCounterHook = require('./hooks/feathers-knex/sum-counter.hook');
         const service = require('feathers-knex');
         const model = require('./models/knex.model');
+        const urlService = 'database/feathers-knex/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
         // Create 'messages' service
-        app.use('/messages', service({
+        this.app.use(urlService, service({
             Model: model,
             name: 'messages',
             paginate: {
@@ -166,25 +158,22 @@ class Database extends Base {
             }
         }));
         // Create 'sum-counter' service
-        app.use('sum-counter', service({
+        this.app.use('sum-counter', service({
             Model: model,
             name: 'messages'
         }));
         // Add "sumCounterHook" hooks for find methods
-        app.service('sum-counter').hooks({
+        this.app.service('sum-counter').hooks({
             before: {
                 find: [sumCounterHook]
             }
         });
         // Add appHooks
-        app.hooks(appHooks);
-        // Restart the server
-        await this.restartServer(app);
-
+        this.app.hooks(appHooks);
         // Process messages service
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
-            const messages = app.service('messages');
+            const messages = app.service(urlService);
             const sumCounter = app.service('sum-counter');
             // Clean up our data.
             await model.schema.dropTableIfExists('messages');
@@ -222,7 +211,7 @@ class Database extends Base {
             return {messages_1: messages_1.data, messages_2: messages_2.data, counters: counters[0].sum_counter};
         }
 
-        return processMessages(app);
+        return processMessages(this.app);
     }
 
     /**
@@ -233,15 +222,14 @@ class Database extends Base {
         const sumCounterHook = require('./hooks/feathers-sequelize/sum-counter.hook');
         const service = require('feathers-sequelize');
         const {model, sequelize} = require('./models/sequelize.model');
+        const urlService = 'database/feathers-sequelize/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
         // Save sequelize as 'sequelizeClient'
-        app.set('sequelizeClient', sequelize);
+        this.app.set('sequelizeClient', sequelize);
         // Test the connection
         await sequelize.authenticate();
         // Create Sequelize Feathers service
-        app.use('/messages', service({
+        this.app.use(urlService, service({
             Model: model,
             paginate: {
                 default: 5,
@@ -249,22 +237,19 @@ class Database extends Base {
             }
         }));
         // Create 'sum-counter' service
-        app.use('sum-counter', service({
+        this.app.use('sum-counter', service({
             Model: model
         }));
         // Add "sumCounterHook" hooks for find methods
-        app.service('sum-counter').hooks({
+        this.app.service('sum-counter').hooks({
             before: {
                 find: [sumCounterHook]
             }
         });
-        // Restart the server
-        await this.restartServer(app);
-
         // Process messages service
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
-            const messages = app.service('messages');
+            const messages = app.service(urlService);
             const sumCounter = app.service('sum-counter');
             // force: true will drop the table if it already exists
             await model.sync({force: true});
@@ -294,7 +279,7 @@ class Database extends Base {
             return {messages_1: messages_1.data, messages_2: messages_2.data, counters: counters[0].sum_counter};
         }
 
-        return processMessages(app);
+        return processMessages(this.app);
     }
 
     /**
@@ -308,17 +293,18 @@ class Database extends Base {
         const service = require('feathers-mongoose');
         const Model = require('./models/mongoose.model');
         const config = require('../../config/db');
+        const urlService = 'database/feathers-mongoose/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
-
         mongoose.Promise = global.Promise;
 
         // Connect to your MongoDB instance(s)
-        mongoose.connect(config.mongoose.connection_string);
+        const options = {
+            useNewUrlParser: true
+        };
+        mongoose.connect(config.mongoose.connection_string, options);
 
         // Connect to the db, create and register a Feathers service.
-        app.use('/messages', service({
+        this.app.use(urlService, service({
             Model,
             lean: true, // set to false if you want Mongoose documents returned
             paginate: {
@@ -328,27 +314,23 @@ class Database extends Base {
         }));
 
         // Add "serviceHooks" for service
-        app.service('messages').hooks(serviceHooks);
+        this.app.service(urlService).hooks(serviceHooks);
 
         // Register 'count-message' service
-        app.use('count-messages', service({
+        this.app.use('count-messages', service({
             Model
         }));
 
         // Add "countMessagesHook" for find method
-        app.service('count-messages').hooks({
+        this.app.service('count-messages').hooks({
             before: {
                 find: [countMessagesHook]
             }
         });
-
-        // Restart the server
-        await this.restartServer(app);
-
         // Process messages service
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
-            const messages = app.service('messages');
+            const messages = app.service(urlService);
             const countMessages = app.service('count-messages');
 
             // If there are messages, then we do not create new ones
@@ -380,7 +362,7 @@ class Database extends Base {
             return {messages_1: messages_1.data, messages_2: messages_2.data, numberMessages};
         }
 
-        return processMessages(app);
+        return processMessages(this.app);
     }
 
     /**
@@ -393,13 +375,11 @@ class Database extends Base {
         const countMessagesHook = require('./hooks/feathers-mongodb/count-messages.hook');
         const service = require('feathers-mongodb');
         const getModel = require('./models/mongodb.model');
+        const urlService = 'database/feathers-mongodb/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
-
         // Connect to the db, create and register a Feathers service.
         const Model = await getModel();
-        app.use('/messages', service({
+        this.app.use(urlService, service({
             Model,
             paginate: {
                 default: 5,
@@ -408,7 +388,7 @@ class Database extends Base {
         }));
 
         // Add "serviceHooks" for service
-        app.service('messages').hooks({
+        this.app.service(urlService).hooks({
             before: {
                 find: [correctTypeQueryHook({_id: 'ObjectID', counter: 'int'})],
                 create: [mongodbOptions],
@@ -418,24 +398,20 @@ class Database extends Base {
         });
 
         // Register 'count-message' service
-        app.use('count-messages', service({
+        this.app.use('count-messages', service({
             Model
         }));
 
         // Add "countMessagesHook" for find method
-        app.service('count-messages').hooks({
+        this.app.service('count-messages').hooks({
             before: {
                 find: [countMessagesHook]
             }
         });
-
-        // Restart the server
-        await this.restartServer(app);
-
         // Process messages service
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
-            const messages = app.service('messages');
+            const messages = app.service(urlService);
             const countMessages = app.service('count-messages');
 
             // If there are messages, then we do not create new ones
@@ -467,7 +443,7 @@ class Database extends Base {
             return {messages_1: messages_1.data, messages_2: messages_2.data, numberMessages};
         }
 
-        return processMessages(app);
+        return processMessages(this.app);
     }
 
     /**
@@ -478,14 +454,12 @@ class Database extends Base {
         const Utils = require('../../plugins/utils.class');
         const service = require('feathers-elasticsearch');
         const Messages = require('./models/elasticsearch.model');
+        const urlService = 'database/feathers-elasticsearch/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
-
         // Connect to the db, create and register a Feathers service.
         const messages = new Messages();
         const {Model, elasticsearch} = await messages.getModel();
-        app.use('/messages', service({
+        this.app.use(urlService, service({
             Model,
             elasticsearch,
             paginate: {
@@ -495,15 +469,11 @@ class Database extends Base {
         }));
 
         // Connect to the db, create and register a Feathers service.
-        app.use('/messages-query', messages);
-
-        // Restart the server
-        await this.restartServer(app);
-
+        this.app.use('messages-query', messages);
         // Process messages service
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
-            const messages = app.service('messages');
+            const messages = app.service(urlService);
             const queryMessages = app.service('messages-query');
 
             // If there are messages, then we do not create new ones
@@ -537,7 +507,7 @@ class Database extends Base {
             return {messages_1: messages_1.data, messages_2: messages_2.data, queryResult};
         }
 
-        return processMessages(app);
+        return processMessages(this.app);
     }
 
     /**
@@ -550,10 +520,8 @@ class Database extends Base {
         const filterMessagesHook = require('./hooks/feathers-rethinkdb/filter-messages.hook');
         const service = require('feathers-rethinkdb');
         const {model, table} = require('./models/rethinkdb.model');
+        const urlService = 'database/feathers-rethinkdb/messages';
         //------------------------------------------------
-        // Set rest transport
-        const app = this.setRestTransport();
-
         // Register the service
        const messages = service({
            Model: model,
@@ -563,40 +531,36 @@ class Database extends Base {
                max: 10
            }
        });
-        app.use('messages', messages);
+        this.app.use(urlService, messages);
 
         // Add hook for service
-        app.service('messages').hooks({
+        this.app.service(urlService).hooks({
             before: {
                 find: [correctTypeQueryHook({counter: 'int'})],
             }
         });
 
         // Connect to the db, create and register a Feathers service.
-        app.use('/distance-between-two-points', messages);
+        this.app.use('distance-between-two-points', messages);
         // Add hook for service
-        app.service('distance-between-two-points').hooks({
+        this.app.service('distance-between-two-points').hooks({
             before: {
                 find: [distanceBetweenTwoPointsHook],
             }
         });
 
         // Connect to the db, create and register a Feathers service.
-        app.use('/filter-messages', messages);
+        this.app.use('filter-messages', messages);
         // Add hook for service
-        app.service('filter-messages').hooks({
+        this.app.service('filter-messages').hooks({
             before: {
                 find: [filterMessagesHook],
             }
         });
-
-        // Restart the server
-        await this.restartServer(app);
-
         // Process messages service
         async function processMessages(app) {
             // Stores a reference to the messages service so we don't have to call it all the time
-            const messages = app.service('messages');
+            const messages = app.service(urlService);
             const distanceBetweenTwoPoints = app.service('distance-between-two-points');
             const filterMessages = app.service('filter-messages');
 
@@ -635,7 +599,7 @@ class Database extends Base {
             const findFilterMessages = await filterMessages.find();
             return {messages_1: messages_1.data, messages_2: messages_2.data, distance, count: findFilterMessages.data.length};
         }
-        return processMessages(app);
+        return processMessages(this.app);
     }
 }
 

@@ -11,15 +11,14 @@ require('./plugins/unhandled-rejection');
 /**
  * Get port from environment and store in Express.
  */
-const _port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000;
+const _port = process.env.PORT || 3000;
 const port = normalizePort(_port);
 app.set('port', port);
-// debug('PORT: ', process.env.PORT, ' OPENSHIFT_NODEJS_PORT: ', process.env.OPENSHIFT_NODEJS_PORT);
 
 /**
  * Get host from environment and store in Express.
  */
-const _host = process.env.BASE_URL || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+const _host = process.env.BASE_URL || '0.0.0.0';
 app.set('host', _host);
 
 /**
@@ -89,7 +88,6 @@ function onListening() {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     const address = server.address();
-    debug('Server.Address: ', address);
     debug('App is running at %s:%d in %s mode', app.get('host'), app.get('port'), app.get('env'));
     debug('Press CTRL-C to stop');
 }

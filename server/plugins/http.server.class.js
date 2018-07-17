@@ -188,20 +188,6 @@ class HttpBox {
         return HttpBox.mimeTypes[type]
     }
 
-    static makeUrl(path, app = {}) {
-        const get = typeof app.get === 'function' ? app.get.bind(app) : () => {
-        };
-        const env = get('env') || process.env.NODE_ENV;
-        const host = get('host') || process.env.HOST_NAME || 'localhost';
-        const protocol = (env === 'development' || env === 'test' || (env === undefined)) ? 'http' : 'https';
-        const PORT = get('port') || process.env.PORT || 3030;
-        const port = (env === 'development' || env === 'test' || (env === undefined)) ? `:${PORT}` : '';
-
-        path = path || '';
-
-        return `${protocol}://${host}${port}/${Utils.stripSlashes(path)}`;
-    };
-
     /**
      * Get method for axios
      * @param url String
@@ -383,6 +369,16 @@ class HttpBox {
     }
 
     /**
+     * getProtocol
+     *
+     * ex. // Host: "https://example.com:3000"
+     *     // => "https"
+     */
+    getProtocol() {
+        return this.request.protocol;
+    }
+
+    /**
      * getHost
      *
      * ex. // Host: "example.com:3000"
@@ -408,7 +404,28 @@ class HttpBox {
      *     // => "/users"
      */
     getPath() { //
-        return this.request.path;
+        return   this.request.path;
+    }
+
+    /**
+     * getPort
+     *
+     * ex. // https://example.com:3000/users?sort=desc
+     *     // => "3000"
+     */
+    getPort() { //
+        return this.request.app.get('port');
+    }
+
+    /**
+     * getHostAndPath
+     *
+     * ex. // https://example.com/service/users?sort=desc
+     *     // => "https://example.com/service/users"
+     */
+    getHostAndPath() {
+        const originalUrl = this.getOriginalUrl().split('?')[0];
+        return   `${this.getProtocol()}://${this.getHost()}:${this.getPort()}${originalUrl}`;
     }
 
     /**
@@ -427,7 +444,7 @@ class HttpBox {
      * ex. // GET /search?q=something
      *     // => "/search?q=something"
      */
-    getUrl() { //
+    getOriginalUrl() { //
         return this.request.originalUrl;
     }
 
