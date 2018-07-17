@@ -16,8 +16,10 @@ class Base {
      * @return {*}
      */
     setRestTransport() {
-        // const restURL = `${this.req.protocol}//${this.req.hostname}:${this.data.port}`;
-        const restURL = `${this.req.protocol}//${this.req.hostname}`;
+        let restURL = `${this.req.protocol}//${this.req.hostname}`;
+        if (process.env.NODE_ENV === 'development') {
+            restURL += `:${this.data.port}`;
+        }
         const feathers = require('@feathersjs/client');
         const axios = require('axios');
         //---------------------------------
