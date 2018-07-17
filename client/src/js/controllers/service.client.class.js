@@ -7,7 +7,8 @@ const debug = require('debug')('app:service.controller');
 class Service extends Base {
     constructor(client) {
         super(client);
-        this.urlHost = `${this.req.protocol}//${this.req.hostname}:${this.data.port}`;
+        // this.urlHost = `${this.req.protocol}//${this.req.hostname}:${this.data.port}`;
+        this.urlHost = `${this.req.protocol}//${this.req.hostname}`;
     }
 
     /**
