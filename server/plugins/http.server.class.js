@@ -2,6 +2,7 @@
 
 const axios = require('axios');
 const Utils = require('../../plugins/utils.class');
+const debug = require('debug')('app:HttpBox.plugin');
 
 /**
  * HttpBox - http functions
@@ -375,6 +376,7 @@ class HttpBox {
      *     // => "https"
      */
     getProtocol() {
+        debug('http.getProtocol: ', this.request.protocol);
         return this.request.protocol;
     }
 
