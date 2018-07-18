@@ -5,5 +5,8 @@ const cors = require('./cors');
 
 module.exports = function (app) {
     app.use(initApp);
-    // app.use(cors);
+
+    if (process.env.IS_CORS === 'true') {
+        app.use(cors);
+    }
 };
