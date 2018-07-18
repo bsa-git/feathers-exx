@@ -381,6 +381,17 @@ class HttpBox {
     }
 
     /**
+     * isHttps
+     *
+     * ex. // Host: "https://example.com:3000"
+     *     // => "true"
+     */
+    isHttps() {
+        debug('http.isHttps: ', this.request.secure);
+        return this.request.secure;
+    }
+
+    /**
      * getHost
      *
      * ex. // Host: "example.com:3000"
@@ -406,7 +417,7 @@ class HttpBox {
      *     // => "/users"
      */
     getPath() { //
-        return   this.request.path;
+        return this.request.path;
     }
 
     /**
@@ -427,7 +438,8 @@ class HttpBox {
      */
     getHostAndPath() {
         const originalUrl = this.getOriginalUrl().split('?')[0];
-        return   `${this.getProtocol()}://${this.getHost()}:${this.getPort()}${originalUrl}`;
+        const protocol = this.isHttps() ? 'https' : 'http';
+        return `${protocol}://${this.getHost()}:${this.getPort()}${originalUrl}`;
     }
 
     /**
