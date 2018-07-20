@@ -11,15 +11,15 @@ require('./plugins/unhandled-rejection');
 /**
  * Get port from environment and store in Express.
  */
-const _port = process.env.PORT || 3000;
-const port = normalizePort(_port);
-app.set('port', port);
+// const _port = process.env.PORT || 3000;
+// const port = normalizePort(_port);
+// app.set('port', port);
 
 /**
  * Get host from environment and store in Express.
  */
-const _host = process.env.BASE_URL || '0.0.0.0';
-app.set('host', _host);
+// const _host = process.env.BASE_URL || '0.0.0.0';
+// app.set('host', _host);
 
 /**
  * Create HTTP server.
@@ -29,7 +29,7 @@ const server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port);
+server.listen(app.get('port'));
 server.on('error', onError);
 server.on('listening', onListening);
 
