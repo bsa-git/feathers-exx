@@ -5,6 +5,9 @@ const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const socketio = require('@feathersjs/socketio');
+const compress = require('compression');
+const cors = require('cors');
+const helmet = require('helmet');
 
 module.exports = function (app) {
 
@@ -14,6 +17,10 @@ module.exports = function (app) {
 
     // your favicon in /public
     app.use(favicon(path.join(__dirname, '../../client/public/images', 'favicon.ico')));
+    // Enable CORS, security, compression, favicon and body parsing
+    app.use(cors());
+    app.use(helmet());
+    app.use(compress());
     // app.use(logger('dev'));
     // Turn on JSON body parsing for REST services
     app.use(express.json());
@@ -21,11 +28,6 @@ module.exports = function (app) {
     app.use(express.urlencoded({extended: true}));
     // Set up REST transport using Express
     app.configure(express.rest());
-    // Set up an error handler that gives us nicer errors
-    // app.use(express.errorHandler());
-    if (process.env.NODE_ENV === 'development') {
-        app.use(express.errorHandler());
-    }
     // Configure the Socket.io transport
     app.configure(socketio());
     // On any real-time connection, add it to the 'everybody' channel
@@ -34,5 +36,9 @@ module.exports = function (app) {
     app.publish(() => app.channel('everybody'));
 
     app.use(express.static(path.join(__dirname, '../../client/public')));
+
+    // Configure a middleware for 404s and the error handler
+    // app.use(express.notFound());
+    app.use(express.errorHandler({logger}));
 
 };

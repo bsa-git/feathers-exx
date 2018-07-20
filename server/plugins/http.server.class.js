@@ -376,7 +376,6 @@ class HttpBox {
      *     // => "https"
      */
     getProtocol() {
-        debug('http.getProtocol: ', this.request.protocol);
         return this.request.protocol;
     }
 
@@ -387,7 +386,6 @@ class HttpBox {
      *     // => "true"
      */
     isHttps() {
-        debug('http.isHttps: ', this.request.secure);
         return this.request.secure;
     }
 

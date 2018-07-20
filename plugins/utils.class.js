@@ -18,16 +18,16 @@ class Utils {
         //-------------------------
         dataList = str.split('\n');
         dataList = array.compact(dataList);
-        if(dataList.length > 0){
+        if (dataList.length > 0) {
             keys = dataList[0].split(re);
-            if(dataList.length === 1){
+            if (dataList.length === 1) {
                 for (let i = 0; i < keys.length; i++) {
                     objData[keys[i]] = null;
                 }
                 resultData.push(objData);
-            }else {
+            } else {
                 const valuesList = array.tail(dataList);
-                collection.forEach(valuesList, function(value) {
+                collection.forEach(valuesList, function (value) {
                     objData = {};
                     values = value.split(re);
                     for (let i = 0; i < keys.length; i++) {
@@ -45,8 +45,8 @@ class Utils {
      * @param sec
      * @return {Promise}
      */
-    static delayTime(sec){
-        return new Promise(function(resolve, reject) {
+    static delayTime(sec) {
+        return new Promise(function (resolve, reject) {
             setTimeout(() => resolve("done!"), sec * 1000);
         });
     }
@@ -58,6 +58,37 @@ class Utils {
      */
     static stripSlashes(name) {
         return name.replace(/^(\/*)|(\/*)$/g, '');
+    }
+
+    /**
+     * Parse bool
+     * @param b String|Any
+     * @return boolean
+     */
+    static parseBool(b) {
+        return !(/^(false|0)$/i).test(b) && !!b;
+    }
+
+    /**
+     * Is true
+     * @param value String|Any
+     * @return boolean
+     */
+    static isTrue(value) {
+        if (typeof(value) === 'string') {
+            value = value.trim().toLowerCase();
+        }
+        switch (value) {
+            case true:
+            case "true":
+            case 1:
+            case "1":
+            case "on":
+            case "yes":
+                return true;
+            default:
+                return false;
+        }
     }
 }
 
