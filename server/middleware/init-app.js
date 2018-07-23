@@ -3,29 +3,24 @@
 module.exports = function (req, res, next) {
 
     const Base = require('../controllers/base.server.class');
-    const config = require('../../config/app.config');
-    const debug = require('debug')('app:middleware.init');
 
     // Get controller/action
     Object.assign(req, Base.getControllerAction(req.path));
 
     // Check maintenance mode
-    if (config.maintenance && req.action !== 'maintenance') {
+    if ( req.app.get('maintenance') && req.action !== 'maintenance') {
         return res.redirect('/maintenance')
     }
-
-    // Set config in req
-    // req.config = config;
 
     // Set values for view
     res.locals.port = req.app.get('port');
     res.locals.req = req;
-    res.locals.controllers = config.controllers;
-    res.locals.actions = config.actions;
-    res.locals.color_theme = config.color_theme;
-    res.locals.logo_img = process.env.PERSONAL_LOGO_IMAGE;
-    res.locals.contact_website = process.env.PERSONAL_WEBSITE;
-    res.locals.copyright = process.env.PERSONAL_COPYRIGHT;
+    res.locals.controllers = req.app.get('controllers');
+    res.locals.actions = req.app.get('actions');
+    res.locals.color_theme = req.app.get('color_theme');
+    res.locals.logo_img = req.app.get('personal')['logo_image'];
+    res.locals.contact_website = req.app.get('personal')['website'];
+    res.locals.copyright = req.app.get('personal')['copyright'];
 
     // Check .env
     if(req.app.get('env') === 'development'){

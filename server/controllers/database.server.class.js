@@ -70,7 +70,7 @@ class Database extends Base {
         const correctTypeQueryHook = require('./hooks/correct-type-query');
         const countMessagesHook = require('./hooks/feathers-nedb/count-messages.hook');
         const service = require('feathers-nedb');
-        const model = require('./models/nedb.model');
+        const model = require('./models/nedb.model')(this.app);
         const urlService = 'database/feathers-nedb/messages';
         //------------------------------------------------
         // Connect to the db, create and register a Feathers service.
@@ -145,7 +145,7 @@ class Database extends Base {
         const appHooks = require('./hooks/feathers-knex/app.hooks');
         const sumCounterHook = require('./hooks/feathers-knex/sum-counter.hook');
         const service = require('feathers-knex');
-        const model = require('./models/knex.model');
+        const model = require('./models/knex.model')(this.app);
         const urlService = 'database/feathers-knex/messages';
         //------------------------------------------------
         // Create 'messages' service
@@ -221,7 +221,7 @@ class Database extends Base {
     async feathersSequelize() {
         const sumCounterHook = require('./hooks/feathers-sequelize/sum-counter.hook');
         const service = require('feathers-sequelize');
-        const {model, sequelize} = require('./models/sequelize.model');
+        const {model, sequelize} = require('./models/sequelize.model')(this.app);
         const urlService = 'database/feathers-sequelize/messages';
         //------------------------------------------------
         // Save sequelize as 'sequelizeClient'
@@ -289,21 +289,16 @@ class Database extends Base {
     async feathersMongoose() {
         const serviceHooks = require('./hooks/feathers-mongoose/service.hooks');
         const countMessagesHook = require('./hooks/feathers-mongoose/count-messages.hook');
-        const mongoose = require('mongoose');
+        // const mongoose = require('mongoose');
         const service = require('feathers-mongoose');
-        const Model = require('./models/mongoose.model');
-        const config = require('../../config/db');
+        const Model = require('./models/mongoose.model').Model;
+        const dbConnect = require('./models/mongoose.model').connect;
         const urlService = 'database/feathers-mongoose/messages';
         //------------------------------------------------
-        mongoose.Promise = global.Promise;
-
         // Connect to your MongoDB instance(s)
-        const options = {
-            useNewUrlParser: true
-        };
-        mongoose.connect(config.mongoose.connection_string, options);
+        await dbConnect(this.app);
 
-        // Connect to the db, create and register a Feathers service.
+        // Create and register a Feathers service.
         this.app.use(urlService, service({
             Model,
             lean: true, // set to false if you want Mongoose documents returned
@@ -378,7 +373,7 @@ class Database extends Base {
         const urlService = 'database/feathers-mongodb/messages';
         //------------------------------------------------
         // Connect to the db, create and register a Feathers service.
-        const Model = await getModel();
+        const Model = await getModel(this.app);
         this.app.use(urlService, service({
             Model,
             paginate: {
@@ -457,7 +452,7 @@ class Database extends Base {
         const urlService = 'database/feathers-elasticsearch/messages';
         //------------------------------------------------
         // Connect to the db, create and register a Feathers service.
-        const messages = new Messages();
+        const messages = new Messages(this.app);
         const {Model, elasticsearch} = await messages.getModel();
         this.app.use(urlService, service({
             Model,
@@ -519,7 +514,7 @@ class Database extends Base {
         const distanceBetweenTwoPointsHook = require('./hooks/feathers-rethinkdb/distance-between-two-points.hook');
         const filterMessagesHook = require('./hooks/feathers-rethinkdb/filter-messages.hook');
         const service = require('feathers-rethinkdb');
-        const {model, table} = require('./models/rethinkdb.model');
+        const {model, table} = require('./models/rethinkdb.model')(this.app);
         const urlService = 'database/feathers-rethinkdb/messages';
         //------------------------------------------------
         // Register the service

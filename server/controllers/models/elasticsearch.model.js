@@ -1,8 +1,6 @@
 "use strict";
 
 const HttpBox = require('../../plugins/http.server.class');
-const config = require('../../../config/db');
-const es_config = config.elasticsearch;
 const collection = require('lodash/collection');
 const Utils = require('../../../plugins/utils.class');
 const elasticsearch = require('elasticsearch');
@@ -12,7 +10,8 @@ const debug = require('debug')('app:elasticsearch.model');
 
 class Messages {
 
-    constructor() {
+    constructor(app) {
+        this.config = app.get('database')['elasticsearch'];
         this.http = new HttpBox();
     }
 
@@ -35,27 +34,28 @@ class Messages {
      * @return {Promise.<{Model: *, elasticsearch: {index: (*|string), type: (*|string)}}>}
      */
     async getModel() {
+        const self = this;
         let responseData, arrData;
         //--------------------------
         // Get index information
         responseData = await this._getIndices();
         arrData = Utils.strToObjectList(responseData);
         // If the index is not created, then create it
-        if (collection.find(arrData, ['index', es_config.index]) === undefined) {
+        if (collection.find(arrData, ['index', self.config.index]) === undefined) {
             responseData = await this._createIndex();
             debug('Response Data: ', responseData);
-            console.log('Created index: ', es_config.index);
+            console.log('Created index: ', self.config.index);
             // Delay time 1 sec
             await Utils.delayTime(1);
         }
         const Model = new elasticsearch.Client({
-            host: es_config.connection_string,
+            host: self.config.connection_string,
             apiVersion: '6.2'
         });
         return {
             Model, elasticsearch: {
-                index: es_config.index,
-                type: es_config.type
+                index: self.config.index,
+                type: self.config.type
             }
         }
     };
@@ -66,7 +66,7 @@ class Messages {
      * @return {Promise.<void>}
      */
     async _getIndices() {
-        return await this.http.get(`${es_config.connection_string}/_cat/indices?v`);
+        return await this.http.get(`${this.config.connection_string}/_cat/indices?v`);
     };
 
     /**
@@ -75,7 +75,7 @@ class Messages {
      * @return {Promise.<void>}
      */
     async _createIndex() {
-        return await this.http.put(`${es_config.connection_string}/${es_config.index}?pretty`);
+        return await this.http.put(`${this.config.connection_string}/${this.config.index}?pretty`);
     };
 
     /**
@@ -84,7 +84,7 @@ class Messages {
      * @return {Promise.<void>}
      */
     async _httpPost(query) {
-        return await this.http.post(`${es_config.connection_string}/${es_config.index}/${es_config.type}/_search`, query);
+        return await this.http.post(`${this.config.connection_string}/${this.config.index}/${this.config.type}/_search`, query);
     };
 
     /**

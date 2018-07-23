@@ -1,6 +1,5 @@
 "use strict";
 
-// const express = require('express');
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const configuration = require('@feathersjs/configuration');

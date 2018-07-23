@@ -8,4 +8,14 @@ const MessageSchema = new Schema({
 });
 const Model = mongoose.model('Message', MessageSchema);
 
-module.exports = Model;
+module.exports.Model = Model;
+module.exports.connect = async (app) => {
+    mongoose.Promise = global.Promise;
+    const config = app.get('database')['mongoose'];
+
+    const options = {
+        useNewUrlParser: true
+    };
+    // Connect to your MongoDB instance(s)
+    await mongoose.connect(config.connection_string, options);
+};
