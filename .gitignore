@@ -31,7 +31,11 @@ package-lock.json
 client/public/js/*
 
 # data
-server/data/*
+server/data/log/*
+server/data/db/elasticsearch/*
+server/data/db/mongodb/*
+server/data/db/nedb/*
+server/data/db/rethinkdb/*
 
 # Configuration file
 .idea
