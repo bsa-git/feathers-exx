@@ -1,4 +1,4 @@
-// server/boot/error-handler.js
+'use strict';
 
 
 module.exports = function (app) {

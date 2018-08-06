@@ -1,4 +1,4 @@
-// server/routes/index.js
+'use strict';
 
 // Require routers
 const index = require('./index.router');

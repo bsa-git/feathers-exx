@@ -9,6 +9,7 @@ class Bulma {
             idMsgBox: 'message-box',
             idMsgError: 'message-error',
             queryNavbarBurgers: '.navbar-burger',
+            idMsgBoxDelete: 'msgbox-delete'
         };
         Object.assign(this.opts, options);
     }
@@ -96,6 +97,7 @@ class Bulma {
                 $msg.classList.toggle('is-hidden');
             }
             this.initMessage(this.opts.idMsgBox);
+            this.getFocus(this.opts.idMsgBoxDelete);
         }
     }
 
@@ -117,6 +119,7 @@ class Bulma {
                 $msg.classList.toggle('is-hidden');
             }
             this.initMessage(this.opts.idMsgBox);
+            this.getFocus(this.opts.idMsgBoxDelete);
         }
     }
 
@@ -166,6 +169,10 @@ class Bulma {
                 }
             }
         }
+    }
+
+    getFocus(id) {
+        document.getElementById(id).focus({preventScroll:false});
     }
 }
 

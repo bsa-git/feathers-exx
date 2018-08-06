@@ -1,13 +1,13 @@
 "use strict";
 
-// import AuthRouter from './auth.router.class'
+import AuthRouter from './auth.router.class'
 import ServiceRouter from './service.router.class'
 import DatabaseRouter from './database.router.class'
 
 export default async function (client) {
     const serviceRouter = new ServiceRouter(client);
     const databaseRouter = new DatabaseRouter(client);
-    // const authRouter = new AuthRouter(client);
+    const authRouter = new AuthRouter(client);
     switch (`${client.req.controller}/${client.req.action}`) {
         case 'service/start-client':
             return await serviceRouter.routeServiceStartClient('dishes');
@@ -47,6 +47,9 @@ export default async function (client) {
             break;
         case 'database/feathers-rethinkdb':
             return await databaseRouter.routeRethinkDB();
+            break;
+        case 'auth/chat':
+            return await authRouter.routeAuthChat();
             break;
         default:
             return `Path controller/action:  '${client.req.controller}/${client.req.action}'`

@@ -1,3 +1,5 @@
+'use strict';
+
 const { BadRequest } = require('@feathersjs/errors');
 
 const validate = async context => {

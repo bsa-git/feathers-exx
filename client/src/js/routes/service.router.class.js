@@ -15,8 +15,7 @@ class ServiceRouter {
      */
     async routeServiceStartClient(name) {
         const result = await this.service.startClient(name);
-        const msgBox = {type: 'info', text: result};
-        this.client.bulma.showMessage({msgBox: msgBox});
+        this.client.bulma.showMessage({type: 'info', text: result});
         return 'ok';
     }
 

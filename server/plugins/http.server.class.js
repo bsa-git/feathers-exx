@@ -1,7 +1,6 @@
 "use strict";
 
 const axios = require('axios');
-const Utils = require('../../plugins/utils.class');
 const debug = require('debug')('app:HttpBox.plugin');
 
 /**

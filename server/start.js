@@ -3,20 +3,25 @@
 /**
  * Module dependencies.
  */
+const debug = require('debug')('app:start');
 const app = require('./app.server');
-const debug = require('debug')('app:server');
-const http = require('http');
-require('./plugins/unhandled-rejection');
 
 /**
  * Create HTTP server.
  */
-const server = http.createServer(app);
+const port = app.get('port');
+const server = app.listen(port);
+
+/**
+ * Unhandled Rejection for Promise
+  */
+process.on('unhandledRejection', (reason, p) =>
+    logger.error('Unhandled Rejection at: Promise ', p, reason)
+);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(app.get('port'));
 server.on('listening', onListening);
 
 /**

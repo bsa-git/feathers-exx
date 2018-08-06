@@ -6,7 +6,6 @@ class Base {
     constructor(client) {
         this.client = client ? client : {};
         this.bulma = this.client.bulma;
-        // this.config = this.client.config;
         this.req = this.client.req;
         this.data = this.client.data;
     }
@@ -20,7 +19,7 @@ class Base {
         if (process.env.NODE_ENV === 'development') {
             restURL += `:${this.data.port}`;
         }
-        const feathers = require('@feathersjs/client');
+        const feathers = require('@feathersjs/client/index');
         const axios = require('axios');
         //---------------------------------
         // Create app
@@ -29,6 +28,13 @@ class Base {
         const restClient = feathers.rest(restURL);
         // Configure an AJAX library (see below) with that client
         app.configure(restClient.axios(axios));
+
+        const authentication = require('@feathersjs/client/authentication');
+        app.configure(authentication({
+            storage: window.localStorage
+        }));
+
+
         return app
     }
 

@@ -1,0 +1,57 @@
+<div class="chat">
+    <div class="tile is-ancestor">
+        <div class="tile is-vertical is-parent is-4">
+            <div class="tile is-child">
+                <article class="tile is-child content">
+                    <p class="title">Count</p>
+                    <p class="subtitle"><span class="online-count"></span> Users</p>
+                </article>
+            </div>
+            <div class="tile is-child">
+                <article class="message">
+                    <div class="message-body">
+                        Select the user who should receive the message. <strong>By default</strong>, all users are selected.
+                    </div>
+                </article>
+                <article class="tile is-child ">
+                    <nav class="panel">
+                        <p class="panel-heading">
+                            <label class="checkbox">
+                                <input id="allUsers" type="checkbox" name="allUsers" value="selected">
+                                Users
+                            </label>
+                        </p>
+                        {# Insert users #}
+                        <div class="user-list"></div>
+                        {# User LogOut #}
+                        <div class="panel-block">
+                            <button id="logout" class="button is-info is-fullwidth">
+                                Sign Out
+                            </button>
+                        </div>
+                    </nav>
+                </article>
+            </div>
+        </div>
+        <div class="tile is-parent">
+            <article class="tile is-child ">
+                {# Insert messages #}
+                <div class="box message-list"></div>
+                <div class="box">
+                    <form id="send-message">
+                        <div class="field">
+                            <div class="control">
+                                <textarea class="textarea is-info" type="text" placeholder="User Message"></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-info is-fullwidth" type="submit">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>

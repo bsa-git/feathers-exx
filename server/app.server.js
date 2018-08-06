@@ -8,18 +8,13 @@ const debug = require('debug')('app:app');
 
 // Load environment variables
 dotenv.load();
-// Load configuration variables
-const conf = configuration();
 
 // Create APP
 const app = express(feathers());
-app.configure(conf);
+app.configure(configuration());
 
 // Boot
 require('./boot/index')(app);
-
-// Middleware
-require('./middleware/index')(app);
 
 // Routing
 require('./routes/index')(app);

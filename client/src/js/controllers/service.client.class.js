@@ -253,7 +253,7 @@ class Service extends Base {
     }
 
     /**
-     * REST Client - feathers application
+     * REAL Time - feathers application
      * @return Promise
      */
     realTime() {

@@ -1,7 +1,7 @@
 <article class="message is-danger">
     <div class="message-header">
         <p>{% if error.name %}{{ error.name }}{% else %}Error{% endif %}</p>
-        <button class="delete" aria-label="delete"></button>
+        <button id="msgbox-delete" class="delete" aria-label="delete"></button>
     </div>
     <div class="message-body content">
         <div class="has-text-centered">

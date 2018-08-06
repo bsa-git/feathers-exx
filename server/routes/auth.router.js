@@ -17,6 +17,17 @@ router.get('/about', function (req, res, next) {
     debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
 });
 
+router.get('/chat', function (req, res, next) {
+    const context = {
+        title: 'Chat Application',
+        req: req
+    };
+    debug('Router.get: ', req.originalUrl);
+    // View render
+    res.render('tmpls/auth/chat/index.html.twig', context);
+    debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+});
+
 router.get('/server', function (req, res, next) {
     const context = {
         title: 'Server Authentication',
@@ -25,6 +36,17 @@ router.get('/server', function (req, res, next) {
     debug('Router.get: ', req.originalUrl);
     // View render
     res.render('tmpls/auth/server/index.html.twig', context);
+    debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
+});
+
+router.get('/client', function (req, res, next) {
+    const context = {
+        title: 'Client Authentication',
+        req: req
+    };
+    debug('Router.get: ', req.originalUrl);
+    // View render
+    res.render('tmpls/auth/client/index.html.twig', context);
     debug(`Result: "OK"; Controller: "${req.controller}"; Action: "${req.action}";`);
 });
 

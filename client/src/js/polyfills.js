@@ -1,3 +1,5 @@
+'use strict';
+
 const debug = require('debug')('app:polyfills');
 
 if(!('assign' in Object)){

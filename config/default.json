@@ -34,11 +34,10 @@
     },
     "local": {
       "entity": "user",
-      "usernameField": "email",
+      "usernameField": "\\email",
       "passwordField": "password"
     }
   },
-  "nedb": "../server/data/db/nedb",
   "controllers": [
     {
       "icon": "fa-cog",
@@ -109,6 +108,11 @@
         "name": "about",
         "url": "/auth/about",
         "value": "About"
+      },
+      {
+        "name": "chat",
+        "url": "/auth/chat",
+        "value": "Chat"
       },
       {
         "name": "server",
@@ -197,8 +201,18 @@
   "database": {
     "db_current": "DB_CURRENT",
     "nedb": {
-      "filename": "../server/data/db/nedb/messages.db",
-      "autoload": true
+      "messages":{
+        "filename": "../server/data/db/nedb/messages.db",
+        "autoload": true
+      },
+      "users":{
+        "filename": "../server/data/db/nedb/users.db",
+        "autoload": true
+      },
+      "posts":{
+        "filename": "../server/data/db/nedb/posts.db",
+        "autoload": true
+      }
     },
     "mongoose": {
       "connection_string": "DB_MONGOOSE_URI"

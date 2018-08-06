@@ -7,6 +7,9 @@ $OpenSansFont: unquote("Open Sans");
 $ExoticFont: unquote("Playball");
 @import url("https://fonts.googleapis.com/css?family=#{$ExoticFont}");
 
+//--- Import the login.css ---//
+//@import "./chat/login.css";
+
 //--- Import the initial variables ---//
 @import "../../../node_modules/bulma/sass/utilities/initial-variables";
 @import "../../../node_modules/bulma/sass/utilities/functions";
@@ -37,6 +40,66 @@ $body-background-color: $white-ter;
     font-family: $ExoticFont, sans-serif;
   }
 }
+
+//--- Chat style ---//
+@mixin chat-style {
+  // Login
+  .login .hero.is-success {
+    background: #F2F6FA !important;
+  }
+  .login .hero .nav, .login .hero.is-success .nav {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .login .box {
+    margin-top: 5rem;
+  }
+  .login .avatar {
+    margin-top: -70px;
+    padding-bottom: 20px;
+  }
+  .login .avatar img {
+    padding: 5px;
+    background: #fff;
+    border-radius: 50%;
+    -webkit-box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+    box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+  }
+  .login input {
+    font-weight: 300;
+  }
+  .login p {
+    font-weight: 700;
+  }
+  .login p.subtitle {
+    padding-top: 1rem;
+  }
+  // Chat
+  .chat .panel-heading {
+    margin-bottom: 0px !important;
+  }
+  .user-list .content figure {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
+  .chat .avatar img {
+     padding: 5px;
+     border-radius: 50%;
+     -webkit-box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+     box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+   }
+
+  .user-list .media-content {
+    overflow: inherit;
+  }
+
+  .user-list .panel-block.is-active {
+    border-left-width: 3px;
+  }
+
+}
+
 
 //--- Common style ---//
 @mixin common-style {
@@ -70,7 +133,9 @@ $body-background-color: $white-ter;
 
   // SideBar left menu
   #sidebar-content .menu-list a.is-active {
-    background-color: $primary;
+    //background-color: $primary;
+
+    //background-color: $link;
   }
   aside.menu .menu-list {
     line-height: 1.5;
@@ -111,7 +176,9 @@ $body-background-color: $white-ter;
 
 //--- Default theme ---//
 @mixin default-theme {
-
+  #sidebar-content .menu-label strong {
+    color: #363636 !important;
+  }
 }
 
 //--- Cerulean theme ---//
@@ -135,11 +202,6 @@ $body-background-color: $white-ter;
 
   #navMenu.is-active {
     background-image: linear-gradient(#258dc8 0%,#258dc8 100%);
-  }
-
-  // SideBar left menu
-  #sidebar-content .menu-list a.is-active {
-    background-color: $link;
   }
 
   #sidebar-content .menu-label strong {

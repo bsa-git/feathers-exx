@@ -1,0 +1,17 @@
+<a id="{{ _id }}" class="panel-block  {% if isActive %}is-active{% endif %}">
+    <label class="checkbox">
+        <input type="checkbox" name="{% if isActive %}chatActiveUser{% else %}chatUser{% endif %}" value="{{ _id }}"  {% if isActive %}disabled checked{% endif %} >
+        <article class="media content">
+            <div class="media-left">
+                <figure class="image is-48x48 avatar">
+                    <img src="{{ avatar }}" alt="Image">
+                </figure>
+            </div>
+            <div class="media-content">
+                <div class="content">
+                    <p><strong>{{ email }}</strong></p>
+                </div>
+            </div>
+        </article>
+    </label>
+</a>

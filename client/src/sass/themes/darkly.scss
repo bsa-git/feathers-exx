@@ -6,13 +6,16 @@
 // Exotic font
 @include exotic-font;
 
+// Chat style
+@include chat-style;
+
 // Common style
 @include common-style;
 
 // Darkly theme
 @include darkly-theme;
 
-// Highlight.js style
+// Import Highlight.js style
 @import "../highlight/xcode.css";
 
 //--- Import the initial theme variables ---//
