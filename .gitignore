@@ -31,11 +31,7 @@ package-lock.json
 client/public/js/*
 
 # data
-server/data/log/*
-server/data/db/mongodb/*
-server/data/db/elasticsearch/*
-server/data/db/rethinkdb/*
-${ES_TMPDIR}
+server/data/*
 
 # Configuration file
 .idea
