@@ -132,11 +132,6 @@ $body-background-color: $white-ter;
   }
 
   // SideBar left menu
-  #sidebar-content .menu-list a.is-active {
-    //background-color: $primary;
-
-    //background-color: $link;
-  }
   aside.menu .menu-list {
     line-height: 1.5;
   }
@@ -157,6 +152,11 @@ $body-background-color: $white-ter;
     //background-color: inherit !important;
     border-radius: $radius;
     margin: 2px;
+  }
+
+  .error-list{
+    list-style: none !important;
+    color: #4a4a4a;
   }
 
   // Footer

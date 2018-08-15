@@ -51,6 +51,12 @@ export default async function (client) {
         case 'auth/chat':
             return await authRouter.routeAuthChat();
             break;
+        case 'auth/server':
+            return await authRouter.routeAuthServer();
+            break;
+        case 'auth/client':
+            return await authRouter.routeAuthClient();
+            break;
         default:
             return `Path controller/action:  '${client.req.controller}/${client.req.action}'`
     }

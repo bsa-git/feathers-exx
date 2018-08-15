@@ -90,6 +90,35 @@ class Utils {
                 return false;
         }
     }
+
+    // Pass a jwt token, get back a payload if it's valid.
+    /**
+     * verifyJWT
+     * @param token
+     * @return {Promise.<void>}
+     */
+    static verifyJWT (token) {
+        const decode = require('jwt-decode');
+        const payloadIsValid = function payloadIsValid (payload) {
+            return payload && (!payload.exp || payload.exp * 1000 > new Date().getTime());
+        };
+
+        if (typeof token !== 'string') {
+            return Promise.reject(new Error('Token provided to verifyJWT is missing or not a string'));
+        }
+
+        try {
+            let payload = decode(token);
+
+            if (payloadIsValid(payload)) {
+                return Promise.resolve(payload);
+            }
+
+            return Promise.reject(new Error('Invalid token: expired'));
+        } catch (error) {
+            return Promise.reject(new Error('Cannot decode malformed token.'));
+        }
+    }
 }
 
 module.exports = Utils;

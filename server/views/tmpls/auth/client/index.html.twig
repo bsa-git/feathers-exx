@@ -1,5 +1,257 @@
 {% extends 'layouts/sidebar.html.twig' %}
 
 {% block sidebar_content %}
+    <section class="normal markdown-section">
+        <h1 id="authentication-client">Authentication Client<a class="anchorjs-link " href="#authentication-client"
+                                                               aria-label="Anchor link for: authentication client"
+                                                               data-anchorjs-icon="#"
+                                                               style="padding-left: 0.375em;"></a></h1>
+        <pre><code>npm install @feathersjs/authentication-client --save
+</code></pre>
+        <p>The <a href="https://github.com/feathersjs/authentication-client" target="_blank">@feathersjs/authentication-client</a>
+            module allows you to easily authenticate against a Feathers server. It is not required, but makes it easier
+            to implement authentication in your client by automatically storing and sending the JWT access token and
+            handling re-authenticating when a websocket disconnects.</p>
+        <p>This module contains:</p>
+        <ul>
+            <li><a href="#configuration">The main entry function</a></li>
+            <li><a href="#additional-feathersclient-methods">Additional feathersClient methods</a></li>
+            <li><a href="#hooks">Some helpful hooks</a></li>
+        </ul>
+        <h2 id="appconfigureauthoptions">app.configure(auth(options))<a class="anchorjs-link "
+                                                                        href="#appconfigureauthoptions"
+                                                                        aria-label="Anchor link for: appconfigureauthoptions"
+                                                                        data-anchorjs-icon="#"
+                                                                        style="padding-left: 0.375em;"></a></h2>
+        <p>Setup is done the same as all Feathers plugins, using the <code>configure</code> method:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> socketio = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/socketio-client'</span>);
+<span class="hljs-keyword">const</span> io = <span class="hljs-built_in">require</span>(<span class="hljs-string">'socket.io-client'</span>);
+<span class="hljs-keyword">const</span> auth = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-client'</span>);
 
+<span class="hljs-keyword">const</span> socket = io(<span class="hljs-string">'http://api.feathersjs.com'</span>);
+<span class="hljs-keyword">const</span> app = feathers();
+
+<span class="hljs-comment">// Setup the transport (Rest, Socket, etc.) here</span>
+app.configure(socketio(socket));
+
+<span class="hljs-comment">// Available options are listed in the "Options" section</span>
+app.configure(auth(options))
+</code></pre>
+        <p><strong>&gt; The <a href="https://docs.feathersjs.com/api/client.html">transports plugins</a> (Rest, Socket, Primus...) must have been
+                initialized previously to the authentication plugin.</strong></p>
+        <h2 id="options">Options<a class="anchorjs-link " href="#options" aria-label="Anchor link for: options"
+                                   data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>The following default options will be mixed in with the settings you pass in when configuring authentication.
+            It will set the mixed options back to to the app so that they are available at any time by <code>app.get('auth')</code>.
+            They can all be overridden.</p>
+        <pre><code class="lang-js">{
+  header: <span class="hljs-string">'Authorization'</span>, <span class="hljs-comment">// the default authorization header for REST</span>
+  prefix: <span class="hljs-string">''</span>, <span class="hljs-comment">// if set will add a prefix to the header value. for example if prefix was 'JWT' then the header would be 'Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOi...'</span>
+  path: <span class="hljs-string">'/authentication'</span>, <span class="hljs-comment">// the server-side authentication service path</span>
+  jwtStrategy: <span class="hljs-string">'jwt'</span>, <span class="hljs-comment">// the name of the JWT authentication strategy </span>
+  entity: <span class="hljs-string">'user'</span>, <span class="hljs-comment">// the entity you are authenticating (ie. a users)</span>
+  service: <span class="hljs-string">'users'</span>, <span
+                        class="hljs-comment">// the service to look up the entity</span>
+  cookie: <span class="hljs-string">'feathers-jwt'</span>, <span class="hljs-comment">// the name of the cookie to parse the JWT from when cookies are enabled server side</span>
+  storageKey: <span class="hljs-string">'feathers-jwt'</span>, <span class="hljs-comment">// the key to store the accessToken in localstorage or AsyncStorage on React Native</span>
+  storage: <span class="hljs-literal">undefined</span> <span class="hljs-comment">// Passing a WebStorage-compatible object to enable automatic storage on the client.</span>
+}
+</code></pre>
+        <p>To enable storing the JWT make sure to provide a <code>storage</code> when configuring the plugin. The
+            following storage options are available:</p>
+        <ul>
+            <li><code>window.localStorage</code> in the browser to use the browsers <a
+                        href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage" target="_blank">localStorage</a>
+            </li>
+            <li><a href="https://facebook.github.io/react-native/docs/asyncstorage.html"
+                   target="_blank">AsyncStorage</a> for <em>React Native</em></li>
+            <li><a href="https://www.npmjs.com/package/localforage" target="_blank">localForage</a> which helps deal
+                with older browsers and browsers in Incognito / Private Browsing mode.
+            </li>
+            <li><a href="https://www.npmjs.com/package/cookie-storage" target="_blank">cookie-storage</a> uses cookies.
+                It can be useful on devices that don't support <code>localStorage</code>.
+            </li>
+        </ul>
+        <h2 id="appauthenticate">app.authenticate()<a class="anchorjs-link " href="#appauthenticate"
+                                                      aria-label="Anchor link for: appauthenticate"
+                                                      data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p><code>app.authenticate() -&gt; Promise</code> with no arguments will try to authenticate using the JWT from
+            the <code>storage</code>. This is normally called to either show your application (when successful) or
+            showing a login page or redirecting to the appropriate oAuth link.</p>
+        <pre><code class="lang-js">app.authenticate().then(() =&gt; {
+  <span class="hljs-comment">// show application page</span>
+}).catch(() =&gt; {
+  <span class="hljs-comment">// show login page</span>
+})
+</code></pre>
+        <blockquote>
+            <p><strong>Important:</strong> <code>app.authenticate()</code> <strong>has</strong> to be called when you
+                want to use the token from storage and <strong>only once</strong> when the application initializes. Once
+                successful, all subsequent requests will send their authentication information automatically.</p>
+        </blockquote>
+        <h2 id="appauthenticateoptions">app.authenticate(options)<a class="anchorjs-link "
+                                                                    href="#appauthenticateoptions"
+                                                                    aria-label="Anchor link for: appauthenticateoptions"
+                                                                    data-anchorjs-icon="#"
+                                                                    style="padding-left: 0.375em;"></a></h2>
+        <p><code>app.authenticate(options) -&gt; Promise</code> will try to authenticate with a Feathers server by
+            passing a <code>strategy</code> and other properties as credentials. It will use whichever transport has
+            been setup on the client (@feathersjs/rest-client, @feathersjs/socketio-client, or
+            @feathersjs/primus-client).</p>
+        <pre><code class="lang-js"><span
+                        class="hljs-comment">// Authenticate with the local email/password strategy </span>
+app.authenticate({
+  strategy: <span class="hljs-string">'local'</span>,
+  email: <span class="hljs-string">'my@email.com'</span>,
+  password: <span class="hljs-string">'my-password'</span>
+}).then(() =&gt; {
+  <span class="hljs-comment">// Logged in</span>
+}).catch(e =&gt; {
+  <span class="hljs-comment">// Show login page (potentially with `e.message`)</span>
+  <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Authentication error'</span>, e);
+});
+
+app.authenticate({
+  strategy: <span class="hljs-string">'jwt'</span>,
+  accessToken: <span class="hljs-string">'&lt;the.jwt.token.string&gt;'</span>
+}).then(() =&gt; {
+  <span class="hljs-comment">// JWT authentication successful</span>
+}).catch(e =&gt; {
+  <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Authentication error'</span>, e);
+  <span class="hljs-comment">// Show login page</span>
+});
+</code></pre>
+        <ul>
+            <li><code>data {Object}</code> - of the format <code>{strategy [, ...otherProps]}</code>
+                <ul>
+                    <li><code>strategy {String}</code> - the name of the strategy to be used to authenticate. Required.
+                    </li>
+                    <li><code>...otherProps {Properties}</code> vary depending on the chosen strategy. Above is an
+                        example of using the <code>jwt</code> strategy. Below is one for the <code>local</code>
+                        strategy.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="applogout">app.logout()<a class="anchorjs-link " href="#applogout"
+                                          aria-label="Anchor link for: applogout" data-anchorjs-icon="#"
+                                          style="padding-left: 0.375em;"></a></h2>
+        <p>Removes the JWT accessToken from storage on the client. It also calls the <code>remove</code> method of the
+            <a href="server.html">/authentication service</a> on the Feathers server.</p>
+        <h2 id="apppassport">app.passport<a class="anchorjs-link " href="#apppassport"
+                                            aria-label="Anchor link for: apppassport" data-anchorjs-icon="#"
+                                            style="padding-left: 0.375em;"></a></h2>
+        <p><code>app.passport</code> contains helper functions to work with the JWT.</p>
+        <h3 id="apppassportgetjwt">app.passport.getJWT()<a class="anchorjs-link " href="#apppassportgetjwt"
+                                                           aria-label="Anchor link for: apppassportgetjwt"
+                                                           data-anchorjs-icon="#" style="padding-left: 0.375em;"></a>
+        </h3>
+        <p>Pull the JWT from <code>storage</code> or the cookie. Returns a Promise.</p>
+        <h3 id="apppassportverifyjwttoken">app.passport.verifyJWT(token)<a class="anchorjs-link "
+                                                                           href="#apppassportverifyjwttoken"
+                                                                           aria-label="Anchor link for: apppassportverifyjwttoken"
+                                                                           data-anchorjs-icon="#"
+                                                                           style="padding-left: 0.375em;"></a></h3>
+        <p>Verify that a JWT is not expired and decode it to get the payload. Returns a Promise.</p>
+        <h3 id="apppassportpayloadisvalidtoken">app.passport.payloadIsValid(token)<a class="anchorjs-link "
+                                                                                     href="#apppassportpayloadisvalidtoken"
+                                                                                     aria-label="Anchor link for: apppassportpayloadisvalidtoken"
+                                                                                     data-anchorjs-icon="#"
+                                                                                     style="padding-left: 0.375em;"></a>
+        </h3>
+        <p>Synchronously verify that a token has not expired. Returns a Boolean.</p>
+        <h2 id="authentication-events">Authentication Events<a class="anchorjs-link " href="#authentication-events"
+                                                               aria-label="Anchor link for: authentication events"
+                                                               data-anchorjs-icon="#"
+                                                               style="padding-left: 0.375em;"></a></h2>
+        <p>On the client authentication events are emitted on the app object whenever a client successfully
+            authenticates or "logs out".
+            These events are emitted on the client.</p>
+        <h2 id="apponauthenticated-callback">app.on('authenticated', callback)<a class="anchorjs-link "
+                                                                                 href="#apponauthenticated-callback"
+                                                                                 aria-label="Anchor link for: apponauthenticated callback"
+                                                                                 data-anchorjs-icon="#"
+                                                                                 style="padding-left: 0.375em;"></a>
+        </h2>
+        <h2 id="apponlogout-callback">app.on('logout', callback)<a class="anchorjs-link " href="#apponlogout-callback"
+                                                                   aria-label="Anchor link for: apponlogout callback"
+                                                                   data-anchorjs-icon="#"
+                                                                   style="padding-left: 0.375em;"></a></h2>
+        <h2 id="apponreauthentication-error-errorhandler">app.on('reauthentication-error', errorHandler)<a
+                    class="anchorjs-link " href="#apponreauthentication-error-errorhandler"
+                    aria-label="Anchor link for: apponreauthentication error errorhandler" data-anchorjs-icon="#"
+                    style="padding-left: 0.375em;"></a></h2>
+        <p>In the event that your server goes down or the client loses connectivity, it will automatically handle
+            attempting to re-authenticate the socket when the client regains connectivity with the server. In order to
+            handle an authentication failure during automatic re-authentication you need to implement the following
+            event listener:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> errorHandler = error =&gt; {
+  app.authenticate({
+    strategy: <span class="hljs-string">'local'</span>,
+    email: <span class="hljs-string">'admin@feathersjs.com'</span>,
+    password: <span class="hljs-string">'admin'</span>
+  }).then(response =&gt; {
+    <span class="hljs-comment">// You are now authenticated again</span>
+  });
+};
+
+<span class="hljs-comment">// Handle when auth fails during a reconnect or a transport upgrade</span>
+app.on(<span class="hljs-string">'reauthentication-error'</span>, errorHandler)
+</code></pre>
+        <h2 id="hooks">Hooks<a class="anchorjs-link " href="#hooks" aria-label="Anchor link for: hooks"
+                               data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>There are 3 hooks. They are really meant for internal use and you shouldn't need to worry about them very
+            often.</p>
+        <ul>
+            <li><code>populateAccessToken</code> - Takes the token and puts in on <code>hooks.params.accessToken</code>
+                in case you need it in one of your client side services or hooks
+            </li>
+            <li><code>populateHeader</code> - Add the accessToken to the authorization header</li>
+            <li><code>populateEntity</code> - Experimental. Populate an entity based on the JWT payload.</li>
+        </ul>
+        <h2 id="complete-example">Complete Example<a class="anchorjs-link " href="#complete-example"
+                                                     aria-label="Anchor link for: complete example"
+                                                     data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>Here's an example of a Feathers server that uses <code>@feathersjs/authentication-client</code>. </p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> rest = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/rest-client'</span>);
+<span class="hljs-keyword">const</span> auth = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-client'</span>);
+
+<span class="hljs-keyword">const</span> superagent = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'superagent'</span>);
+<span class="hljs-keyword">const</span> localStorage = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'localstorage-memory'</span>);
+
+<span class="hljs-keyword">const</span> feathersClient = feathers();
+
+feathersClient.configure(rest(<span class="hljs-string">'http://localhost:3030'</span>).superagent(superagent))
+  .configure(auth({ storage: localStorage }));
+
+feathersClient.authenticate({
+  strategy: <span class="hljs-string">'local'</span>,
+  email: <span class="hljs-string">'admin@feathersjs.com'</span>,
+  password: <span class="hljs-string">'admin'</span>
+})
+.then(response =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Authenticated!'</span>, response);
+  <span class="hljs-keyword">return</span> feathersClient.passport.verifyJWT(response.accessToken);
+})
+.then(payload =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'JWT Payload'</span>, payload);
+  <span class="hljs-keyword">return</span> feathersClient.service(<span class="hljs-string">'users'</span>).get(payload.userId);
+})
+.then(user =&gt; {
+  feathersClient.set(<span class="hljs-string">'user'</span>, user);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'User'</span>, feathersClient.get(<span
+                        class="hljs-string">'user'</span>));
+})
+.catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span
+                            class="hljs-params">error</span>)</span>{
+  <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Error authenticating!'</span>, error);
+});
+</code></pre>
+    </section>
 {% endblock %}

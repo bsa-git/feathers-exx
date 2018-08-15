@@ -99,6 +99,10 @@ aside.menu .menu-label {
   border-radius: 3px;
   margin: 2px; }
 
+.error-list {
+  list-style: none !important;
+  color: #4a4a4a; }
+
 footer {
   margin-top: 40px;
   padding-top: 40px;

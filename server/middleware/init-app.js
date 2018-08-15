@@ -1,5 +1,7 @@
 "use strict";
 
+const debug = require('debug')('app:middleware.init-app');
+
 module.exports = function (req, res, next) {
 
     const Base = require('../controllers/base.server.class');
@@ -15,6 +17,7 @@ module.exports = function (req, res, next) {
     // Set values for view
     res.locals.port = req.app.get('port');
     res.locals.req = req;
+    // res.locals.isAuth = !!req.authenticated;
     res.locals.controllers = req.app.get('controllers');
     res.locals.actions = req.app.get('actions');
     res.locals.color_theme = req.app.get('color_theme');

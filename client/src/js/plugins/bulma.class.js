@@ -30,7 +30,7 @@ class Bulma {
         if ($deleteButtons.length > 0) {
             // Add a click event on each of them
             for (let i = 0, len = $deleteButtons.length; i < len; i++) {
-                let $deleteButton =  $deleteButtons[i];
+                let $deleteButton = $deleteButtons[i];
                 $deleteButton.addEventListener('click', function () {
                     // Get element for id
                     let $msg = document.getElementById(id);
@@ -48,7 +48,7 @@ class Bulma {
         if ($navbarBurgers.length > 0) {
             // Add a click event on each of them
             for (let i = 0, len = $navbarBurgers.length; i < len; i++) {
-                let $el =  $navbarBurgers[i];
+                let $el = $navbarBurgers[i];
                 $el.addEventListener('click', function () {
                     // Get the target from the "data-target" attribute
                     let target = $el.dataset.target;
@@ -69,31 +69,31 @@ class Bulma {
         if ($elms.length > 0) {
             // Is class
             for (let i = 0, len = $elms.length; i < len; i++) {
-                let $el =  $elms[i];
+                let $el = $elms[i];
                 _isClass = $el.classList.contains(className);
             }
         }
         return _isClass;
     }
 
-    getData(){
+    getData() {
         let data = {};
         const $elData = document.getElementById(this.opts.idDataBox);
-        if($elData){
+        if ($elData) {
             const port = $elData.dataset.port;
             return {port}
         }
         return data
     }
 
-    showMessage(data){
+    showMessage(data) {
         const $msg = document.getElementById(this.opts.idMsgBox);
-        if($msg){
+        if ($msg) {
             // Render twig template
             const template = require('../tmpls/layouts/message.html.twig');
             const html = template(data);
             $msg.innerHTML = html;
-            if(this.isClass(`#${this.opts.idMsgBox}`, 'is-hidden')){
+            if (this.isClass(`#${this.opts.idMsgBox}`, 'is-hidden')) {
                 $msg.classList.toggle('is-hidden');
             }
             this.initMessage(this.opts.idMsgBox);
@@ -101,21 +101,22 @@ class Bulma {
         }
     }
 
-    showError(err){
+    showError(err) {
         const $msg = document.getElementById(this.opts.idMsgBox);
-        if($msg){
+        if ($msg) {
             // Set error values
             err.code = err.code || err.status || 500;
             err.type = err.type || err.statusText || 'Request Error';
             err.stack = process.env.NODE_ENV === 'development' ? err.stack : '';
             err.request_info = err.request_info ? err.request_info : '';
             err.response_data = err.response_data ? err.response_data : '';
+            err.errors = err.errors ? err.errors : [];
 
             // Render twig template
             const template = require('../tmpls/layouts/error.html.twig');
             const html = template({error: err});
             $msg.innerHTML = html;
-            if(this.isClass(`#${this.opts.idMsgBox}`, 'is-hidden')){
+            if (this.isClass(`#${this.opts.idMsgBox}`, 'is-hidden')) {
                 $msg.classList.toggle('is-hidden');
             }
             this.initMessage(this.opts.idMsgBox);
@@ -123,21 +124,21 @@ class Bulma {
         }
     }
 
-    addMessage(message){
+    addMessage(message) {
         const self = this;
         //----------------------
         const $msg = document.getElementById(this.opts.idMsgBox);
-        if($msg){
+        if ($msg) {
             // Get "message-body" element
             const $elms = Array.prototype.slice.call(document.querySelectorAll(`#${this.opts.idMsgBox} .message-body .client-body`), 0);
             // Check if there are any query items
             if ($elms.length > 0) {
                 // Add my message to message-box
                 for (let i = 0, len = $elms.length; i < len; i++) {
-                    let $el =  $elms[i];
-                    let _message =  $el.innerHTML;
-                    $el.innerHTML = _message +  message;
-                    if(self.isClass(`#${self.opts.idMsgBox}`, 'is-hidden')){
+                    let $el = $elms[i];
+                    let _message = $el.innerHTML;
+                    $el.innerHTML = _message + message;
+                    if (self.isClass(`#${self.opts.idMsgBox}`, 'is-hidden')) {
                         $msg.classList.toggle('is-hidden');
                     }
                 }
@@ -145,12 +146,12 @@ class Bulma {
         }
     }
 
-    addListener(query, cb){
+    addListener(query, cb) {
         const $elms = Array.prototype.slice.call(document.querySelectorAll(query), 0);
         if ($elms.length > 0) {
             // Add a click event on each of them
             for (let i = 0, len = $elms.length; i < len; i++) {
-                let $elm =  $elms[i];
+                let $elm = $elms[i];
                 $elm.addEventListener('click', cb);
             }
         }
@@ -163,8 +164,8 @@ class Bulma {
         if ($elms.length > 0) {
             // Remove class
             for (let i = 0, len = $elms.length; i < len; i++) {
-                let $el =  $elms[i];
-                if($el.classList.contains(classForRemove)){
+                let $el = $elms[i];
+                if ($el.classList.contains(classForRemove)) {
                     $el.classList.remove(classForRemove);
                 }
             }
@@ -172,7 +173,7 @@ class Bulma {
     }
 
     getFocus(id) {
-        document.getElementById(id).focus({preventScroll:false});
+        document.getElementById(id).focus({preventScroll: false});
     }
 }
 

@@ -33,9 +33,46 @@ class Base {
         app.configure(authentication({
             storage: window.localStorage
         }));
-
-
         return app
+    }
+
+    /**
+     * getAccessToken
+     * @param app
+     * @return String
+     */
+    getAccessToken(app) {
+        return app.get('accessToken')
+    }
+
+    /**
+     * isAuth
+     * @param app
+     * @return Boolean
+     */
+    isAuth(app) {
+        return  !!app.get('accessToken')
+    }
+    /**
+     * Get logged userId
+     * @param app
+     * @param response
+     * @return {Promise.<void>}
+     */
+    async getLoggedUserId(app, response) {
+        const payload = await app.passport.verifyJWT(response.accessToken);
+        return payload.userId;
+    }
+
+    /**
+     * getLoggedInUser
+     * @param app
+     * @param response
+     * @return {Promise.<void>}
+     */
+    async getLoggedInUser(app, response) {
+        const payload = await app.passport.verifyJWT(response.accessToken);
+        return  await app.service('users').get(payload.userId);
     }
 
     /**

@@ -2,7 +2,6 @@
 
 import Base from './base.client.class'
 import moment from 'moment'
-import Utils from '../../../../plugins/utils.class'
 
 
 const debug = require('debug')('app:chat.controller');
@@ -10,7 +9,6 @@ const debug = require('debug')('app:chat.controller');
 class Chat extends Base {
     constructor(context) {
         super(context);
-        this.app = this.setRestTransport();
     }
 
     /**
@@ -18,6 +16,7 @@ class Chat extends Base {
      * @return Promise
      */
     async init() {
+        this.app = this.setRestTransport();
         await this.addClickListener();
         await this.addSubmitListener();
         await this.addRealTimeListener();
@@ -28,10 +27,24 @@ class Chat extends Base {
      * Retrieve email/password object from the login/signup page
      */
     getCredentials() {
+        const errors =  require('@feathersjs/errors');
+        const Ajv = require('../../../../node_modules/ajv/dist/ajv.min');
+        const ajv = new Ajv({allErrors: true});
+        const userSchema = require('../../../../validations/user-schema.json');
+        const getFormatErrors = require('../../../../validations/ajv-errors').getFormatErrors;
+        const validate = ajv.compile(userSchema);
+        //----------------------------------------------------------
         const user = {
             email: document.querySelector('[type="email"]').value,
             password: document.querySelector('[type="password"]').value
         };
+
+        const valid = validate(user);
+        if (!valid){
+            debug('Errors user credentials:',validate.errors);
+            throw new errors.BadRequest('User data error', { errors: getFormatErrors(validate.errors)});
+        }
+
         return user;
     };
 
@@ -49,12 +62,16 @@ class Chat extends Base {
                 // If we get login information, add the strategy we want to use for login
                 const payload = Object.assign({strategy: 'local'}, credentials);
                 response = await this.app.authenticate(payload);
-                this.bulma.showMessage({type: 'success', text: 'User logged in successfully!'});
             }
-
-            const userId = await this.getLoggedUserId(response);
-            debug('Login for userId:', userId);
-            this.userId = userId;
+            // const userId = await this.getLoggedUserId(this.app, response);
+            // debug('Login for userId:', userId);
+            if(!this.app.get('user')){
+                const user = await this.getLoggedInUser(this.app, response);
+                this.app.set('user', user);
+                this.userId = user._id;
+                debug('Logged in user:', this.app.get('user'));
+            }
+            // this.userId = userId;
             // If successful, show the chat page
             await this.showChat();
         } catch (error) {
@@ -68,10 +85,10 @@ class Chat extends Base {
      * @param response
      * @return {Promise.<void>}
      */
-    async getLoggedUserId(response) {
-        const payload = await this.app.passport.verifyJWT(response.accessToken);
-        return payload.userId;
-    }
+    // async getLoggedUserId(response) {
+    //     const payload = await this.app.passport.verifyJWT(response.accessToken);
+    //     return payload.userId;
+    // }
 
     /**
      * Action showLogin
@@ -123,6 +140,7 @@ class Chat extends Base {
             self.addSelectUsersListener();
             document.querySelector('input[name="allUsers"]').click();
         }
+        this.bulma.showMessage({type: 'success', text: 'User logged in successfully!'});
     }
 
     /**
@@ -206,24 +224,24 @@ class Chat extends Base {
         await document.addEventListener('click', async ev => {
             try {
                 switch (ev.target.id) {
+                    case 'authenticate': {
+                        ev.preventDefault();
+                        await self.login();
+                        break;
+                    }
                     case 'signup': {
                         ev.preventDefault();
                         // For signup, create a new user and then log them in
                         credentials = self.getCredentials();
                         // First create the user
-                        // try {
-                            await self.app.service('users').create(credentials);
-                            // If successful log them in
-                            await self.login(credentials);
-                        // } catch (ex) {
-                        //     self.bulma.showMessage({text: 'A user with such an email has already been registered. Please enter another email address or click the login button.'});
-                        //     break;
-                        // }
+                        await self.app.service('users').create(credentials);
+                        // If successful log them in
+                        await self.login(credentials);
                         break;
                     }
                     case 'login': {
                         ev.preventDefault();
-                        const credentials = self.getCredentials();
+                        credentials = self.getCredentials();
                         await self.login(credentials);
                         break;
                     }
@@ -237,11 +255,7 @@ class Chat extends Base {
                     }
                 }
             } catch (ex) {
-                if(ev.target.id === 'signup'){
-                    self.bulma.showMessage({text: 'A user with such an email has already been registered. Please enter another email address or click the login button.'});
-                }else {
-                    self.bulma.showError(ex);
-                }
+                self.bulma.showError(ex);
             }
         });
     }

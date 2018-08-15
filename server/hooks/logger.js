@@ -1,3 +1,5 @@
+"use strict";
+
 // A hook that logs service method before, after and error
 // See https://github.com/winstonjs/winston for documentation
 // about the logger.
@@ -8,17 +10,17 @@ const debug = require('debug')('app:hooks.logger');
 // logger.level = 'debug';
 
 module.exports = function () {
-  return context => {
-    // This debugs the service call and a stringified version of the hook context
-    // You can customize the mssage (and logger) to your needs
-    debug(`${context.type} app.service('${context.path}').${context.method}()`);
+    return context => {
+        // This debugs the service call and a stringified version of the hook context
+        // You can customize the mssage (and logger) to your needs
+        debug(`${context.type} app.service('${context.path}').${context.method}()`);
 
-    if (typeof context.toJSON === 'function') {
-      debug('Hook Context', JSON.stringify(context, null, '  '));
-    }
+        if (typeof context.toJSON === 'function') {
+            debug('Hook Context', JSON.stringify(context, null, '  '));
+        }
 
-    if (context.error) {
-        debug(context.error);
-    }
-  };
+        if (context.error) {
+            debug(context.error);
+        }
+    };
 };

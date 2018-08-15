@@ -35,6 +35,11 @@ module.exports = {
             systemvars: true // It makes it possible to work in production mode on Heroku hosting
         })
     ],
+    resolve: {
+        alias: {
+            joi: 'joi-browser'
+        }
+    },
     node: {
         fs: "empty" // avoids error messages
     }

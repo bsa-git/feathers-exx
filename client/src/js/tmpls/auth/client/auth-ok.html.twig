@@ -1,0 +1,17 @@
+<section class="client-body">
+    <div class="box">
+        User logged in successfully!
+    </div>
+    <div>
+        <div class="level">
+            <div class="level-item">
+                <a id="authenticate" class="button is-link" title="Create authenticate">Authenticate</a>
+            </div>
+            {% if isAuth %}
+                <div class="level-item">
+                    <a id="logout" class="button is-link" title="Log Out">Log Out</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
