@@ -1,12 +1,12 @@
 <section class="client-body">
     <div class="box">
-        User logged in successfully!
+        Authenticate using the "<strong>Login</strong>" button or end the authentication using the "<strong>Log Out</strong>" button.
     </div>
     <div>
         <div class="level">
             {% if not isAuth %}
             <div class="level-item">
-                <a id="authenticate" class="button is-link" title="Create authenticate">Login With Local/JWT</a>
+                <a id="authenticate" href="/auth/twitter" class="button is-link">Login With Twitter</a>
             </div>
             {% endif %}
             {% if isAuth %}

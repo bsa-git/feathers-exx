@@ -2,6 +2,7 @@
 
 import Base from './base.client.class'
 import moment from 'moment'
+import Cookie from '../plugins/cookie.class'
 
 
 const debug = require('debug')('app:chat.controller');
@@ -27,7 +28,7 @@ class Chat extends Base {
      * Retrieve email/password object from the login/signup page
      */
     getCredentials() {
-        const errors =  require('@feathersjs/errors');
+        const errors = require('@feathersjs/errors');
         const Ajv = require('../../../../node_modules/ajv/dist/ajv.min');
         const ajv = new Ajv({allErrors: true});
         const userSchema = require('../../../../validations/user-schema.json');
@@ -40,9 +41,9 @@ class Chat extends Base {
         };
 
         const valid = validate(user);
-        if (!valid){
-            debug('Errors user credentials:',validate.errors);
-            throw new errors.BadRequest('User data error', { errors: getFormatErrors(validate.errors)});
+        if (!valid) {
+            debug('Errors user credentials:', validate.errors);
+            throw new errors.BadRequest('User data error', {errors: getFormatErrors(validate.errors)});
         }
 
         return user;
@@ -54,6 +55,7 @@ class Chat extends Base {
      */
     async login(credentials) {
         let response;
+        //-----------------------
         try {
             if (!credentials) {
                 // Try to authenticate using the JWT from localStorage
@@ -63,15 +65,12 @@ class Chat extends Base {
                 const payload = Object.assign({strategy: 'local'}, credentials);
                 response = await this.app.authenticate(payload);
             }
-            // const userId = await this.getLoggedUserId(this.app, response);
-            // debug('Login for userId:', userId);
-            if(!this.app.get('user')){
+            if (!this.app.get('user')) {
                 const user = await this.getLoggedInUser(this.app, response);
                 this.app.set('user', user);
                 this.userId = user._id;
                 debug('Logged in user:', this.app.get('user'));
             }
-            // this.userId = userId;
             // If successful, show the chat page
             await this.showChat();
         } catch (error) {
@@ -79,16 +78,6 @@ class Chat extends Base {
             this.showLogin(error);
         }
     }
-
-    /**
-     * Get logged userId
-     * @param response
-     * @return {Promise.<void>}
-     */
-    // async getLoggedUserId(response) {
-    //     const payload = await this.app.passport.verifyJWT(response.accessToken);
-    //     return payload.userId;
-    // }
 
     /**
      * Action showLogin
@@ -131,7 +120,8 @@ class Chat extends Base {
             });
         }
         // Find all users
-        const users = await this.app.service('users').find();
+        // const query = { query: {email: { $ne: null}} };
+        const users = await this.app.service('users').find();// { query: {$sort: {counter: 1}, $limit: 2, counter: { $ne: 2}} }
         if (users && users.data.length) {
             debug('Users:', users.data);
             users.data.forEach(async user => {
@@ -248,6 +238,10 @@ class Chat extends Base {
                     case 'logout': {
                         ev.preventDefault();
                         await this.app.logout();
+                        self.app.set('user', null);
+                        self.userId = null;
+                        const cookie = new Cookie('feathers-jwt');
+                        cookie.remove('/', this.req.hostname);
                         const template = require('../tmpls/auth/chat/login.html.twig');
                         const loginHTML = template();
                         document.getElementById('app').innerHTML = loginHTML;

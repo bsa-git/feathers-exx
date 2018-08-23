@@ -1,0 +1,156 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+
+
+        <h1 id="jwt-authentication">Authentication<a class="anchorjs-link " href="#jwt-authentication"
+                                                         aria-label="Anchor link for: jwt authentication"
+                                                         data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h1>
+        <pre><code>$ npm install @feathersjs/authentication-jwt --save
+</code></pre>
+        <p><a href="https://github.com/feathersjs/authentication-jwt" target="_blank">@feathersjs/authentication-jwt</a>
+            is a module for the <a href="https://docs.feathersjs.com/api/authentication/server.html">authentication server</a> that wraps the <a
+                    href="https://github.com/themikenicholson/passport-jwt" target="_blank">passport-jwt</a>
+            authentication strategy, which lets you authenticate with your Feathers application using a <a
+                    href="https://jwt.io/" target="_blank">JSON Web Token</a> access token.</p>
+        <p>This module contains 3 core pieces:</p>
+        <ol>
+            <li>The main initialization function</li>
+            <li>The <code>Verifier</code> class</li>
+            <li>The <a href="https://github.com/themikenicholson/passport-jwt#extracting-the-jwt-from-the-request"
+                       target="_blank"><code>ExtractJwt</code></a> object from passport-jwt.
+            </li>
+        </ol>
+        <h2 id="configuration">Configuration<a class="anchorjs-link " href="#configuration"
+                                               aria-label="Anchor link for: configuration" data-anchorjs-icon="#"
+                                               style="padding-left: 0.375em;"></a></h2>
+        <p>In most cases initializing the module is as simple as doing this:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> authentication = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/authentication'</span>);
+<span class="hljs-keyword">const</span> jwt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-jwt'</span>);
+<span class="hljs-keyword">const</span> app = feathers();
+
+<span class="hljs-comment">// Setup authentication</span>
+app.configure(authentication(settings));
+app.configure(jwt());
+
+<span class="hljs-comment">// Setup a hook to only allow valid JWTs to authenticate</span>
+<span class="hljs-comment">// and get new JWT access tokens</span>
+app.service(<span class="hljs-string">'authentication'</span>).hooks({
+  before: {
+    create: [
+      authentication.hooks.authenticate([<span class="hljs-string">'jwt'</span>])
+    ]
+  }
+});
+</code></pre>
+        <p>This will pull from your global authentication object in your config file. It will also mix in the following
+            defaults, which can be customized.</p>
+        <h3 id="options">Options<a class="anchorjs-link " href="#options" aria-label="Anchor link for: options"
+                                   data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <pre><code class="lang-js">{
+    name: <span class="hljs-string">'jwt'</span>, <span class="hljs-comment">// the name to use when invoking the authentication Strategy</span>
+    entity: <span class="hljs-string">'user'</span>, <span class="hljs-comment">// the entity that you pull from if an 'id' is present in the payload</span>
+    service: <span class="hljs-string">'users'</span>, <span
+                        class="hljs-comment">// the service to look up the entity</span>
+    passReqToCallback: <span class="hljs-literal">true</span>, <span class="hljs-comment">// whether the request object should be passed to `verify`</span>
+    jwtFromRequest: [ <span class="hljs-comment">// a passport-jwt option determining where to parse the JWT</span>
+      ExtractJwt.fromHeader, <span class="hljs-comment">// From "Authorization" header</span>
+      ExtractJwt.fromAuthHeaderWithScheme(<span class="hljs-string">'Bearer'</span>), <span class="hljs-comment">// Allowing "Bearer" prefix</span>
+      ExtractJwt.fromBodyField(<span class="hljs-string">'body'</span>) <span
+                        class="hljs-comment">// from request body</span>
+    ],
+    secretOrKey: auth.secret, <span class="hljs-comment">// Your main secret provided to passport-jwt</span>
+    session: <span class="hljs-literal">false</span> <span class="hljs-comment">// whether to use sessions,</span>
+    Verifier: Verifier <span class="hljs-comment">// A Verifier class. Defaults to the built-in one but can be a custom one. See below for details.</span>
+}
+</code></pre>
+        <p>Additional <a href="https://github.com/themikenicholson/passport-jwt" target="_blank">passport-jwt</a>
+            options can be provided.</p>
+        <h2 id="verifier">Verifier<a class="anchorjs-link " href="#verifier" aria-label="Anchor link for: verifier"
+                                     data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>This is the verification class that receives the JWT payload (if verification is successful) and either
+            returns the payload or, if an <code>id</code> is present in the payload, populates the entity (normally a
+            <code>user</code>) and returns both the entity and the payload. It has the following methods that can all be
+            overridden. The <code>verify</code> function has the exact same signature as <a
+                    href="https://github.com/themikenicholson/passport-jwt" target="_blank">passport-jwt</a>.</p>
+        <pre><code class="lang-js">{
+    <span class="hljs-keyword">constructor</span>(app, options) // the class <span
+                        class="hljs-keyword">constructor</span>
+    verify(req, payload, done) // queries the configured service
+}
+</code></pre>
+        <h4 id="customizing-the-verifier">Customizing the Verifier<a class="anchorjs-link "
+                                                                     href="#customizing-the-verifier"
+                                                                     aria-label="Anchor link for: customizing the verifier"
+                                                                     data-anchorjs-icon="#"
+                                                                     style="padding-left: 0.375em;"></a></h4>
+        <p>The <code>Verifier</code> class can be extended so that you customize it's behavior without having to rewrite
+            and test a totally custom local Passport implementation. Although that is always an option if you don't want
+            use this plugin.</p>
+        <p>An example of customizing the Verifier:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">import</span> jwt, { Verifier } <span
+                        class="hljs-keyword">from</span> <span
+                        class="hljs-string">'@feathersjs/authentication-jwt'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomVerifier</span> <span
+            class="hljs-keyword">extends</span> <span class="hljs-title">Verifier</span> </span>{
+  <span class="hljs-comment">// The verify function has the exact same inputs and </span>
+  <span class="hljs-comment">// return values as a vanilla passport strategy</span>
+  verify(req, payload, done) {
+    <span class="hljs-comment">// do your custom stuff. You can call internal Verifier methods</span>
+    <span class="hljs-comment">// and reference this.app and this.options. This method must be implemented.</span>
+
+    <span class="hljs-comment">// the 'user' variable can be any truthy value</span>
+    <span class="hljs-comment">// the 'payload' is the payload for the JWT access token that is generated after successful authentication</span>
+    done(<span class="hljs-literal">null</span>, user, payload);
+  }
+}
+
+app.configure(jwt({ Verifier: CustomVerifier }));
+</code></pre>
+        <h2 id="client-usage">Client Usage<a class="anchorjs-link " href="#client-usage"
+                                             aria-label="Anchor link for: client usage" data-anchorjs-icon="#"
+                                             style="padding-left: 0.375em;"></a></h2>
+        <h3 id="authentication-client">authentication-client<a class="anchorjs-link " href="#authentication-client"
+                                                               aria-label="Anchor link for: authentication client"
+                                                               data-anchorjs-icon="#"
+                                                               style="padding-left: 0.375em;"></a></h3>
+        <p>When this module is registered server side, using the default config values this is how you can authenticate
+            using <a href="https://docs.feathersjs.com/api/authentication/client.html">@feathersjs/authentication-client</a>:</p>
+        <pre><code class="lang-js">app.authenticate({
+  strategy: <span class="hljs-string">'jwt'</span>,
+  accessToken: <span class="hljs-string">'your access token'</span>
+}).then(response =&gt; {
+  <span class="hljs-comment">// You are now authenticated</span>
+});
+</code></pre>
+        <h3 id="http">HTTP<a class="anchorjs-link " href="#http" aria-label="Anchor link for: http"
+                             data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>If you are not using <code>@feathersjs/authentication-client</code> and you have registered this module
+            server side then you can include the access token in an <code>Authorization</code> header.</p>
+        <p>Here is what that looks like with curl:</p>
+        <pre><code class="lang-bash">curl -H <span class="hljs-string">"Content-Type: application/json"</span> -H <span
+                        class="hljs-string">"Authorization: &lt;your access token&gt;"</span> -X POST http://localhost:3030/authentication
+</code></pre>
+        <h3 id="sockets">Sockets<a class="anchorjs-link " href="#sockets" aria-label="Anchor link for: sockets"
+                                   data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h3>
+        <p>Authenticating using an access token via sockets is done by emitting the following message:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> io = <span
+                        class="hljs-built_in">require</span>(<span class="hljs-string">'socket.io-client'</span>);
+<span class="hljs-keyword">const</span> socket = io(<span class="hljs-string">'http://localhost:3030'</span>);
+
+socket.emit(<span class="hljs-string">'authenticate'</span>, {
+  strategy: <span class="hljs-string">'jwt'</span>,
+  accessToken: <span class="hljs-string">'your token'</span>
+}, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">message, data</span>) </span>{
+  <span class="hljs-built_in">console</span>.log(message); <span class="hljs-comment">// message will be null</span>
+  <span class="hljs-built_in">console</span>.log(data); <span class="hljs-comment">// data will be {"accessToken": "your token"}</span>
+  <span class="hljs-comment">// You can now send authenticated messages to the server</span>
+});
+</code></pre>
+    </section>
+{% endblock %}

@@ -2,7 +2,7 @@
 
 import Base from './base.client.class'
 import Chat from './chat.vanilla.class'
-
+import Cookie from '../plugins/cookie.class'
 const debug = require('debug')('app:auth.controller');
 
 class Auth extends Base {
@@ -14,6 +14,7 @@ class Auth extends Base {
         }
         this.urlAuthService = `${this.urlHost}/authentication`;
         this.urlAuthUsers = `${this.urlHost}/users`;
+        this.urlAuthTwitter = `${this.urlHost}/auth/twitter`;
         this.app = this.setRestTransport();
         this.chat = new Chat(context);
         this.getCredentials = this.chat.getCredentials.bind(this);
@@ -23,11 +24,85 @@ class Auth extends Base {
     }
 
     /**
-     * Action auth server
+     * Action auth client
      * @return Promise
      */
     async authClient() {
         await this.addClickListener();
+    }
+
+    /**
+     * Action auth local
+     * @return Promise
+     */
+    async authLocal() {
+        await this.addClickListener();
+    }
+
+    /**
+     * Action auth jwt
+     * @return Promise
+     */
+    async authJwt() {
+        await this.addClickListener();
+    }
+
+    /**
+     * Action OAuth1
+     * @return Promise
+     */
+    async authOAuth1() {
+        const self = this;
+        //------------------
+        await document.addEventListener('click', async ev => {
+            try {
+                switch (ev.target.id) {
+                    case 'logout': {
+                        ev.preventDefault();
+                        await this.app.logout();
+                        self.app.set('user', null);
+                        self.userId = null;
+                        const cookie = new Cookie('feathers-jwt');
+                        cookie.remove('/', this.req.hostname);
+                        const template = require('../tmpls/auth/oauth1/load.html.twig');
+                        const html = template({isAuth: self.isAuth(self.app)});
+                        document.getElementById('app').innerHTML = html;
+                        break;
+                    }
+                }
+            } catch (ex) {
+                self.bulma.showError(ex);
+            }
+        });
+    }
+
+    /**
+     * Action OAuth2
+     * @return Promise
+     */
+    async authOAuth2() {
+        const self = this;
+        //------------------
+        await document.addEventListener('click', async ev => {
+            try {
+                switch (ev.target.id) {
+                    case 'logout': {
+                        ev.preventDefault();
+                        await this.app.logout();
+                        self.app.set('user', null);
+                        self.userId = null;
+                        const cookie = new Cookie('feathers-jwt');
+                        cookie.remove('/', this.req.hostname);
+                        const template = require('../tmpls/auth/oauth2/load.html.twig');
+                        const html = template({isAuth: self.isAuth(self.app)});
+                        document.getElementById('app').innerHTML = html;
+                        break;
+                    }
+                }
+            } catch (ex) {
+                self.bulma.showError(ex);
+            }
+        });
     }
 
     /**
@@ -51,7 +126,7 @@ class Auth extends Base {
                         // For signup, create a new user and then log them in
                         credentials = self.getCredentials();
                         // First create the user
-                        await self.appSignUp(credentials);
+                        await self.serverSignUp(credentials);
                         // If successful log them in
                         await self.serverLogin(credentials);
                         break;
@@ -64,7 +139,7 @@ class Auth extends Base {
                     }
                     case 'logout': {
                         ev.preventDefault();
-                        await this.appLogOut();
+                        await this.serverLogOut();
                         const template = require('../tmpls/auth/chat/login.html.twig');
                         const loginHTML = template();
                         document.getElementById('app').innerHTML = loginHTML;
@@ -78,21 +153,19 @@ class Auth extends Base {
     }
 
     /**
-     * Action login
+     * serverLogin
      * @param credentials Object
      * @return Promise
      */
     async serverLogin(credentials) {
-        let response;
-        //----------------------
         try {
             if (!credentials) {
                 // Try to authenticate using the JWT from localStorage
-                await this.appAuthenticate();
+                await this.serverAuthenticate();
             } else {
                 // If we get login information, add the strategy we want to use for login
                 const payload = Object.assign({strategy: 'local'}, credentials);
-                await this.appAuthenticate(payload);
+                await this.serverAuthenticate(payload);
             }
             // If successful, show the chat page
             await this.showChat();
@@ -103,14 +176,13 @@ class Auth extends Base {
     }
 
     /**
-     * appAuthenticate
+     * serverAuthenticate
      * @param payload Object
      * @return Promise
      */
-    async appAuthenticate(payload) {
+    async serverAuthenticate(payload) {
         let response;
         const storage = window.localStorage;
-        const Utils = require('../../../../plugins/utils.class');
         //--------------
         if (payload) {
             response = await this.req.post(this.urlAuthService, payload);
@@ -123,9 +195,12 @@ class Auth extends Base {
         if (accessToken && !storage.getItem('feathers-jwt')) {
             storage.setItem('feathers-jwt', accessToken);
             this.app.set('accessToken', accessToken);
+            // Cookie store
+            const cookie = new Cookie('feathers-jwt');
+            cookie.store(1, '/', this.req.hostname);
 
             // Get user using accessToken
-            const payload = await Utils.verifyJWT(accessToken);
+            const payload = await this.verifyJWT(accessToken);
             const config = {headers: {'Authorization': accessToken}};
             const user = await this.req.get(`${this.urlAuthUsers}/${payload.userId}`, config);
             this.app.set('user', user);
@@ -135,19 +210,19 @@ class Auth extends Base {
     }
 
     /**
-     * appSignUp
+     * serverSignUp
      * @param credentials Object
      * @return Promise
      */
-    async appSignUp(credentials) {
+    async serverSignUp(credentials) {
         return await this.req.post(this.urlAuthUsers, credentials);
     }
 
     /**
-     * appLogOut
+     * serverLogOut
      * @return Promise
      */
-    async appLogOut() {
+    async serverLogOut() {
         const storage = window.localStorage;
         //--------------
         if (storage.getItem('feathers-jwt')) {
@@ -158,6 +233,8 @@ class Auth extends Base {
                 storage.removeItem('feathers-jwt');
                 this.app.set('accessToken', null);
                 this.app.set('user', null);
+                const cookie = new Cookie('feathers-jwt');
+                cookie.remove('/', this.req.hostname);
             }
         }
     }
@@ -167,7 +244,8 @@ class Auth extends Base {
      */
     async showChat() {
         // Insert auth-ok.html.twig
-        const template = require('../tmpls/auth/client/auth-ok.html.twig');
+        const action = this.req.action;
+        const template = require(`../tmpls/auth/${action}/auth-ok.html.twig`);
         const html = template({isAuth: this.isAuth(this.app)});
         document.getElementById('app').innerHTML = html;
     }

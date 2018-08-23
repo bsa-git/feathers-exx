@@ -4,12 +4,14 @@
     </div>
     <div>
         <div class="level">
+            {% if not isAuth %}
             <div class="level-item">
-                <a id="authenticate" class="button is-link" title="Create authenticate">Authenticate</a>
+                <a id="authenticate" class="button is-link" title="Create authenticate">Login With Local/JWT</a>
             </div>
+            {% endif %}
             {% if isAuth %}
                 <div class="level-item">
-                    <a id="logout" class="button is-link" title="Log Out">Log Out</a>
+                    <a id="logout" class="button is-link">Log Out</a>
                 </div>
             {% endif %}
         </div>

@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require("./express");
-const rest = require("./rest");
+const transports = require("./transports");
 const middleware = require("../middleware");
 const authentication = require("./authentication");
 const services = require("../services");
@@ -11,7 +11,7 @@ const errorHandler = require("./error-handler");
 
 module.exports = function (app) {
     express(app);
-    rest(app);
+    transports(app);
     middleware(app);
     authentication(app);
     services(app);

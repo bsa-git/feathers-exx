@@ -1,0 +1,224 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+
+
+        <h1 id="oauth1-authentication">Authentication<a class="anchorjs-link " href="#oauth1-authentication"
+                                                               aria-label="Anchor link for: oauth1 authentication"
+                                                               data-anchorjs-icon="#"
+                                                               style="padding-left: 0.375em;"></a></h1>
+        <pre><code>$ npm install @feathersjs/authentication-oauth1 --save
+</code></pre>
+        <p><a href="https://github.com/feathersjs/authentication-oauth1" target="_blank">@feathersjs/authentication-oauth1</a>
+            is a server side module that allows you to use any <a href="http://passportjs.org/"
+                                                                  target="_blank">Passport</a> OAuth1 authentication
+            strategy within your Feathers application, most notably <a
+                    href="https://github.com/jaredhanson/passport-twitter" target="_blank">Twitter</a>.</p>
+        <p>This module contains 2 core pieces:</p>
+        <ol>
+            <li>The main initialization function</li>
+            <li>The <code>Verifier</code> class</li>
+        </ol>
+        <h2 id="configuration">Configuration<a class="anchorjs-link " href="#configuration"
+                                               aria-label="Anchor link for: configuration" data-anchorjs-icon="#"
+                                               style="padding-left: 0.375em;"></a></h2>
+        <p>In most cases initializing the module is as simple as doing this:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> authentication = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/authentication'</span>);
+<span class="hljs-keyword">const</span> jwt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-jwt'</span>);
+<span class="hljs-keyword">const</span> oauth1 = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-oauth1'</span>);
+
+<span class="hljs-keyword">const</span> session = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express-session'</span>);
+<span class="hljs-keyword">const</span> TwitterStrategy = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'passport-twitter'</span>).Strategy;
+<span class="hljs-keyword">const</span> app = feathers();
+
+<span class="hljs-comment">// Setup in memory session</span>
+app.use(session({
+  secret: <span class="hljs-string">'super secret'</span>,
+  resave: <span class="hljs-literal">true</span>,
+  saveUninitialized: <span class="hljs-literal">true</span>
+}));
+
+<span class="hljs-comment">// Setup authentication</span>
+app.configure(authentication(settings));
+app.configure(jwt());
+app.configure(oauth1({
+  name: <span class="hljs-string">'twitter'</span>,
+  Strategy: TwitterStrategy,
+  consumerKey: <span class="hljs-string">'&lt;your consumer key&gt;'</span>,
+  consumerSecret: <span class="hljs-string">'&lt;your consumer secret&gt;'</span>
+}));
+
+<span class="hljs-comment">// Setup a hook to only allow valid JWTs to authenticate</span>
+<span class="hljs-comment">// and get new JWT access tokens</span>
+app.service(<span class="hljs-string">'authentication'</span>).hooks({
+  before: {
+    create: [
+      authentication.hooks.authenticate([<span class="hljs-string">'jwt'</span>])
+    ]
+  }
+});
+</code></pre>
+        <p>This will pull from your global authentication object in your config file. It will also mix in the following
+            defaults, which can be customized.</p>
+        <p>Registering the OAuth1 plugin will automatically set up routes to handle the OAuth redirects and
+            authorization.</p>
+        <h2 id="options">Options<a class="anchorjs-link " href="#options" aria-label="Anchor link for: options"
+                                   data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <pre><code class="lang-js">{
+    idField: <span class="hljs-string">'&lt;provider&gt;Id'</span>, <span class="hljs-comment">// The field to look up the entity by when logging in with the provider. Defaults to '&lt;provider&gt;Id' (ie. 'twitterId').</span>
+    path: <span class="hljs-string">'/auth/&lt;provider&gt;'</span>, <span class="hljs-comment">// The route to register the middleware</span>
+    callbackURL: <span class="hljs-string">'http(s)://hostame[:port]/auth/&lt;provider&gt;/callback'</span>, <span
+                        class="hljs-comment">// The callback url. Will automatically take into account your host and port and whether you are in production based on your app environment to construct the url. (ie. in development http://localhost:3030/auth/twitter/callback)</span>
+    entity: <span class="hljs-string">'user'</span>, <span
+                        class="hljs-comment">// the entity that you are looking up</span>
+    service: <span class="hljs-string">'users'</span>, <span
+                        class="hljs-comment">// the service to look up the entity</span>
+    passReqToCallback: <span class="hljs-literal">true</span>, <span class="hljs-comment">// whether the request object should be passed to `verify`</span>
+    session: <span class="hljs-literal">true</span>, <span class="hljs-comment">// whether to use sessions,</span>
+    handler: <span class="hljs-function"><span class="hljs-keyword">function</span>, // <span
+                            class="hljs-title">Express</span> <span class="hljs-title">middleware</span> <span
+                            class="hljs-title">for</span> <span class="hljs-title">handling</span> <span
+                            class="hljs-title">the</span> <span class="hljs-title">oauth</span> <span
+                            class="hljs-title">callback</span>. <span class="hljs-title">Defaults</span> <span
+                            class="hljs-title">to</span> <span class="hljs-title">the</span> <span class="hljs-title">built</span> <span
+                            class="hljs-title">in</span> <span class="hljs-title">middleware</span>.
+    <span class="hljs-title">formatter</span>: <span class="hljs-title">function</span>, // <span
+                            class="hljs-title">The</span> <span class="hljs-title">response</span> <span
+                            class="hljs-title">formatter</span>. <span class="hljs-title">Defaults</span> <span
+                            class="hljs-title">the</span> <span class="hljs-title">the</span> <span class="hljs-title">built</span> <span
+                            class="hljs-title">in</span> <span class="hljs-title">feathers</span>-<span
+                            class="hljs-title">rest</span> <span class="hljs-title">formatter</span>, <span
+                            class="hljs-title">which</span> <span class="hljs-title">returns</span> <span
+                            class="hljs-title">JSON</span>.
+    <span class="hljs-title">Verifier</span>: <span class="hljs-title">Verifier</span> // <span
+                            class="hljs-title">A</span> <span class="hljs-title">Verifier</span> <span
+                            class="hljs-title">class</span>. <span class="hljs-title">Defaults</span> <span
+                            class="hljs-title">to</span> <span class="hljs-title">the</span> <span class="hljs-title">built</span>-<span
+                            class="hljs-title">in</span> <span class="hljs-title">one</span> <span class="hljs-title">but</span> <span
+                            class="hljs-title">can</span> <span class="hljs-title">be</span> <span
+                            class="hljs-title">a</span> <span class="hljs-title">custom</span> <span class="hljs-title">one</span>. <span
+                            class="hljs-title">See</span> <span class="hljs-title">below</span> <span
+                            class="hljs-title">for</span> <span class="hljs-title">details</span>.
+}
+</span></code></pre>
+        <p>Additional passport strategy options can be provided based on the OAuth1 strategy you are configuring.</p>
+        <h2 id="verifier">Verifier<a class="anchorjs-link " href="#verifier" aria-label="Anchor link for: verifier"
+                                     data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>This is the verification class that handles the OAuth1 verification by looking up the entity (normally a
+            <code>user</code>) on a given service and either creates or updates the entity and returns them. It has the
+            following methods that can all be overridden. All methods return a promise except <code>verify</code>, which
+            has the exact same signature as <a href="https://github.com/jaredhanson/passport-oauth1" target="_blank">passport-oauth1</a>.
+        </p>
+        <pre><code class="lang-js">{
+    <span class="hljs-keyword">constructor</span>(app, options) // the class <span
+                        class="hljs-keyword">constructor</span>
+    _updateEntity(entity) // updates an existing entity
+    _createEntity(entity) // creates an entity if they didn't exist already
+    _normalizeResult(result) // normalizes result from service to account for pagination
+    verify(req, accessToken, refreshToken, profile, done) // queries the service and calls the other internal functions.
+}
+</code></pre>
+        <p>The <code>Verifier</code> class can be extended so that you customize it's behavior without having to rewrite
+            and test a totally custom local Passport implementation. Although that is always an option if you don't want
+            use this plugin.</p>
+        <p>An example of customizing the Verifier:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">import</span> oauth1, { Verifier } <span
+                        class="hljs-keyword">from</span> <span
+                        class="hljs-string">'@feathersjs/authentication-oauth1'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomVerifier</span> <span
+            class="hljs-keyword">extends</span> <span class="hljs-title">Verifier</span> </span>{
+  <span class="hljs-comment">// The verify function has the exact same inputs and </span>
+  <span class="hljs-comment">// return values as a vanilla passport strategy</span>
+  verify(req, accessToken, refreshToken, profile, done) {
+    <span class="hljs-comment">// do your custom stuff. You can call internal Verifier methods</span>
+    <span class="hljs-comment">// and reference this.app and this.options. This method must be implemented.</span>
+
+    <span class="hljs-comment">// the 'user' variable can be any truthy value</span>
+    <span class="hljs-comment">// the 'payload' is the payload for the JWT access token that is generated after successful authentication</span>
+    done(<span class="hljs-literal">null</span>, user, payload);
+  }
+}
+
+app.configure(oauth1({
+  name: <span class="hljs-string">'twitter'</span>
+  Strategy: TwitterStrategy,
+  consumerKey: <span class="hljs-string">'&lt;your consumer key&gt;'</span>,
+  consumerSecret: <span class="hljs-string">'&lt;your consumer secret&gt;'</span>,
+  Verifier: CustomVerifier
+}));
+</code></pre>
+        <h2 id="customizing-the-oauth-response">Customizing The OAuth Response<a class="anchorjs-link "
+                                                                                 href="#customizing-the-oauth-response"
+                                                                                 aria-label="Anchor link for: customizing the oauth response"
+                                                                                 data-anchorjs-icon="#"
+                                                                                 style="padding-left: 0.375em;"></a>
+        </h2>
+        <p>Whenever you authenticate with an OAuth1 provider such as Twitter, the provider sends back an <code>accessToken</code>,
+            <code>refreshToken</code>, and a <code>profile</code> that contains the authenticated entity's information
+            based on the OAuth1 <code>scopes</code> you have requested and been granted.</p>
+        <p>By default the <code>Verifier</code> takes everything returned by the provider and attaches it to the <code>entity</code>
+            (ie. the user object) under the provider name. You will likely want to customize the data that is returned.
+            This can be done by adding a <code>before</code> hook to both the <code>update</code> and
+            <code>create</code> service methods on your <code>entity</code>'s service.</p>
+        <pre><code class="lang-js">app.configure(oauth1({
+  name: <span class="hljs-string">'twitter'</span>,
+  entity: <span class="hljs-string">'user'</span>,
+  service: <span class="hljs-string">'users'</span>,
+  Strategy,
+  consumerKey: <span class="hljs-string">'&lt;your consumer key&gt;'</span>,
+  consumerSecret: <span class="hljs-string">'&lt;your consumer secret&gt;'</span>
+}));
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span
+            class="hljs-title">customizeTwitterProfile</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span
+                            class="hljs-params">context</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Customizing Twitter Profile'</span>);
+    <span class="hljs-comment">// If there is a twitter field they signed up or</span>
+    <span class="hljs-comment">// signed in with twitter so let's pull the email. If</span>
+    <span class="hljs-keyword">if</span> (context.data.twitter) {
+      context.data.email = context.data.twitter.email;
+    }
+
+    <span class="hljs-comment">// If you want to do something whenever any OAuth</span>
+    <span class="hljs-comment">// provider authentication occurs you can do this.</span>
+    <span class="hljs-keyword">if</span> (context.params.oauth) {
+      <span class="hljs-comment">// do something for all OAuth providers</span>
+    }
+
+    <span class="hljs-keyword">if</span> (context.params.oauth.provider === <span class="hljs-string">'twitter'</span>) {
+      <span class="hljs-comment">// do something specific to the twitter provider</span>
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(context);
+  };
+}
+
+
+app.service(<span class="hljs-string">'users'</span>).hooks({
+  before: {
+    create: [customizeTwitterProfile()],
+    update: [customizeTwitterProfile()]
+  }
+});
+</code></pre>
+        <h2 id="client-usage">Client Usage<a class="anchorjs-link " href="#client-usage"
+                                             aria-label="Anchor link for: client usage" data-anchorjs-icon="#"
+                                             style="padding-left: 0.375em;"></a></h2>
+        <p>When this module is registered server side, whether you are using <code>feathers-authentication-client</code>
+            or not the user has to navigate to the authentication strategy url. This could be by setting <code>window.location</code>
+            or through a link in your app.</p>
+        <p>For example you might have a login button for Twitter:</p>
+        <pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span
+                            class="hljs-attr">href</span>=<span class="hljs-string">"/auth/twitter"</span> <span
+                            class="hljs-attr">class</span>=<span class="hljs-string">"button"</span>&gt;</span>Login With Twitter<span
+                        class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+</code></pre>
+    </section>
+{% endblock %}

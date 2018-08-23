@@ -5,6 +5,6 @@
   "type": "object",
   "properties": {
     "email": { "type": "string", "format": "email" },
-    "password": { "type": "string", "minLength": 5, "maxLength": 32, "pattern": "^[a-zA-Z0-9]+$" }
+    "password": { "type": "string", "minLength": 5, "maxLength": 32, "pattern": "^[a-zA-Z0-9_-]+$" }
   }
 }

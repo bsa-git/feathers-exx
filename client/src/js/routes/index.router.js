@@ -57,6 +57,24 @@ export default async function (client) {
         case 'auth/client':
             return await authRouter.routeAuthClient();
             break;
+        case 'auth/local':
+            return await authRouter.routeAuthLocal();
+            break;
+        case 'auth/jwt':
+            return await authRouter.routeAuthJwt();
+            break;
+        case 'auth/oauth1':
+            return await authRouter.routeOAuth1();
+            break;
+        case 'auth/oauth1-ok':
+            return await authRouter.routeOAuth1Ok();
+            break;
+        case 'auth/oauth2':
+            return await authRouter.routeOAuth2();
+            break;
+        case 'auth/oauth2-ok':
+            return await authRouter.routeOAuth2Ok();
+            break;
         default:
             return `Path controller/action:  '${client.req.controller}/${client.req.action}'`
     }

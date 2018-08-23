@@ -31,7 +31,8 @@ class Base {
 
         const authentication = require('@feathersjs/client/authentication');
         app.configure(authentication({
-            storage: window.localStorage
+            storage: window.localStorage,
+            cookie: 'feathers-jwt'
         }));
         return app
     }
@@ -51,8 +52,9 @@ class Base {
      * @return Boolean
      */
     isAuth(app) {
-        return  !!app.get('accessToken')
+        return !!app.get('accessToken')
     }
+
     /**
      * Get logged userId
      * @param app
@@ -72,7 +74,7 @@ class Base {
      */
     async getLoggedInUser(app, response) {
         const payload = await app.passport.verifyJWT(response.accessToken);
-        return  await app.service('users').get(payload.userId);
+        return await app.service('users').get(payload.userId);
     }
 
     /**
@@ -82,7 +84,7 @@ class Base {
      * @return {Promise.<void>}
      */
     static loadScript(url, callback) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             const script = document.createElement("script")
             script.type = "text/javascript";
             // script.async = false;
@@ -111,6 +113,37 @@ class Base {
             script.src = url;
             document.getElementsByTagName("head")[0].appendChild(script);
         });
+    }
+
+    /**
+     * verifyJWT
+     * Pass a jwt token, get back a payload if it's valid.
+     *
+     * @param token
+     * @return {Promise.<void>}
+     */
+    async verifyJWT(token) {
+        const decode = require('jwt-decode');
+        //-----------------------------------
+        const payloadIsValid = function payloadIsValid(payload) {
+            return payload && (!payload.exp || payload.exp * 1000 > new Date().getTime());
+        };
+
+        if (typeof token !== 'string') {
+            return Promise.reject(new Error('Token provided to verifyJWT is missing or not a string'));
+        }
+
+        try {
+            let payload = decode(token);
+
+            if (payloadIsValid(payload)) {
+                return Promise.resolve(payload);
+            }
+
+            return Promise.reject(new Error('Invalid token: expired'));
+        } catch (error) {
+            return Promise.reject(new Error('Cannot decode malformed token.'));
+        }
     }
 }
 

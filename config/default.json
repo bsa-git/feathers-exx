@@ -14,6 +14,11 @@
     "default": 10,
     "max": 50
   },
+  "session": {
+    "secret": "SESSION_SECRET",
+    "resave": true,
+    "saveUninitialized": true
+  },
   "authentication": {
     "secret": "AUTH_SECRET",
     "strategies": [
@@ -36,6 +41,50 @@
       "entity": "user",
       "usernameField": "\\email",
       "passwordField": "password"
+    },
+    "cookie": {
+      "enabled": true,
+      "name": "feathers-jwt",
+      "httpOnly": false,
+      "secure": false
+    },
+    "facebook": {
+      "name": "facebook",
+      "clientID": "FACEBOOK_ID",
+      "clientSecret": "FACEBOOK_SECRET",
+      "callbackURL": "/auth/facebook/callback",
+      "successRedirect": "/auth/oauth2-ok",
+      "scope": ["public_profile", "email"]
+    },
+    "github": {
+      "name": "github",
+      "clientID": "GITHUB_ID",
+      "clientSecret": "GITHUB_SECRET",
+      "callbackURL": "/auth/github/callback",
+      "successRedirect": "/auth/oauth2-ok"
+    },
+    "instagram": {
+      "name": "instagram",
+      "clientID": "INSTAGRAM_ID",
+      "clientSecret": "INSTAGRAM_SECRET",
+      "callbackURL": "/auth/instagram/callback",
+      "successRedirect": "/auth/oauth2-ok",
+      "scope": ["basic", "public_content", "comments", "follower_list", "likes", "relationships"]
+    },
+    "google": {
+      "name": "google",
+      "clientID": "GOOGLE_ID",
+      "clientSecret": "GOOGLE_SECRET",
+      "callbackURL": "/auth/google/callback",
+      "successRedirect": "/auth/oauth2-ok",
+      "scope": ["profile openid email"]
+    },
+    "twitter": {
+      "name": "twitter",
+      "consumerKey": "TWITTER_KEY",
+      "consumerSecret": "TWITTER_SECRET",
+      "callbackURL": "/auth/twitter/callback",
+      "successRedirect": "/auth/oauth1-ok"
     }
   },
   "controllers": [
@@ -106,43 +155,51 @@
     "auth": [
       {
         "name": "about",
+        "okName": "about-ok",
         "url": "/auth/about",
         "value": "About"
       },
       {
         "name": "chat",
+        "okName": "chat-ok",
         "url": "/auth/chat",
         "value": "Chat"
       },
       {
         "name": "server",
+        "okName": "server-ok",
         "url": "/auth/server",
         "value": "Server"
       },
       {
         "name": "client",
+        "okName": "client-ok",
         "url": "/auth/client",
         "value": "Client"
       },
       {
         "name": "local",
+        "okName": "local-ok",
         "url": "/auth/local",
         "value": "Local"
       },
       {
         "name": "jwt",
+        "okName": "jwt-ok",
         "url": "/auth/jwt",
         "value": "JWT"
       },
       {
         "name": "oauth1",
+        "okName": "oauth1-ok",
         "url": "/auth/oauth1",
         "value": "OAuth1"
       },
       {
         "name": "oauth2",
+        "okName": "oauth2-ok",
         "url": "/auth/oauth2",
-        "value": "OAuth1"
+        "value": "OAuth2"
       }
     ],
     "database": [

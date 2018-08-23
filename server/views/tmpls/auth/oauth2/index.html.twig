@@ -1,0 +1,211 @@
+{% extends 'layouts/sidebar.html.twig' %}
+
+{% block sidebar_content %}
+    <section class="normal markdown-section">
+
+
+        <h1 id="oauth2-authentication">Authentication<a class="anchorjs-link " href="#oauth2-authentication"
+                                                               aria-label="Anchor link for: oauth2 authentication"
+                                                               data-anchorjs-icon="#"
+                                                               style="padding-left: 0.375em;"></a></h1>
+        <pre><code>$ npm install @feathersjs/authentication-oauth2 --save
+</code></pre>
+        <p><a href="https://github.com/feathersjs/authentication-oauth2" target="_blank">@feathersjs/authentication-oauth2</a>
+            is a server side module that allows you to use any <a href="http://passportjs.org/"
+                                                                  target="_blank">Passport</a> OAuth2 authentication
+            strategy within your Feathers application. There are hundreds of them! Some commonly used ones are:</p>
+        <ul>
+            <li><a href="https://github.com/jaredhanson/passport-facebook" target="_blank">Facebook</a></li>
+            <li><a href="https://github.com/jaredhanson/passport-instagram" target="_blank">Instagram</a></li>
+            <li><a href="https://github.com/jaredhanson/passport-github" target="_blank">Github</a></li>
+            <li><a href="https://github.com/jaredhanson/passport-google-oauth2" target="_blank">Google</a></li>
+            <li><a href="https://github.com/JMPerez/passport-spotify" target="_blank">Spotify</a></li>
+        </ul>
+        <p>This module contains 2 core pieces:</p>
+        <ol>
+            <li>The main initialization function</li>
+            <li>The <code>Verifier</code> class</li>
+        </ol>
+        <h2 id="configuration">Configuration<a class="anchorjs-link " href="#configuration"
+                                               aria-label="Anchor link for: configuration" data-anchorjs-icon="#"
+                                               style="padding-left: 0.375em;"></a></h2>
+        <p>In most cases initializing the module is as simple as doing this:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">const</span> feathers = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/feathers'</span>);
+<span class="hljs-keyword">const</span> authentication = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'@feathersjs/authentication'</span>);
+<span class="hljs-keyword">const</span> jwt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-jwt'</span>);
+<span class="hljs-keyword">const</span> oauth2 = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@feathersjs/authentication-oauth2'</span>);
+<span class="hljs-keyword">const</span> FacebookStrategy = <span class="hljs-built_in">require</span>(<span
+                        class="hljs-string">'passport-facebook'</span>).Strategy;
+<span class="hljs-keyword">const</span> app = feathers();
+
+<span class="hljs-comment">// Setup authentication</span>
+app.configure(authentication({ secret: <span class="hljs-string">'super secret'</span> }));
+app.configure(jwt());
+app.configure(oauth2({
+  name: <span class="hljs-string">'facebook'</span>,
+  Strategy: FacebookStrategy,
+  clientID: <span class="hljs-string">'&lt;your client id&gt;'</span>,
+  clientSecret: <span class="hljs-string">'&lt;your client secret&gt;'</span>,
+  scope: [<span class="hljs-string">'public_profile'</span>, <span class="hljs-string">'email'</span>]
+}));
+
+<span class="hljs-comment">// Setup a hook to only allow valid JWTs to authenticate</span>
+<span class="hljs-comment">// and get new JWT access tokens</span>
+app.service(<span class="hljs-string">'authentication'</span>).hooks({
+  before: {
+    create: [
+      authentication.hooks.authenticate([<span class="hljs-string">'jwt'</span>])
+    ]
+  }
+});
+</code></pre>
+        <p>This will pull from your global authentication object in your config file. It will also mix in the following
+            defaults, which can be customized.</p>
+        <p>Registering the OAuth2 plugin will automatically set up routes to handle the OAuth redirects and
+            authorization.</p>
+        <h2 id="options">Options<a class="anchorjs-link " href="#options" aria-label="Anchor link for: options"
+                                   data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <pre><code class="lang-js">{
+    idField: <span class="hljs-string">'&lt;provider&gt;Id'</span>, <span class="hljs-comment">// The field to look up the entity by when logging in with the provider. Defaults to '&lt;provider&gt;Id' (ie. 'facebookId').</span>
+    path: <span class="hljs-string">'/auth/&lt;provider&gt;'</span>, <span class="hljs-comment">// The route to register the middleware</span>
+    callbackURL: <span class="hljs-string">'http(s)://hostname[:port]/auth/&lt;provider&gt;/callback'</span>, <span
+                        class="hljs-comment">// The callback url. Will automatically take into account your host and port and whether you are in production based on your app environment to construct the url. (ie. in development http://localhost:3030/auth/facebook/callback)</span>
+    successRedirect: <span class="hljs-literal">undefined</span>,
+    failureRedirect: <span class="hljs-literal">undefined</span>,
+    entity: <span class="hljs-string">'user'</span>, <span
+                        class="hljs-comment">// the entity that you are looking up</span>
+    service: <span class="hljs-string">'users'</span>, <span
+                        class="hljs-comment">// the service to look up the entity</span>
+    passReqToCallback: <span class="hljs-literal">true</span>, <span class="hljs-comment">// whether the request object should be passed to `verify`</span>
+    session: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether to use sessions,</span>
+    handler: middleware, <span class="hljs-comment">// Express middleware for handling the oauth callback. Defaults to the built in middleware.</span>
+    errorHandler: middleware, <span class="hljs-comment">// Express middleware for handling errors. Defaults to the built in middleware.</span>
+    formatter: middleware, <span class="hljs-comment">// The response formatter middleware. Defaults to the the built in feathers-rest formatter, handling only JSON.</span>
+    Verifier: Verifier <span class="hljs-comment">// A Verifier class. Defaults to the built-in one but can be a custom one. See below for details.</span>
+}
+</code></pre>
+        <p>Additional passport strategy options can be provided based on the OAuth1 strategy you are configuring.</p>
+        <blockquote>
+            <p><strong>Note:</strong> If your api and frontend live on separate domains, you will need to manually setup
+                a handler to pass the access token back to the frontend application. <a
+                        href="https://docs.feathersjs.com/faq/readme.html#oauth-is-not-setting-the-cookie"
+                        target="_blank">See this FAQ</a>.</p>
+        </blockquote>
+        <h2 id="verifier">Verifier<a class="anchorjs-link " href="#verifier" aria-label="Anchor link for: verifier"
+                                     data-anchorjs-icon="#" style="padding-left: 0.375em;"></a></h2>
+        <p>This is the verification class that handles the OAuth2 verification by looking up the entity (normally a
+            <code>user</code>) on a given service and either creates or updates the entity and returns them. It has the
+            following methods that can all be overridden. All methods return a promise except <code>verify</code>, which
+            has the exact same signature as <a href="https://github.com/jaredhanson/passport-oauth2" target="_blank">passport-oauth2</a>.
+        </p>
+        <pre><code class="lang-js">{
+    <span class="hljs-keyword">constructor</span>(app, options) // the class <span
+                        class="hljs-keyword">constructor</span>
+    _updateEntity(entity) // updates an existing entity
+    _createEntity(entity) // creates an entity if they didn't exist already
+    _normalizeResult(result) // normalizes result from service to account for pagination
+    verify(req, accessToken, refreshToken, profile, done) // queries the service and calls the other internal functions.
+}
+</code></pre>
+        <p>The <code>Verifier</code> class can be extended so that you customize it's behavior without having to rewrite
+            and test a totally custom local Passport implementation. Although that is always an option if you don't want
+            use this plugin.</p>
+        <p>An example of customizing the Verifier:</p>
+        <pre><code class="lang-js"><span class="hljs-keyword">import</span> oauth2, { Verifier } <span
+                        class="hljs-keyword">from</span> <span
+                        class="hljs-string">'@feathersjs/authentication-oauth2'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomVerifier</span> <span
+            class="hljs-keyword">extends</span> <span class="hljs-title">Verifier</span> </span>{
+  <span class="hljs-comment">// The verify function has the exact same inputs and </span>
+  <span class="hljs-comment">// return values as a vanilla passport strategy</span>
+  verify(req, accessToken, refreshToken, profile, done) {
+    <span class="hljs-comment">// do your custom stuff. You can call internal Verifier methods</span>
+    <span class="hljs-comment">// and reference this.app and this.options. This method must be implemented.</span>
+
+    <span class="hljs-comment">// the 'user' variable can be any truthy value</span>
+    <span class="hljs-comment">// the 'payload' is the payload for the JWT access token that is generated after successful authentication</span>
+    done(<span class="hljs-literal">null</span>, user, payload);
+  }
+}
+
+app.configure(oauth2({
+  name: <span class="hljs-string">'facebook'</span>,
+  Strategy: FacebookStrategy,
+  clientID: <span class="hljs-string">'&lt;your client id&gt;'</span>,
+  clientSecret: <span class="hljs-string">'&lt;your client secret&gt;'</span>,
+  scope: [<span class="hljs-string">'public_profile'</span>, <span class="hljs-string">'email'</span>],
+  Verifier: CustomVerifier
+}));
+</code></pre>
+        <h2 id="customizing-the-oauth-response">Customizing The OAuth Response<a class="anchorjs-link "
+                                                                                 href="#customizing-the-oauth-response"
+                                                                                 aria-label="Anchor link for: customizing the oauth response"
+                                                                                 data-anchorjs-icon="#"
+                                                                                 style="padding-left: 0.375em;"></a>
+        </h2>
+        <p>Whenever you authenticate with an OAuth2 provider such as Facebook, the provider sends back an <code>accessToken</code>,
+            <code>refreshToken</code>, and a <code>profile</code> that contains the authenticated entity's information
+            based on the OAuth2 <code>scopes</code> you have requested and been granted.</p>
+        <p>By default the <code>Verifier</code> takes everything returned by the provider and attaches it to the <code>entity</code>
+            (ie. the user object) under the provider name. You will likely want to customize the data that is returned.
+            This can be done by adding a <code>before</code> hook to both the <code>update</code> and
+            <code>create</code> service methods on your <code>entity</code>'s service.</p>
+        <pre><code class="lang-js">app.configure(oauth2({
+  name: <span class="hljs-string">'github'</span>,
+  entity: <span class="hljs-string">'user'</span>,
+  service: <span class="hljs-string">'users'</span>,
+  Strategy,
+  clientID: <span class="hljs-string">'your client id'</span>,
+  clientSecret: <span class="hljs-string">'your client secret'</span>
+}));
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span
+            class="hljs-title">customizeGithubProfile</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span
+                            class="hljs-params">context</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Customizing Github Profile'</span>);
+    <span class="hljs-comment">// If there is a github field they signed up or</span>
+    <span class="hljs-comment">// signed in with github so let's pull the primary account email.</span>
+    <span class="hljs-keyword">if</span> (context.data.github) {
+      context.data.email = context.data.github.profile.emails.find(email =&gt; email.primary).value;
+    }
+
+    <span class="hljs-comment">// If you want to do something whenever any OAuth</span>
+    <span class="hljs-comment">// provider authentication occurs you can do this.</span>
+    <span class="hljs-keyword">if</span> (context.params.oauth) {
+      <span class="hljs-comment">// do something for all OAuth providers</span>
+    }
+
+    <span class="hljs-keyword">if</span> (context.params.oauth.provider === <span class="hljs-string">'github'</span>) {
+      <span class="hljs-comment">// do something specific to the github provider</span>
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(context);
+  };
+}
+
+
+app.service(<span class="hljs-string">'users'</span>).hooks({
+  before: {
+    create: [customizeGithubProfile()],
+    update: [customizeGithubProfile()]
+  }
+});
+</code></pre>
+        <h2 id="client-usage">Client Usage<a class="anchorjs-link " href="#client-usage"
+                                             aria-label="Anchor link for: client usage" data-anchorjs-icon="#"
+                                             style="padding-left: 0.375em;"></a></h2>
+        <p>When this module is registered server side, whether you are using <code>feathers-authentication-client</code>
+            or not the user has to navigate to the authentication strategy url. This could be by setting <code>window.location</code>
+            or through a link in your app.</p>
+        <p>For example you might have a login button for Facebook:</p>
+        <pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span
+                            class="hljs-attr">href</span>=<span class="hljs-string">"/auth/facebook"</span> <span
+                            class="hljs-attr">class</span>=<span class="hljs-string">"button"</span>&gt;</span>Login With Facebook<span
+                        class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+</code></pre>
+    </section>
+{% endblock %}

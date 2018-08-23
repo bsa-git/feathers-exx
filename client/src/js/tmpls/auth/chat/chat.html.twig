@@ -1,40 +1,42 @@
 <div class="chat">
-    <div class="tile is-ancestor">
-        <div class="tile is-vertical is-parent is-4">
-            <div class="tile is-child">
-                <article class="tile is-child content">
+    <div class="columns">
+        <div class="column is-4">
+            <div class="">
+                <article class="content">
                     <p class="title">Count</p>
                     <p class="subtitle"><span class="online-count"></span> Users</p>
                 </article>
             </div>
-            <div class="tile is-child">
+            <div class="">
                 <article class="message">
                     <div class="message-body">
-                        Select the user who should receive the message. <strong>By default</strong>, all users are selected.
+                        Select the user who should receive the message. <strong>By default</strong>, all users are
+                        selected.
                     </div>
                 </article>
-                <article class="tile is-child ">
-                    <nav class="panel">
-                        <p class="panel-heading">
-                            <label class="checkbox">
-                                <input id="allUsers" type="checkbox" name="allUsers" value="selected">
-                                Users
-                            </label>
-                        </p>
-                        {# Insert users #}
-                        <div class="user-list"></div>
-                        {# User LogOut #}
-                        <div class="panel-block">
-                            <button id="logout" class="button is-info is-fullwidth">
-                                Sign Out
-                            </button>
-                        </div>
-                    </nav>
-                </article>
+                {#<article class="tile is-child ">#}
+                {#<article class="">#}
+                <nav class="panel">
+                    <p class="panel-heading">
+                        <label class="checkbox">
+                            <input id="allUsers" type="checkbox" name="allUsers" value="selected">
+                            Users
+                        </label>
+                    </p>
+                    {# Insert users #}
+                    <div class="user-list"></div>
+                    {# User LogOut #}
+                    <div class="panel-block">
+                        <button id="logout" class="button is-info is-fullwidth">
+                            Sign Out
+                        </button>
+                    </div>
+                </nav>
+                {#</article>#}
             </div>
         </div>
-        <div class="tile is-parent">
-            <article class="tile is-child ">
+        <div class="column">
+            <article class="">
                 {# Insert messages #}
                 <div class="box message-list"></div>
                 <div class="box">
