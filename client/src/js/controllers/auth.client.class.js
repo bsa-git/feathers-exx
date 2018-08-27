@@ -196,8 +196,6 @@ class Auth extends Base {
             storage.setItem('feathers-jwt', accessToken);
             this.app.set('accessToken', accessToken);
             // Cookie store
-            // const cookie = new Cookie('feathers-jwt');
-            // cookie.store(1, '/', this.req.hostname);
             cookies.set('feathers-jwt', accessToken);
 
             // Get user using accessToken
