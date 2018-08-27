@@ -83,6 +83,7 @@ class Auth extends Base {
      */
     async authOAuth2() {
         const self = this;
+        const cookies = require('browser-cookies');
         //------------------
         await document.addEventListener('click', async ev => {
             try {
@@ -92,9 +93,12 @@ class Auth extends Base {
                         await this.app.logout();
                         self.app.set('user', null);
                         self.userId = null;
-                        const cookie = new Cookie('feathers-jwt');
-                        cookie.remove('/', self.req.hostname, true);
-                        debug('authOAuth2.logout.cookie.remove:', `path='/'; hostname='${self.req.hostname}'`);
+                        // const cookie = new Cookie('feathers-jwt');
+                        // cookie.remove('/', self.req.hostname);
+                        // cookies.get('feathers-jwt');
+                        debug('authOAuth2.logout.cookie.get:', cookies.get('feathers-jwt'));
+                        cookies.erase('feathers-jwt');
+                        debug('authOAuth2.logout.cookie.get:', cookies.get('feathers-jwt'));
                         const template = require('../tmpls/auth/oauth2/load.html.twig');
                         const html = template({isAuth: self.isAuth(self.app)});
                         document.getElementById('app').innerHTML = html;
