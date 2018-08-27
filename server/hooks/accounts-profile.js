@@ -47,6 +47,36 @@ module.exports = function () {
             // Override the original data (so that people can't submit additional stuff)
             context.data = user;
         }
+        // Facebook account
+        if (context.data.facebook) {
+            const facebook = context.data.facebook;
+            const profile = context.data.facebook.profile;
+            user.email = profile._json.email;
+            user.facebookId = profile.id;
+            user.tokens.push({kind: 'facebook', accessToken: facebook.accessToken});
+            user.profile.name = `${profile.name.givenName} ${profile.name.familyName}`;
+            user.profile.gender = profile._json.gender;
+            user.profile.picture = `https://graph.facebook.com/${profile.id}/picture?type=large`;
+            user.profile.location = (profile._json.location) ? profile._json.location.name : '';
+
+            // Override the original data (so that people can't submit additional stuff)
+            context.data = user;
+        }
+        // GitHub account
+        if (context.data.github) {
+            const github = context.data.github;
+            const profile = context.data.github.profile;
+            user.email = profile._json.email;
+            user.githubId = profile.id;
+            user.tokens.push({kind: 'github', accessToken: github.accessToken});
+            user.profile.name = profile.displayName;
+            user.profile.picture = profile._json.avatar_url;
+            user.profile.location = profile._json.location;
+            user.profile.website = profile._json.blog;
+
+            // Override the original data (so that people can't submit additional stuff)
+            context.data = user;
+        }
 
         // If you want to do something whenever any OAuth
         // provider authentication occurs you can do this.
