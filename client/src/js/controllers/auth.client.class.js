@@ -63,7 +63,8 @@ class Auth extends Base {
                         self.app.set('user', null);
                         self.userId = null;
                         const cookie = new Cookie('feathers-jwt');
-                        cookie.remove('/', this.req.hostname);
+                        cookie.remove('/', self.req.hostname);
+                        debug('authOAuth1.logout.cookie.remove:', `path='/'; hostname='${self.req.hostname}'`);
                         const template = require('../tmpls/auth/oauth1/load.html.twig');
                         const html = template({isAuth: self.isAuth(self.app)});
                         document.getElementById('app').innerHTML = html;
@@ -93,7 +94,7 @@ class Auth extends Base {
                         self.userId = null;
                         const cookie = new Cookie('feathers-jwt');
                         cookie.remove('/', self.req.hostname);
-                        debug('authOAuth2.cookie.remove:', self.req.hostname);
+                        debug('authOAuth2.logout.cookie.remove:', `path='/'; hostname='${self.req.hostname}'`);
                         const template = require('../tmpls/auth/oauth2/load.html.twig');
                         const html = template({isAuth: self.isAuth(self.app)});
                         document.getElementById('app').innerHTML = html;
