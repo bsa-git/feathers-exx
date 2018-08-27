@@ -5,7 +5,7 @@ const favicon = require('serve-favicon');
 const compress = require('compression');
 const helmet = require('helmet');
 const cors = require('cors');
-const session = require('express-session');
+// const session = require('express-session');
 
 module.exports = function (app) {
 
@@ -22,7 +22,7 @@ module.exports = function (app) {
     app.use(express.urlencoded({extended: true}));
     app.use(favicon(`${app.get('public')}/images/favicon.ico`));
     // Setup in memory session
-    app.use(session(app.get('session')));
+    // app.use(session(app.get('session')));
     app.use(express.static(app.get('public')));
 
 };

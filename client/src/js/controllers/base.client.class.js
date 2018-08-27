@@ -31,8 +31,8 @@ class Base {
 
         const authentication = require('@feathersjs/client/authentication');
         app.configure(authentication({
-            storage: window.localStorage,
-            cookie: 'feathers-jwt'
+            storage: window.localStorage
+            // cookie: 'feathers-jwt'
         }));
         return app
     }
