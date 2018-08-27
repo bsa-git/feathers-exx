@@ -2,9 +2,7 @@
 
 import Base from './base.client.class'
 import moment from 'moment'
-import Cookie from '../plugins/cookie.class'
-
-
+import cookies from 'browser-cookies'
 const debug = require('debug')('app:chat.controller');
 
 class Chat extends Base {
@@ -240,9 +238,7 @@ class Chat extends Base {
                         await this.app.logout();
                         self.app.set('user', null);
                         self.userId = null;
-                        const cookie = new Cookie('feathers-jwt');
-                        cookie.remove('/', self.req.hostname);
-                        debug('addClickListener.logout.cookie.remove:', `path='/'; hostname='${self.req.hostname}'`);
+                        cookies.erase('feathers-jwt');
                         const template = require('../tmpls/auth/chat/login.html.twig');
                         const loginHTML = template();
                         document.getElementById('app').innerHTML = loginHTML;
