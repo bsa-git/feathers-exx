@@ -241,7 +241,8 @@ class Chat extends Base {
                         self.app.set('user', null);
                         self.userId = null;
                         const cookie = new Cookie('feathers-jwt');
-                        cookie.remove('/', this.req.hostname);
+                        cookie.remove('/', self.req.hostname);
+                        debug('addClickListener.logout.cookie.remove:', `path='/'; hostname='${self.req.hostname}'`);
                         const template = require('../tmpls/auth/chat/login.html.twig');
                         const loginHTML = template();
                         document.getElementById('app').innerHTML = loginHTML;
