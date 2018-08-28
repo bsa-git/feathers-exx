@@ -1,6 +1,7 @@
 # feathers-exx
 
-> Feathers examples
+> Feathers examples:
+> work with services, work with databases, authentication and authorization of users
 
 ## About
 
@@ -24,9 +25,10 @@ Getting up and running is as easy as 1, 2, 3, 4, 5.
 4. Environment variables
 
 Add file ".env" to your project to set user environment variables.
-See the sample file ".env.example".
+See the sample file ".env.example". In environment variables, user's secret
+data such as user_id, user_secret, etc. are usually specified.
 
-5. Start your app
+5. Start your app for development mode
 
 Let's start building packages on the client side
 
@@ -34,11 +36,32 @@ Let's start building packages on the client side
   npm run build
   ```
 
+or
+
+```bash
+  npm run watch
+  ```
+
+to work with the MongoDB database
+
+```bash
+  npm run start-mongod
+  ```
+
+to work with the RethinkDB database
+
+```bash
+  npm run start-rethinkdb
+  ```
+
+to work with the ElasticSearch database you need to install it locally and run it
+
 Start the local server, so that you can see the application running
 
   ```bash
   npm run dev
   ```
+
 
 6. The application is now running on http://localhost:3000
 
