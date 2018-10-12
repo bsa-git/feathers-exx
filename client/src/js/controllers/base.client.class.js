@@ -24,7 +24,7 @@ class Base {
         //---------------------------------
         // Create app
         const app = feathers();
-        // Connect to a different URL
+        // Connect to URL
         const restClient = feathers.rest(restURL);
         // Configure an AJAX library (see below) with that client
         app.configure(restClient.axios(axios));
