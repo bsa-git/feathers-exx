@@ -1,7 +1,7 @@
 # feathers-exx
 
 > Feathers examples:
-> work with services, work with databases, authentication and authorization of users
+> work with services, work with databases, authentication and authorization of users.
 
 ## About
 
