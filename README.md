@@ -7,6 +7,10 @@
 
 This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
 
+## Demo
+
+[http://feathers-exx.herokuapp.com/](http://feathers-exx.herokuapp.com/)
+
 ## Getting Started
 
 Getting up and running is as easy as 1, 2, 3, 4, 5.
